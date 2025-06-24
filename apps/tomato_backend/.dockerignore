@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+.turbo/
+.git/
+node_modules/
+.vscode/
+.idea/
+*.log

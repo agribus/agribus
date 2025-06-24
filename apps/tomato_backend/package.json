@@ -1,0 +1,10 @@
+{
+  "name": "tomato",
+  "private": true,
+  "scripts": {
+    "build": "dotnet build",
+    "dev": "dotnet watch run",
+    "lint": "dotnet csharpier check .",
+    "format": "dotnet csharpier format ."
+  }
+}
