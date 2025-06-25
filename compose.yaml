@@ -52,7 +52,8 @@ services:
     container_name: lychee_client
     build:
       context: .
-      dockerfile: tools/docker/Dockerfile.lychee
+      dockerfile: docker/Dockerfile.lychee
+      target: development
     volumes:
       - ./apps/lychee_client:/app/apps/lychee_client
       - /app/apps/lychee_client/node_modules
