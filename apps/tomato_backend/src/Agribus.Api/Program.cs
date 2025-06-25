@@ -1,4 +1,5 @@
 using Agribus.Api.Extensions;
+using Agribus.Api.Middlewares;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,5 +24,5 @@ if (app.Environment.IsDevelopment())
 // app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
-
+app.UseMiddleware<MappingMiddleware>();
 app.Run();
