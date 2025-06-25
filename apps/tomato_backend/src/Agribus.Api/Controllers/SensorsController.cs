@@ -1,5 +1,5 @@
 using Agribus.Core.Ports.Api.DTOs;
-using Agribus.Core.Tests;
+using Agribus.Core.Ports.Api.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;

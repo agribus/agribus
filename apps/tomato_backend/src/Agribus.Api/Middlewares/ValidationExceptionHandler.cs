@@ -11,7 +11,8 @@ public class ValidationExceptionHandler
         ValidationException exception
     )
     {
-        var problemDetailsFactory = context.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+        var problemDetailsFactory =
+            context.RequestServices.GetRequiredService<ProblemDetailsFactory>();
         var modelStateDictionary = new ModelStateDictionary();
         foreach (var error in exception.Errors)
         {
@@ -23,7 +24,8 @@ public class ValidationExceptionHandler
             modelStateDictionary,
             statusCode: StatusCodes.Status400BadRequest,
             title: "VALIDATION_EXCEPTION",
-            detail: "Please refer to the errors property for additional details");
+            detail: "Please refer to the errors property for additional details"
+        );
 
         problemDetails.Extensions["traceId"] = context.TraceIdentifier;
 
