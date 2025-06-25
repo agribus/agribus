@@ -1,6 +1,6 @@
 using Agribus.Core.Ports.Api.DTOs;
 
-namespace Agribus.Core.Tests;
+namespace Agribus.Core.Ports.Api.Interfaces;
 
 public interface IParseSensorData
 {

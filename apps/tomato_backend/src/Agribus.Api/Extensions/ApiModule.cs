@@ -1,5 +1,6 @@
+using Agribus.Core.Features;
+using Agribus.Core.Ports.Api.Interfaces;
 using Agribus.Core.Ports.Api.Validators;
-using Agribus.Core.Tests;
 using FluentValidation;
 
 namespace Agribus.Api.Extensions;
@@ -18,7 +19,7 @@ public static class ApiModule
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         // API
-        services.AddScoped<IParseSensorData, ParseSensorData>();
+        services.AddScoped<IParseSensorData, ParseAndStoreSensorDataFeature>();
 
         services.AddValidatorsFromAssemblyContaining<RawSensorPayloadValidator>(
             ServiceLifetime.Singleton

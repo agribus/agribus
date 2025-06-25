@@ -26,23 +26,29 @@ public class MappingMiddleware(RequestDelegate next)
 
     private static async Task HandleUnexpectedExceptionAsync(
         HttpContext context,
-        Exception exception)
+        Exception exception
+    )
     {
-        var problemDetailsFactory = context.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+        var problemDetailsFactory =
+            context.RequestServices.GetRequiredService<ProblemDetailsFactory>();
 
         var problemDetails = problemDetailsFactory.CreateProblemDetails(
             context,
             statusCode: StatusCodes.Status500InternalServerError,
             title: "UNEXCEPTED_EXCEPTION",
             detail: "Please contact support if this problem persists",
-            instance: context.Request.Path);
+            instance: context.Request.Path
+        );
 
         problemDetails.Extensions.Add("traceId", context.TraceIdentifier);
 
-        var logger = context.RequestServices.GetRequiredService<ILogger<ValidationExceptionHandler>>();
+        var logger = context.RequestServices.GetRequiredService<
+            ILogger<ValidationExceptionHandler>
+        >();
         logger.LogError(exception, "Unexpected error occurred: {Message}", exception.Message);
 
-        context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
+        context.Response.StatusCode =
+            problemDetails.Status ?? StatusCodes.Status500InternalServerError;
         await context.Response.WriteAsJsonAsync(problemDetails);
     }
 }

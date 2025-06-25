@@ -12,7 +12,7 @@ src/
 └── Agribus.Core/
 ├── Agribus.Core.csproj       # Main project file
 ├── Domain/                   # Domain Layer
-│   ├── Entities/             # Core business models (e.g., Farm, Sensor)
+│   ├── AggregatesModels/             # Core business models (e.g., Greenhouse, Widgets)
 │   ├── ValueObjects/         # Immutable value types (e.g., Coordinates)
 │   └── Exceptions/           # Domain-specific exceptions
 ├── Features/                 # Business use cases (currently placeholder)
