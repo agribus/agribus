@@ -1,0 +1,6 @@
+@Agribus.Api_HostAddress = http://localhost:5140
+
+GET {{Agribus.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
