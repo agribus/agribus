@@ -14,12 +14,13 @@ public static class ApiModule
         services.AddControllers();
         services.AddCors(options =>
         {
-            options.AddPolicy("AllowAll", builder =>
-            {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            });
+            options.AddPolicy(
+                "AllowAll",
+                builder =>
+                {
+                    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                }
+            );
         });
         return services;
     }
@@ -28,6 +29,7 @@ public static class ApiModule
     {
         // API
         services.AddScoped<IParseSensorData, ParseAndStoreSensorDataFeature>();
+        services.AddScoped<IStoreSensorData, ParseAndStoreSensorDataFeature>();
 
         services.AddValidatorsFromAssemblyContaining<RawSensorPayloadValidator>(
             ServiceLifetime.Singleton

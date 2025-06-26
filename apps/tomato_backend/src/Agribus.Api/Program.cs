@@ -7,7 +7,6 @@ var config = builder.Configuration;
 
 builder.Services.AddPresentation().AddFeatures().AddInfrastructure();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

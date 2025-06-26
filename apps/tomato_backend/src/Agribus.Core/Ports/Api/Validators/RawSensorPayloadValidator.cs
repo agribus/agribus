@@ -16,7 +16,8 @@ public class RawSensorPayloadValidator : AbstractValidator<RawSensorPayload>
                 "'{PropertyName}' must be a valid SensorType value. Temperature; Humidity; Pressure; Motion"
             );
         RuleFor(rp => rp.Value).NotEmpty();
-        RuleFor(rp => rp.Timestamp).NotEmpty().Must(BeValidSensorTimestamp).WithMessage("'{PropertyName}' must be valid long timestamp.");
+        RuleFor(rp => rp.Timestamp)
+            .NotEmpty();
     }
 
     private bool BeValidSensorTimestamp(string arg)
