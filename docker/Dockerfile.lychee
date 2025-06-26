@@ -10,6 +10,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/lychee_client ./apps/lychee_client
 
 RUN pnpm install
+RUN pnpm --filter lychee build
 
 # ---------- DEVELOPMENT ----------
 FROM build AS development
