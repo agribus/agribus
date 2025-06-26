@@ -58,6 +58,8 @@ services:
       - "4200"
     networks:
       - agribus-network
+    volumes:
+      - ./apps/lychee_client:/app/apps/lychee_client
     environment:
       - NODE_ENV=development
     depends_on:
