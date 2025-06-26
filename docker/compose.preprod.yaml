@@ -51,16 +51,48 @@ services:
   lychee:
     container_name: lychee_client
     build:
-      context: .
+      context: ../
       dockerfile: docker/Dockerfile.lychee
       target: development
-    volumes:
-      - ./apps/lychee_client:/app/apps/lychee_client
-      - /app/apps/lychee_client/node_modules
-    ports:
-      - "4200:4200"
+    expose:
+      - "4200"
     networks:
       - agribus-network
+    volumes:
+      - ./apps/lychee_client:/app/apps/lychee_client
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PREPROD}`)"
+      - "traefik.http.routers.lychee.entrypoints=websecure"
+      - "traefik.http.routers.lychee.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.lychee.loadbalancer.server.port=4200"
+
+  proxy:
+    container_name: proxy
+    image: traefik:v2.7
+    restart: always
+    command:
+      - "--global.sendAnonymousUsage=false"
+      - "--providers.docker"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge=true"
+      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.tmhttpchallenge.acme.email=${LETSENCRYPT_EMAIL}"
+      - "--certificatesresolvers.tmhttpchallenge.acme.storage=/etc/acme/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - agribus-network
+    volumes:
+      - ./acme/:/etc/acme/
+      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   postgres_data:
