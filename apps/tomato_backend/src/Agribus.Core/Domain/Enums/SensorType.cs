@@ -9,4 +9,7 @@ public enum SensorType
     Humidity,
     Pressure,
     Motion,
+    Rssi,
+    Neighbors,
+    Unknown,
 }

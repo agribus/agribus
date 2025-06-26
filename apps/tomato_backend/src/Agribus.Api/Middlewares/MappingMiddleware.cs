@@ -36,11 +36,11 @@ public class MappingMiddleware(RequestDelegate next)
             context,
             statusCode: StatusCodes.Status500InternalServerError,
             title: "UNEXCEPTED_EXCEPTION",
-            detail: "Please contact support if this problem persists",
+            detail: exception?.Message ?? "Please contact support if this problem persists",
             instance: context.Request.Path
         );
 
-        problemDetails.Extensions.Add("traceId", context.TraceIdentifier);
+        problemDetails.Extensions["traceId"] = context.TraceIdentifier;
 
         var logger = context.RequestServices.GetRequiredService<
             ILogger<ValidationExceptionHandler>

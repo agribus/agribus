@@ -1,15 +1,17 @@
 using Agribus.Api.Extensions;
 using Agribus.Api.Middlewares;
+using Agribus.Application.Extensions;
+using Agribus.Core.Extensions;
+using Agribus.InfluxDB.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-builder.Services.AddPresentation().AddFeatures().AddInfrastructure();
+builder.Services.AddPresentation().AddCore().ConfigureInfluxDB(config).AddApplication();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger(options =>

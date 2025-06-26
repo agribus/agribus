@@ -1,5 +1,6 @@
+using Agribus.Application;
 using Agribus.Core.Ports.Api.DTOs;
-using Agribus.Core.Ports.Api.Interfaces;
+using Agribus.Core.Ports.Api.ParseSensorData;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
@@ -9,12 +10,12 @@ namespace Agribus.Api.Controllers;
 public class SensorsController : ControllerBase
 {
     private readonly ILogger<SensorsController> _logger;
-    private readonly IParseSensorData _parseSensorData;
+    private readonly SensorDataProcessor _dataProcessor;
 
-    public SensorsController(ILogger<SensorsController> logger, IParseSensorData parseSensorData)
+    public SensorsController(ILogger<SensorsController> logger, SensorDataProcessor dataProcessor)
     {
         _logger = logger;
-        _parseSensorData = parseSensorData;
+        _dataProcessor = dataProcessor;
         // TODO: add influxdb infra
     }
 
@@ -26,9 +27,7 @@ public class SensorsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        _logger.LogInformation("Received RawSensorPayload: {@Payload}", payload);
-        await _parseSensorData.FromRawJson(payload, cancellationToken);
-        // TODO: push in influxdb
+        await _dataProcessor.ProcessAsync(payload, cancellationToken);
         return Created();
     }
 }

@@ -16,5 +16,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Agribus.Core\Agribus.Core.csproj" />
+    <ProjectReference Include="..\..\src\Agribus.Application\Agribus.Application.csproj" />
   </ItemGroup>
 </Project>
