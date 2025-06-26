@@ -12,7 +12,15 @@ public static class ApiModule
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddControllers();
-
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
         return services;
     }
 
