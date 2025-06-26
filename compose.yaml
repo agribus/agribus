@@ -47,6 +47,29 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+        
+  agribus-api:
+    container_name: tomato
+    build:
+      context: ./apps/tomato_backend
+      dockerfile: Dockerfile.dev
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Release}
+    ports:
+      - "5001:5001"
+      - "5005:5005"
+    environment:
+      - DEBUG_MODE=true
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    restart: unless-stopped
+    volumes:
+      - ./apps/tomato_backend:/app
+    depends_on:
+      - postgres
+    networks:
+      - agribus-network
 
   influxdb3-explorer:
     image: quay.io/influxdb/influxdb3-explorer:latest
@@ -81,6 +104,8 @@ volumes:
     name: agribus-cold-potato-data
   influxdb_data:
     name: agribus-hot-potato-data
+  agribus-api:
+    name: agribus-tomato-data
 
 networks:
   agribus-network:
