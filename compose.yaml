@@ -48,6 +48,20 @@ services:
       postgres:
         condition: service_healthy
 
+  influxdb3-explorer:
+    image: quay.io/influxdb/influxdb3-explorer:latest
+    container_name: hot-potato-explorer
+    ports:
+      - "8888:80"
+      - "8889:8888"
+    command: [ "--mode=admin" ]
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    networks:
+      - agribus-network
+
   lychee:
     container_name: lychee_client
     build:
