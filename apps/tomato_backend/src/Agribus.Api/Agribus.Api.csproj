@@ -11,5 +11,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Agribus.Core\Agribus.Core.csproj" />
+    <ProjectReference Include="..\Agribus.InfluxDB\Agribus.InfluxDB.csproj" />
+    <ProjectReference Include="..\Agribus.Application\Agribus.Application.csproj" />
   </ItemGroup>
 </Project>

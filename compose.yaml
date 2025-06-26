@@ -48,8 +48,8 @@ services:
       postgres:
         condition: service_healthy
         
-  agribus-api:
-    container_name: tomato
+  tomato:
+    container_name: tomato-backend
     build:
       context: ./apps/tomato_backend
       dockerfile: Dockerfile.dev
@@ -59,7 +59,8 @@ services:
       - "5001:5001"
       - "5005:5005"
     environment:
-      - DEBUG_MODE=true
+      - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
+      - DEBUG_MODE=false
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:5001
       - DOTNET_RUNNING_IN_CONTAINER=true
@@ -86,7 +87,7 @@ services:
       - agribus-network
 
   lychee:
-    container_name: lychee_client
+    container_name: lychee-client
     build:
       context: .
       dockerfile: docker/Dockerfile.lychee

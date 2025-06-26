@@ -1,5 +1,3 @@
-using Agribus.Core.Features;
-using Agribus.Core.Ports.Api.Interfaces;
 using Agribus.Core.Ports.Api.Validators;
 using FluentValidation;
 
@@ -22,24 +20,6 @@ public static class ApiModule
                 }
             );
         });
-        return services;
-    }
-
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
-    {
-        // API
-        services.AddScoped<IParseSensorData, ParseAndStoreSensorDataFeature>();
-        services.AddScoped<IStoreSensorData, ParseAndStoreSensorDataFeature>();
-
-        services.AddValidatorsFromAssemblyContaining<RawSensorPayloadValidator>(
-            ServiceLifetime.Singleton
-        );
-
-        return services;
-    }
-
-    public static IServiceCollection AddFeatures(this IServiceCollection services)
-    {
         return services;
     }
 }

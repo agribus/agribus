@@ -16,8 +16,7 @@ public class RawSensorPayloadValidator : AbstractValidator<RawSensorPayload>
                 "'{PropertyName}' must be a valid SensorType value. Temperature; Humidity; Pressure; Motion"
             );
         RuleFor(rp => rp.Value).NotEmpty();
-        RuleFor(rp => rp.Timestamp)
-            .NotEmpty();
+        RuleFor(rp => rp.Timestamp).NotEmpty();
     }
 
     private bool BeValidSensorTimestamp(string arg)
@@ -28,21 +27,5 @@ public class RawSensorPayloadValidator : AbstractValidator<RawSensorPayload>
     private bool BeValidSensorType(string arg)
     {
         return Enum.TryParse<SensorType>(arg, true, out _);
-    }
-
-    private void ValidateValueBasedOnType(
-        SensorType payloadType,
-        double value,
-        ValidationContext<RawSensorPayload> context
-    )
-    {
-        switch (payloadType)
-        {
-            case SensorType.Motion:
-                Console.WriteLine("validation motion");
-                break;
-            default:
-                break;
-        }
     }
 }
