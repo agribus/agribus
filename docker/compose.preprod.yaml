@@ -53,13 +53,13 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile.lychee
-      target: development
+      target: production
     expose:
       - "80"
     networks:
       - agribus-network
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=production
     depends_on:
       - proxy
     labels:
