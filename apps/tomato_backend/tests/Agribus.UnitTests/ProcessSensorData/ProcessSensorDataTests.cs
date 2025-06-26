@@ -2,6 +2,7 @@
 using Agribus.Core.Ports.Api.DTOs;
 using Agribus.Core.Ports.Api.ParseSensorData;
 using Agribus.Core.Ports.Api.Validators;
+using FluentValidation;
 
 namespace Agribus.UnitTests.ProcessSensorData;
 
@@ -45,4 +46,22 @@ public class ProcessSensorDataTests
     }
 
     // TODO UNKNOWN TYPE SHOULD THROW
+    [Fact]
+    public async Task Should_ThrowValidationException_GivenInvalidPayload()
+    {
+        // Given
+        var payload = new RawSensorPayload
+        {
+            Type = "invalid_type",
+            SourceAdress = "",
+            Timestamp = 1750743600000,
+            Value = 10.0f,
+        };
+
+        // When
+        var action = async () => await _parser.FromRawJson(payload);
+
+        // Then
+        await Assert.ThrowsAsync<ValidationException>(action);
+    }
 }
