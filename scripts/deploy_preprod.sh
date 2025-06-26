@@ -2,11 +2,7 @@
 
 export PATH="/usr/bin:/bin:/usr/local/bin"
 
-set -a
-source ../.env
-set +a
-
-cd $PROJECT_PATH || exit 1
+cd /srv/agribus || exit 1
 
 docker compose -f ./docker/compose.preprod.yaml build --no-cache lychee
 
