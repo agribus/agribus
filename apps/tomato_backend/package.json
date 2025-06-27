@@ -2,9 +2,10 @@
   "name": "tomato",
   "private": true,
   "scripts": {
-    "build": "dotnet build",
+    "build": "dotnet build --configuration Release --no-restore",
     "dev": "dotnet watch run",
     "lint": "dotnet csharpier check .",
-    "format": "dotnet csharpier format ."
+    "format": "dotnet csharpier format .",
+    "test": "dotnet test --configuration Release --no-build"
   }
 }
