@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Agribus.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
 public class SensorsController : ControllerBase
 {
     private readonly ILogger<SensorsController> _logger;
@@ -16,13 +15,12 @@ public class SensorsController : ControllerBase
     {
         _logger = logger;
         _dataProcessor = dataProcessor;
-        // TODO: add influxdb infra
     }
 
-    [HttpPost("/data")]
+    [HttpPost(Endpoints.Sensors.PushSensorData)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> PostSensorData(
+    public async Task<IActionResult> PushSensorData(
         [FromBody] RawSensorPayload payload,
         CancellationToken cancellationToken
     )
