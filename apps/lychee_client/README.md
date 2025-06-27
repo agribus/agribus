@@ -30,17 +30,17 @@ lychee_client/
 
 ## 🧠 Key Principles
 
-* **Single Codebase**: Web and mobile apps share the same code through `common/`.
-* **Capacitor**: Used to wrap the Angular web app into native mobile apps (Android/iOS).
-* **Modular Angular**: Structured around standalone components and feature modules.
+- **Single Codebase**: Web and mobile apps share the same code through `common/`.
+- **Capacitor**: Used to wrap the Angular web app into native mobile apps (Android/iOS).
+- **Modular Angular**: Structured around standalone components and feature modules.
 
 ---
 
 ## 🔧 Development Tips
 
-* Use `apps/common` for any reusable logic or UI components.
-* Keep feature modules under `common/modules/` to reduce duplication.
-* Build the web app **before** syncing to Capacitor via `pnpm build --filter=lychee && pnpm capacitor copy`.
+- Use `apps/common` for any reusable logic or UI components.
+- Keep feature modules under `common/modules/` to reduce duplication.
+- Build the web app **before** syncing to Capacitor via `pnpm build --filter=lychee && pnpm capacitor copy`.
 
 ---
 
