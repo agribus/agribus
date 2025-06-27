@@ -16,10 +16,10 @@ public static class InfluxDBModule
     {
         services.Configure<InfluxOptions>(options =>
         {
-            options.Url = configuration["InfluxDB:Url"];
-            options.Token = configuration["InfluxDB:Token"];
-            options.Bucket = configuration["InfluxDB:Bucket"];
-            options.Org = configuration["InfluxDB:Org"];
+            options.Url = configuration["InfluxDB:Url"]!;
+            options.Token = configuration["InfluxDB:Token"]!;
+            options.Bucket = configuration["InfluxDB:Bucket"]!;
+            options.Org = configuration["InfluxDB:Org"]!;
         });
 
         services.AddSingleton(sp =>
