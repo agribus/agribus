@@ -21,7 +21,7 @@ public class ParseSensorData(RawSensorPayloadValidator validator) : IParseSensor
             Date = date,
             Value = payload.Value,
             Type = sensorType,
-            SourceAdress = payload.SourceAdress,
+            SourceAdress = payload.SourceAddress,
         };
 
         return measurement;

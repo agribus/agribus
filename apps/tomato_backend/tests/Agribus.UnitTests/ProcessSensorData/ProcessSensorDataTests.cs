@@ -27,7 +27,7 @@ public class ProcessSensorDataTests
         var payload = new RawSensorPayload
         {
             Type = type,
-            SourceAdress = "abc123",
+            SourceAddress = "abc123",
             Timestamp = 1750743600000,
             Value = value,
         };
@@ -53,7 +53,7 @@ public class ProcessSensorDataTests
         var payload = new RawSensorPayload
         {
             Type = "invalid_type",
-            SourceAdress = "",
+            SourceAddress = "",
             Timestamp = 1750743600000,
             Value = 10.0f,
         };

@@ -8,7 +8,7 @@ public class RawSensorPayloadValidator : AbstractValidator<RawSensorPayload>
 {
     public RawSensorPayloadValidator()
     {
-        RuleFor(rp => rp.SourceAdress).NotEmpty();
+        RuleFor(rp => rp.SourceAddress).NotEmpty();
         RuleFor(rp => rp.Type)
             .NotEmpty()
             .Must(BeValidSensorType)
