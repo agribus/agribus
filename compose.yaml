@@ -105,8 +105,6 @@ volumes:
     name: agribus-cold-potato-data
   influxdb_data:
     name: agribus-hot-potato-data
-  agribus-api:
-    name: agribus-tomato-data
 
 networks:
   agribus-network:

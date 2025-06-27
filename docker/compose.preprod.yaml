@@ -67,6 +67,32 @@ services:
       - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PREPROD}`)"
       - "traefik.http.routers.lychee.entrypoints=web"
       - "traefik.http.services.lychee.loadbalancer.server.port=80"
+  
+  tomato:
+    container_name: tomato-backend
+    build:
+      context: ../apps/tomato_backend
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - INFLUXDB__URL=http://hot-potato:8181
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - agribus-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tomato.rule=Host(`${DOMAIN_API_PREPROD}`)"
+      - "traefik.http.routers.tomato.entrypoints=websecure"
+      - "traefik.http.routers.tomato.tls=true"
+      - "traefik.http.services.tomato.loadbalancer.server.port=5001"
 
   proxy:
     container_name: proxy

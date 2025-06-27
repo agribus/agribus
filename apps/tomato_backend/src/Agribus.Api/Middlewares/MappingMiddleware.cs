@@ -36,7 +36,9 @@ public class MappingMiddleware(RequestDelegate next)
             context,
             statusCode: StatusCodes.Status500InternalServerError,
             title: "UNEXCEPTED_EXCEPTION",
-            detail: exception?.Message ?? "Please contact support if this problem persists",
+            detail: string.IsNullOrEmpty(exception.Message)
+                ? "Please contact support if this problem persists"
+                : exception.Message,
             instance: context.Request.Path
         );
 
