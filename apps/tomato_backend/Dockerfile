@@ -1,13 +1,41 @@
-# Dockerfile.dev
-FROM mcr.microsoft.com/dotnet/sdk:9.0
+# Stage 1: Base image
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
-RUN apt-get update && apt-get install -y curl
+# Install useful tools (net-tools, curl) for debugging
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends net-tools curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY Agribus.sln .
-COPY src/Agribus.Core/Agribus.Core.csproj src/Agribus.Core/Agribus.Core.csproj
+EXPOSE 5001
+EXPOSE 5002
 
-RUN dotnet restore
+# Create non-root user
+RUN groupadd -r agribusgroup && \
+    useradd -r -g agribusgroup -u 1001 agribususer && \
+    chown -R agribususer:agribusgroup /app
 
-# TODO
+# Set environment to listen on all interfaces
+ENV ASPNETCORE_URLS=http://0.0.0.0:5000
+
+USER agribususer
+
+# Stage 2: Build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore "src/Agribus.Api/Agribus.Api.csproj"
+RUN dotnet build "src/Agribus.Api/Agribus.Api.csproj" -c Release --no-restore
+
+# Stage 3: Publish
+FROM build AS publish
+WORKDIR /src
+RUN dotnet publish "src/Agribus.Api/Agribus.Api.csproj" -c Release -o /out --no-restore
+
+# Final stage
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /out .
+
+ENTRYPOINT ["dotnet", "Agribus.Api.dll"]

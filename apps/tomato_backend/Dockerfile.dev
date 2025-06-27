@@ -1,0 +1,24 @@
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0
+
+WORKDIR /app
+
+COPY Agribus.sln ./
+COPY tests/ tests/
+COPY src/ src/
+
+RUN dotnet restore
+
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+ENV DOTNET_WATCH_AUTO_REBUILD=true
+ENV DOTNET_WATCH_HOT_RELOAD=true
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+EXPOSE 5000
+EXPOSE 5001
+EXPOSE 5005
+
+WORKDIR /app/src/Agribus.Api
+
+CMD ["/bin/bash", "-c", "if [ \"$DEBUG_MODE\" = \"true\" ]; then dotnet run --no-launch-profile; else dotnet watch --no-launch-profile run; fi"]
