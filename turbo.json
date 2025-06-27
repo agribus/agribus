@@ -22,6 +22,9 @@
     },
     "clean": {
       "dependsOn": ["^clean"]
+    },
+    "test": {
+      "dependsOn": ["^test"]
     }
   }
 }
