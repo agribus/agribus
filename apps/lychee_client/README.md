@@ -1,59 +1,55 @@
-# LycheeClient
+# lychee_client – Frontend Monorepo (Web & Mobile)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.3.
+This folder contains the **web** and **mobile** applications of the Agribus ecosystem, structured as a modular, maintainable **Angular + Capacitor** monorepo.
 
-## Development server
+Built with `pnpm`, powered by `TurboRepo` for fast dev & CI workflows.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
+## 📁 Project Structure
+
+```txt
+
+lychee_client/
+├── package.json                # Root dependencies & scripts (shared across apps)
+├── tsconfig.json               # Shared TypeScript config
+├── angular.json                # Angular workspace config
+├── src/                       # Application-level entry points
+│   ├── web/                    # Web frontend (Angular standalone app)
+│   ├── mobile/                 # Capacitor app (wraps web build)
+│   └── common/                 # Shared code between web & mobile
+│       ├── core/              # Services, models, APIs, auth
+│       ├── shared/            # Reusable UI components (buttons, cards, spinners)
+│       └── features/           # Feature modules (dashboard, settings, etc.)
+├── environments/              # Env config for Angular (dev, prod)
+└── dist/                      # Build outputs (gitignored)
+
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## 🧠 Key Principles
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Single Codebase**: Web and mobile apps share the same code through `common/`.
+- **Capacitor**: Used to wrap the Angular web app into native mobile apps (Android/iOS).
+- **Modular Angular**: Structured around standalone components and feature modules.
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 🔧 Development Tips
 
-```bash
-ng generate --help
-```
+- Use `apps/common` for any reusable logic or UI components.
+- Keep feature modules under `common/modules/` to reduce duplication.
+- Build the web app **before** syncing to Capacitor via `pnpm build --filter=lychee && pnpm capacitor copy`.
 
-## Building
+---
 
-To build the project run:
+## 📱 Native Builds
 
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+After syncing the web app:
 
 ```bash
-ng test
+pnpm capacitor open android
+# or
+pnpm capacitor open ios
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
