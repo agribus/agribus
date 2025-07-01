@@ -1,4 +1,4 @@
-name: Agribus Tomato CI
+name: Agribus Lychee CI
 
 on:
   push:
@@ -9,10 +9,12 @@ on:
 permissions:
   actions: read
   contents: read
-
 jobs:
-  dotnet:
+  frontend:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/lychee_client
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,16 +32,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: '9.0'
+      - name: Build Web App
+        run: pnpm run build
 
-      - name: Restore dependencies
-        run: dotnet restore apps/tomato_backend/
+      - name: Sync Web Build to Capacitor
+        run: |
+          pnpm cap add android
+          pnpm cap add ios
+          pnpm cap copy android
+          pnpm cap copy ios
 
-      - name: Build
-        run: pnpm turbo run build --filter=tomato --cache=local:r,remote:r
-
-      - name: Run tests
-        run: npx turbo run test --filter=tomato
+      # cannot test karma
+      # - name: Test
+      #   run: pnpm run test

@@ -72,7 +72,7 @@ services:
     container_name: tomato-backend-preprod
     build:
       context: ../apps/tomato_backend
-      dockerfile: Dockerfile
+      dockerfile: ../../docker/Dockerfile.tomato
     ports:
       - "5001:5001"
     environment:
