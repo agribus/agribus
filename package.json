@@ -8,7 +8,9 @@
     "test": "turbo run test",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\" && turbo run format",
     "check-types": "turbo run check-types",
-    "clean": "turbo run clean"
+    "clean": "turbo run clean",
+    "ly:add": "pnpm -F lychee add",
+    "to:add": "dotnet add ./apps/tomato_backend package"
   },
   "devDependencies": {
     "prettier": "^3.5.3",
