@@ -3,12 +3,18 @@ using Agribus.Api.Middlewares;
 using Agribus.Application.Extensions;
 using Agribus.Core.Extensions;
 using Agribus.InfluxDB.Extensions;
+using Agribus.Postgres.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 var config = builder.Configuration;
 
-builder.Services.AddPresentation().AddCore().ConfigureInfluxDB(config).AddApplication();
+builder
+    .Services.AddPresentation()
+    .AddCore()
+    .ConfigureInfluxDB(config)
+    .AddApplication()
+    .ConfigurePostgres(config);
 
 var app = builder.Build();
 
