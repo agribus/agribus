@@ -13,5 +13,6 @@
     <ProjectReference Include="..\Agribus.Core\Agribus.Core.csproj" />
     <ProjectReference Include="..\Agribus.InfluxDB\Agribus.InfluxDB.csproj" />
     <ProjectReference Include="..\Agribus.Application\Agribus.Application.csproj" />
+    <ProjectReference Include="..\Agribus.Postgres\Agribus.Postgres.csproj" />
   </ItemGroup>
 </Project>
