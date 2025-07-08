@@ -2,15 +2,9 @@
 name: Feature request
 about: Suggest an idea for this project
 title: "[Feature] Titre"
-labels: ''
+labels: enhancement
 assignees: ''
 
----
-
----
-name: Demande de fonctionnalité
-description: Suggérer une nouvelle idée ou amélioration pour ce projet
-labels: ["Enhancement", "Feature Request"]
 ---
 
 Merci de remplir ce formulaire de manière claire et concise.
