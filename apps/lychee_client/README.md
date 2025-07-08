@@ -11,17 +11,22 @@ Built with `pnpm`, powered by `TurboRepo` for fast dev & CI workflows.
 ```txt
 
 lychee_client/
-├── package.json                # Root dependencies & scripts (shared across apps)
-├── tsconfig.json               # Shared TypeScript config
-├── angular.json                # Angular workspace config
-├── src/                       # Application-level entry points
-│   ├── web/                    # Web frontend (Angular standalone app)
-│   ├── mobile/                 # Capacitor app (wraps web build)
-│   └── common/                 # Shared code between web & mobile
-│       ├── core/              # Services, models, APIs, auth
-│       ├── shared/            # Reusable UI components (buttons, cards, spinners)
-│       └── features/           # Feature modules (dashboard, settings, etc.)
-├── environments/              # Env config for Angular (dev, prod)
+├── package.json                      # Root dependencies & scripts (shared across apps)
+├── tsconfig.json                     # Shared TypeScript config
+├── angular.json                      # Angular workspace config
+├── src/                              # Application-level entry points
+│   └── app/                          # Web frontend (Angular standalone app) 
+│   │   ├── components /
+│   │   ├── directives /       
+│   │   ├── guards /
+│   │   ├── intefaces / 
+│   │   ├── pipes / 
+│   │   ├── services / 
+│   │   └── utils /  
+│   └── environments /                  # Env config for Angular (dev, prod)
+│       ├── environment.production.ts   # Production environment settings
+│       └── environment.ts              # Base environment config (used for switching)
+│
 └── dist/                      # Build outputs (gitignored)
 
 ```
