@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HelloWorld } from './hello-world';
+import { HelloWorld } from './hello-world.component';
 
 describe('HelloWorld', () => {
   let component: HelloWorld;
