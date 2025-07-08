@@ -7,75 +7,43 @@ assignees: ''
 
 ---
 
+---
 name: Demande de fonctionnalité
 description: Suggérer une nouvelle idée ou amélioration pour ce projet
 labels: ["Enhancement", "Feature Request"]
+---
 
-body:
-  - type: markdown
-    attributes:
-      value: |
-        Merci de remplir ce formulaire de manière claire et concise.
+Merci de remplir ce formulaire de manière claire et concise.
 
-  - type: textarea
-    attributes:
-      label: Résumé
-      description: Formule ta demande sous la forme "En tant que..., je souhaite que..., afin que..."
-      placeholder: |
-        En tant que [rôle ou utilisateur], 
-        Je souhaite que [fonctionnalité souhaitée], 
-        Afin que [bénéfice ou objectif]. 
-        (Soyez concis, 1 à 2 phrases)
-    validations:
-      required: true
+### Résumé
+Formule ta demande sous la forme "En tant que..., je souhaite que..., afin que..."  
+**Exemple de réponse**:  
+En tant que [rôle ou utilisateur],  
+Je souhaite que [fonctionnalité souhaitée],  
+Afin que [bénéfice ou objectif].  
+(Soyez concis, 1 à 2 phrases)
 
-  - type: textarea
-    attributes:
-      label: Contexte
-      description: Décris le besoin métier ou le problème que cette fonctionnalité résout.
-    validations:
-      required: false
+### Contexte
+Décris le besoin métier ou le problème que cette fonctionnalité résout.
 
-  - type: textarea
-    attributes:
-      label: Localisation
-      description: Où cette fonctionnalité est-elle concernée dans l'application ? (écran, module, etc. Ex. page d'accueil, page de profil, module de notifications…)
-      placeholder: Ex. Page d’accueil, Menu latéral, Module de gestion des utilisateurs…
-    validations:
-      required: false
+### Localisation
+Où cette fonctionnalité est-elle concernée dans l'application ?  
+Écran, module, etc.  
+**Exemple**: Page d’accueil, Menu latéral, Module de gestion des utilisateurs…
 
-  - type: textarea
-    attributes:
-      label: Permissions / Accès
-      description: Quels rôles ou profils doivent avoir accès à cette fonctionnalité ? Par exemple : admin uniquement, tous les utilisateurs connectés, utilisateurs avec un rôle spécifique, etc.
-      placeholder: Ex. Admin uniquement, Tous les utilisateurs connectés…
-    validations:
-      required: false
+### Permissions / Accès
+Quels rôles ou profils doivent avoir accès à cette fonctionnalité ?  
+**Exemple**: Admin uniquement, Tous les utilisateurs connectés…
 
-  - type: textarea
-    attributes:
-      label: Solution proposée
-      description: Décris la solution ou le comportement attendu.
-    validations:
-      required: true
+### Solution proposée
+Décris la solution ou le comportement attendu.
 
-  - type: textarea
-    attributes:
-      label: Alternatives envisagées
-      description: D'autres solutions ou approches que tu as envisagées.
-    validations:
-      required: false
+### Alternatives envisagées
+D'autres solutions ou approches que tu as envisagées.
 
-  - type: textarea
-    attributes:
-      label: Contraintes ou dépendances
-      description: Y a-t-il des dépendances techniques ou fonctionnelles à prendre en compte ? (Ex. dépendances avec d'autres modules, versions d'API, ou contraintes de performance)
-    validations:
-      required: false
+### Contraintes ou dépendances
+Y a-t-il des dépendances techniques ou fonctionnelles à prendre en compte ?  
+**Exemple**: Dépendances avec d'autres modules, versions d'API, ou contraintes de performance.
 
-  - type: textarea
-    attributes:
-      label: Informations complémentaires
-      description: Captures d’écran, liens, user stories, critères d'acceptation, ou tout autre détail utile.
-    validations:
-      required: false
+### Informations complémentaires
+Captures d’écran, liens, user stories, critères d'acceptation, ou tout autre détail utile.
