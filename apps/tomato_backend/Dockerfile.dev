@@ -6,6 +6,9 @@ COPY Agribus.sln ./
 COPY tests/ tests/
 COPY src/ src/
 
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 RUN dotnet restore
 
 ENV DOTNET_USE_POLLING_FILE_WATCHER=true
@@ -19,6 +22,7 @@ EXPOSE 5000
 EXPOSE 5001
 EXPOSE 5005
 
-WORKDIR /app/src/Agribus.Api
+COPY tomato-entrypoint.sh /tomato-entrypoint.sh
+RUN chmod +x /tomato-entrypoint.sh
 
-CMD ["/bin/bash", "-c", "if [ \"$DEBUG_MODE\" = \"true\" ]; then dotnet run --no-launch-profile; else dotnet watch --no-launch-profile run; fi"]
+ENTRYPOINT ["/tomato-entrypoint.sh"]

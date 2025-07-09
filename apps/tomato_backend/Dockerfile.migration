@@ -1,0 +1,22 @@
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the entire project
+COPY . .
+
+# Install dotnet-ef tool
+RUN dotnet tool install --global dotnet-ef
+
+# Make sure the .NET tools are in the PATH
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Restore the project dependencies
+RUN dotnet restore ./src/Agribus.Postgres/Agribus.Postgres.csproj
+
+# Build the project
+RUN dotnet build ./src/Agribus.Postgres/Agribus.Postgres.csproj --configuration Release --no-restore
+
+# Run the migrations using dotnet ef
+ENTRYPOINT ["dotnet", "ef", "database", "update", "--project", "./src/Agribus.Postgres", "--startup-project", "./src/Agribus.Postgres"]
