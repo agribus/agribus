@@ -58,10 +58,9 @@ services:
       - "80"
     networks:
       - agribus-network
+      - reverse-proxy
     environment:
       - NODE_ENV=production
-    depends_on:
-      - proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PREPROD}`)"
@@ -87,29 +86,13 @@ services:
         condition: service_healthy
     networks:
       - agribus-network
+      - reverse-proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.tomato.rule=Host(`${DOMAIN_API_PREPROD}`)"
       - "traefik.http.routers.tomato.entrypoints=websecure"
       - "traefik.http.routers.tomato.tls=true"
       - "traefik.http.services.tomato.loadbalancer.server.port=5001"
-
-  proxy:
-    container_name: proxy-preprod
-    image: traefik:v2.7
-    restart: always
-    command:
-      - "--global.sendAnonymousUsage=false"
-      - "--providers.docker"
-      - "--providers.docker.exposedByDefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - agribus-network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   postgres_data:

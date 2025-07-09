@@ -58,39 +58,17 @@ services:
       - "80"
     networks:
       - agribus-network
+      - proxy
     environment:
       - NODE_ENV=production
     depends_on:
-      - proxy
+      - reverse-proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PROD}`)"
       - "traefik.http.routers.lychee.entrypoints=websecure"
       - "traefik.http.routers.lychee.tls.certresolver=tmhttpchallenge"
       - "traefik.http.services.lychee.loadbalancer.server.port=80"
-
-  proxy:
-    container_name: proxy
-    image: traefik:v2.7
-    restart: always
-    command:
-      - "--global.sendAnonymousUsage=false"
-      - "--providers.docker"
-      - "--providers.docker.exposedByDefault=false"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge=true"
-      - "--certificatesresolvers.tmhttpchallenge.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.tmhttpchallenge.acme.email=${LETSENCRYPT_EMAIL}"
-      - "--certificatesresolvers.tmhttpchallenge.acme.storage=/etc/acme/acme.json"
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - agribus-network
-    volumes:
-      - ./acme/:/etc/acme/
-      - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
   postgres_data:

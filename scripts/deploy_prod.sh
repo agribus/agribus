@@ -4,8 +4,10 @@ export PATH="/usr/bin:/bin:/usr/local/bin"
 
 cd /srv/agribus || exit 1
 
-./git_pull_prod.sh
+git fetch origin main
+git checkout main
+git pull origin main
 
-docker compose -f ./docker/compose.preprod.yaml build --no-cache lychee
+docker compose -f ./docker/compose.prod.yaml build --no-cache lychee
 
-docker compose -f ./docker/compose.preprod.yaml --env-file .env up -d
+docker compose -f ./docker/compose.prod.yaml --env-file .env up -d
