@@ -20,6 +20,7 @@
       "@directives/*": ["app/directives/*"],
       "@guards/*": ["app/guards/*"],
       "@interfaces/*": ["app/interfaces/*"],
+      "@pages/*": ["app/pages/*"],
       "@pipes/*": ["app/pipes/*"],
       "@services/*": ["app/services/*"],
       "@utils/*": ["app/utils/*"],
