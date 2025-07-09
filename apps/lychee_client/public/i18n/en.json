@@ -1,6 +1,16 @@
 {
-  "hello": {
-    "browser": "Hello from browser",
-    "mobile": "Hello from mobile device"
+  "components": {
+    "hello-world": {
+      "browser": "Hello from browser",
+      "mobile": "Hello from mobile device"
+    }
+  },
+  "pages": {
+    "unsupported-platform": {
+      "title": "This App Is Currently Mobile-Only",
+      "description": "We're working hard on a desktop version. For now, the application is only available on mobile devices.",
+      "progress": "You can follow our progress",
+      "here": "here"
+    }
   }
 }
