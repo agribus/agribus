@@ -1,0 +1,6 @@
+{
+  "hello": {
+    "browser": "Hello from browser",
+    "mobile": "Hello from mobile device"
+  }
+}
