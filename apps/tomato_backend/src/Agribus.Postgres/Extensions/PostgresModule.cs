@@ -11,7 +11,7 @@ public static class PostgresModule
     )
     {
         services.AddDbContext<AgribusDbContext>(options =>
-            options.UseNpgsql(config.GetConnectionString("Postgres"))
+            options.UseNpgsql(config.GetConnectionString("Postgres")).UseSnakeCaseNamingConvention()
         );
 
         return services;
