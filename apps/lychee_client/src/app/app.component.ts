@@ -16,7 +16,7 @@ export class BootstrapApp {
 
   private readonly translateService = inject(TranslateService);
   constructor() {
-    this.translateService.addLangs(['fr', 'en']);
+    this.translateService.addLangs(['fr', 'en', 'de']);
     this.translateService.setDefaultLang('fr');
     this.translateService.use('fr');
   }
