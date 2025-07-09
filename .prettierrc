@@ -1,10 +1,21 @@
 {
-  "trailingComma": "es5",
   "tabWidth": 2,
-  "semi": true,
-  "singleQuote": true,
-  "printWidth": 120,
   "useTabs": false,
+  "singleQuote": false,
+  "semi": true,
   "bracketSpacing": true,
-  "endOfLine": "auto"
+  "arrowParens": "avoid",
+  "trailingComma": "es5",
+  "bracketSameLine": true,
+  "printWidth": 100,
+  "proseWrap": "preserve",
+  "htmlWhitespaceSensitivity": "ignore",
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ]
 }
