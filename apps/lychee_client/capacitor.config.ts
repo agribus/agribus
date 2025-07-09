@@ -1,9 +1,16 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: 'com.lychee.app',
-  appName: 'lychee',
-  webDir: 'dist/lychee_client/browser',
+  appId: "com.lychee.app",
+  appName: "lychee",
+  webDir: "dist/lychee_client/browser",
+  plugins: {
+    StatusBar: {
+      overlaysWebView: false,
+      style: "LIGHT",
+      backgroundColor: "#ffffff",
+    },
+  },
 };
 
 export default config;

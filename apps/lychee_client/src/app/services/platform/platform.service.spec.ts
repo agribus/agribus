@@ -1,16 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { Platform } from './platform.service';
+import { PlatformService } from "./platform.service";
 
-describe('Platform', () => {
-  let service: Platform;
+describe("Platform", () => {
+  let service: PlatformService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Platform);
+    service = TestBed.inject(PlatformService);
   });
 
-  it('should be created', () => {
+  it("should be created", () => {
     expect(service).toBeTruthy();
   });
 });
