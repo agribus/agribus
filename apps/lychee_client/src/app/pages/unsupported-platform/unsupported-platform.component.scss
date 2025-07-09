@@ -1,0 +1,45 @@
+.unsupported-platform {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 2rem 0 2rem;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
+}
+
+.unsupported-platform__title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.unsupported-platform__description,
+.unsupported-platform__progress {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  max-width: 600px;
+}
+
+.unsupported-platform__link {
+  color: #007bff;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.unsupported-platform__stores {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+}
+
+.unsupported-platform__badge {
+  width: 200px;
+  height: 60px;
+}

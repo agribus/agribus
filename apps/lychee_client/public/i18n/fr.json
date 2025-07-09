@@ -1,6 +1,16 @@
 {
-  "hello": {
-    "browser": "Bonjour du navigateur",
-    "mobile": "Bonjour depuis un téléphone portable"
+  "components": {
+    "hello-world": {
+      "browser": "Bonjour du navigateur",
+      "mobile": "Bonjour depuis un téléphone portable"
+    }
+  },
+  "pages": {
+    "unsupported-platform": {
+      "title": "Cette application est actuellement disponible uniquement sur mobile",
+      "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
+      "progress": "Vous pouvez suivre notre avancement",
+      "here": "ici"
+    }
   }
 }
