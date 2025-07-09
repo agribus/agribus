@@ -7,11 +7,11 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\" && turbo run format",
+    "format": "turbo run format",
     "check-types": "turbo run check-types",
     "clean": "turbo run clean",
     "prepare": "husky",
-    "commit": "cz"
+    "commit": "cz" 
   },
   "config": {
     "commitizen": {
