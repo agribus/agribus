@@ -17,7 +17,11 @@ export class HelloWorldComponent {
   private readonly translateService = inject(TranslateService);
 
   constructor() {
-    this.message.set(this.platformService.isBrowser() ? "hello.browser" : "hello.mobile");
+    this.message.set(
+      this.platformService.isBrowser()
+        ? "components.hello-world.browser"
+        : "components.hello-world.mobile"
+    );
   }
 
   useLanguage(language: string): void {
