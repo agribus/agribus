@@ -1,0 +1,46 @@
+.desktop-info-container {
+  background-color: #07160A;
+  color: white;
+  text-align: center;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.app-logo {
+  max-width: 120px;
+  margin: 0 auto 30px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+}
+
+a {
+  color: #4caf50;
+  text-decoration: underline;
+}
+
+.store-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.store-buttons img {
+  height: 60px;
+  cursor: pointer;
+}
