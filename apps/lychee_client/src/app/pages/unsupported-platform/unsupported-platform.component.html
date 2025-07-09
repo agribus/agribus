@@ -1,33 +1,41 @@
-<div class="desktop-info-container">
-  <img src="logo.png" alt="Agribus Logo" class="app-logo" />
+<div class="unsupported-platform">
+  <img [ngSrc]="'/images/logo/logo.png'" alt="Logo Agribus" width="200" height="200" priority />
 
-  <h1>{{ "pages.unsupported-platform.title" | translate }} 📱</h1>
+  <h1 class="unsupported-platform__title">
+    {{ "pages.unsupported-platform.title" | translate }} 📱
+  </h1>
 
-  <p>
+  <p class="unsupported-platform__description">
     {{ "pages.unsupported-platform.description" | translate }}
   </p>
-  <p>
+
+  <p class="unsupported-platform__progress">
     {{ "pages.unsupported-platform.progress" | translate }}
-    <a href="https://github.com/agribus/agribus/issues" target="_blank">
+    <a
+      href="https://github.com/agribus/agribus/issues"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="unsupported-platform__link">
       {{ "pages.unsupported-platform.here" | translate }}
     </a>
   </p>
 
-  <div class="store-buttons">
-    <a href="https://play.google.com/store/apps/details?id=com.yourapp" target="_blank">
+  <div class="unsupported-platform__stores">
+    <a
+      href="https://play.google.com/store/apps/details?id=com.yourapp"
+      target="_blank"
+      rel="noopener noreferrer">
       <img
-        [ngSrc]="'/images/badges/google/GetItOnGooglePlay_Badge_Web_color_' + imageLang() + '.png'"
+        [src]="'/images/badges/google/GetItOnGooglePlay_Badge_Web_color_' + imageLang() + '.png'"
         alt="Get it on Google Play"
-        width="200"
-        height="60" />
+        class="unsupported-platform__badge" />
     </a>
 
-    <a href="https://apps.apple.com/app/id000000000" target="_blank">
+    <a href="https://apps.apple.com/app/id000000000" target="_blank" rel="noopener noreferrer">
       <img
-        [ngSrc]="'/images/badges/apple/Download_on_the_App_Store_Badge_' + imageLang() + '.svg'"
+        [src]="'/images/badges/apple/Download_on_the_App_Store_Badge_' + imageLang() + '.svg'"
         alt="Download on the App Store"
-        width="200"
-        height="60" />
+        class="unsupported-platform__badge" />
     </a>
   </div>
 </div>

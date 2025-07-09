@@ -1,46 +1,45 @@
-.desktop-info-container {
-  background-color: #07160A;
-  color: white;
-  text-align: center;
-  margin: 0 auto;
-  padding: 40px 20px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  min-height: 100vh;
+.unsupported-platform {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 0 2rem 0 2rem;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  color: #333;
+  background-color: #f9f9f9;
 }
 
-.app-logo {
-  max-width: 120px;
-  margin: 0 auto 30px;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
-
-h1 {
+.unsupported-platform__title {
   font-size: 2rem;
-  margin-bottom: 20px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 
-p {
-  font-size: 1.1rem;
-  margin-bottom: 20px;
+.unsupported-platform__description,
+.unsupported-platform__progress {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  max-width: 600px;
 }
 
-a {
-  color: #4caf50;
+.unsupported-platform__link {
+  color: #007bff;
   text-decoration: underline;
+  font-weight: 600;
 }
 
-.store-buttons {
+.unsupported-platform__stores {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 30px;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
 }
 
-.store-buttons img {
+.unsupported-platform__badge {
+  width: 200px;
   height: 60px;
-  cursor: pointer;
 }

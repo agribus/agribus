@@ -15,14 +15,14 @@ lychee_client/
 ├── tsconfig.json                     # Shared TypeScript config
 ├── angular.json                      # Angular workspace config
 ├── src/                              # Application-level entry points
-│   └── app/                          # Web frontend (Angular standalone app) 
+│   └── app/                          # Web frontend (Angular standalone app)
 │   │   ├── components /
-│   │   ├── directives /       
+│   │   ├── directives /
 │   │   ├── guards /
-│   │   ├── intefaces / 
-│   │   ├── pipes / 
-│   │   ├── services / 
-│   │   └── utils /  
+│   │   ├── intefaces /
+│   │   ├── pipes /
+│   │   ├── services /
+│   │   └── utils /
 │   └── environments /                  # Env config for Angular (dev, prod)
 │       ├── environment.production.ts   # Production environment settings
 │       └── environment.ts              # Base environment config (used for switching)

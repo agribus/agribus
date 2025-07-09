@@ -7,8 +7,10 @@
   },
   "pages": {
     "unsupported-platform": {
-      "title": "Cette application est actuellement réservée au mobile",
-      "description": "Nous travaillons sur une version pour ordinateur de bureau. Pour l'instant, l'application n'est disponible que sur les appareils mobiles."
+      "title": "Cette application est actuellement disponible uniquement sur mobile",
+      "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
+      "progress": "Vous pouvez suivre notre avancement",
+      "here": "ici"
     }
   }
 }
