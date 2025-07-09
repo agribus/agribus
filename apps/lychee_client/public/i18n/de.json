@@ -8,7 +8,9 @@
   "pages": {
     "unsupported-platform": {
       "title": "Diese App ist derzeit nur für Mobilgeräte verfügbar",
-      "description": "Wir arbeiten intensiv an einer Desktop-Version. Im Moment ist die Anwendung nur auf mobilen Geräten verfügbar."
+      "description": "Wir arbeiten intensiv an einer Desktop-Version. Derzeit ist die App nur auf mobilen Geräten verfügbar.",
+      "progress": "Du kannst unseren Fortschritt verfolgen",
+      "here": "hier"
     }
   }
 }

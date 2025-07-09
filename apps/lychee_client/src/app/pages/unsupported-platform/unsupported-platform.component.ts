@@ -1,34 +1,33 @@
-import { Component, inject, OnDestroy, signal } from "@angular/core";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { Subscription } from "rxjs";
+import { Component, DestroyRef, inject, signal } from "@angular/core";
 import { NgOptimizedImage } from "@angular/common";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-unsupported-platform",
+  standalone: true,
   imports: [TranslatePipe, NgOptimizedImage],
   templateUrl: "./unsupported-platform.component.html",
   styleUrl: "./unsupported-platform.component.scss",
 })
-export class UnsupportedPlatformComponent implements OnDestroy {
-  private translateService = inject(TranslateService);
-  private langChangeSub: Subscription;
+export class UnsupportedPlatformComponent {
+  private readonly translateService = inject(TranslateService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  public imageLang = signal<string>("");
+  /** Signal exposed for the image language (Google Play / App Store badges) */
+  public readonly imageLang = signal(this.formatLang(this.translateService.currentLang));
 
   constructor() {
-    this.setImageLang(this.translateService.currentLang);
-
-    this.langChangeSub = this.translateService.onLangChange.subscribe(event => {
-      this.setImageLang(event.lang);
-    });
+    // Subscribe to language changes and update imageLang signal accordingly
+    this.translateService.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(event => {
+        this.imageLang.set(this.formatLang(event.lang));
+      });
   }
 
-  private setImageLang(lang: string): void {
-    const mainLang = lang.split("-")[0].toUpperCase();
-    this.imageLang.set(mainLang);
-  }
-
-  ngOnDestroy() {
-    this.langChangeSub?.unsubscribe();
+  /** Extract the primary language code (e.g. 'fr-FR' => 'FR') */
+  private formatLang(lang: string): string {
+    return lang.split("-")[0].toUpperCase();
   }
 }
