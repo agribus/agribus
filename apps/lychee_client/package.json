@@ -9,7 +9,7 @@
     "test": "ng test",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .angular",
     "lint": "eslint . --max-warnings 0",
-    "format": "prettier --write \"**/*.{ts,tsx,md,json}\""
+    "format": "prettier --write \"**/*.{ts,html,scss,md,json}\""
   },
   "private": true,
   "dependencies": {
