@@ -1,0 +1,39 @@
+name: PR Preview Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - preprod
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    environment: preprod
+
+    steps:
+      - name: Cleanup preview container via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            PR=${{ github.event.pull_request.number }}
+            
+            echo "🧹 Removing lychee-pr-$PR container..."
+            docker rm -f lychee-pr-$PR || echo "Container already removed or does not exist"
+            
+            echo "🧼 Removing Docker image lychee:pr-$PR..."
+            docker rmi agribus/lychee:pr-$PR || echo "Image already removed or does not exist"
+
+      - name: Delete image tag on Docker Hub
+        run: |
+          PR=${{ github.event.pull_request.number }}
+          TAG="pr-$PR"
+
+          echo "🗑 Deleting tag $TAG from Docker Hub..."
+          curl -s -X DELETE \
+            -H "Authorization: JWT ${{ secrets.DOCKERHUB_TOKEN }} " \
+            https://hub.docker.com/v2/repositories/agribus/lychee/tags/$TAG/ || echo "Tag not found or already deleted"
