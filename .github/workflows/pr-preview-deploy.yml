@@ -2,8 +2,11 @@ name: PR Lychee Preview Deploy
 
 on:
   pull_request:
-    branches:
-      - preprod
+    branches: [preprod]
+    paths:
+      - 'apps/**'
+      - 'docker/Dockerfile.lychee'
+      - 'docker/Dockerfile.tomato'
 
 jobs:
   docker-build-and-push:
@@ -47,6 +50,10 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             PR=${{ needs.docker-build-and-push.outputs.pr_number }}
+            
+            if [ "$(docker ps -aq -f name=lychee-pr-$PR)" ]; then
+              docker rm -f lychee-pr-$PR
+            fi
             
             docker pull agribus/lychee:pr-$PR
             
