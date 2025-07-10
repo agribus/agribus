@@ -24,7 +24,8 @@ lychee_client/
 │   │   ├── services /
 │   │   └── utils /
 │   └── environments /                  # Env config for Angular (dev, prod)
-│       ├── environment.production.ts   # Production environment settings
+│       ├── environment.development.ts  # Development environment settings
+│       ├── environment.preprod.ts      # Preprod environment settings
 │       └── environment.ts              # Base environment config (used for switching)
 │
 └── dist/                      # Build outputs (gitignored)
