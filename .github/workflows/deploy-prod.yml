@@ -29,6 +29,7 @@ jobs:
       - name: Build Docker image Lychee
         run: |
           docker build \
+            --build-arg CONFIG=production \
             -t agribus/lychee:prod \
             -t agribus/lychee:${{ env.VERSION }} \
             -f ./docker/Dockerfile.lychee .
@@ -36,6 +37,7 @@ jobs:
       - name: Build Docker image Tomato
         run: |
           docker build \
+            --build-arg CONFIG=production \
             -t agribus/tomato:prod \
             -t agribus/tomato:${{ env.VERSION }} \
             -f ./docker/Dockerfile.tomato .
