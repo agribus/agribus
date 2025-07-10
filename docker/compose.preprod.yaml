@@ -46,10 +46,7 @@ services:
 
   lychee:
     container_name: lychee_client-preprod
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile.lychee
-      target: production
+    image: agribus/lychee:preprod
     expose:
       - "80"
     networks:
