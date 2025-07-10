@@ -1,4 +1,4 @@
-using Agribus.Core.Enums;
+using Agribus.Core.Domain.Enums;
 using Agribus.Core.Ports.Api.DTOs;
 using FluentValidation;
 
