@@ -1,5 +1,5 @@
-using Agribus.Core.Domain.AggregatesModels;
-using Agribus.Core.Enums;
+using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
+using Agribus.Core.Domain.Enums;
 using Agribus.Core.Ports.Api.DTOs;
 using Agribus.Core.Ports.Api.Validators;
 using FluentValidation;

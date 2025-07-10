@@ -1,4 +1,4 @@
-using Agribus.Core.Domain.AggregatesModels;
+using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 
 namespace Agribus.Core.Ports.Spi.Measurement;
 

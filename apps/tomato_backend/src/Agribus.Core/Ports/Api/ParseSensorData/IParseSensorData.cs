@@ -1,4 +1,4 @@
-using Agribus.Core.Domain.AggregatesModels;
+using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Ports.Api.DTOs;
 
 namespace Agribus.Core.Ports.Api.ParseSensorData;
