@@ -96,6 +96,8 @@ volumes:
     name: agribus-hot-potato-data-preprod
 
 networks:
+  proxy:
+    external: true
   agribus-network-preprod:
     name: agribus-network-preprod
     driver: bridge
