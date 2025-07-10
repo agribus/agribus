@@ -10,7 +10,7 @@ jobs:
     environment: preprod
     runs-on: ubuntu-latest
     outputs:
-      pr_number: ${{ steps.vars.outputs.PR_NUMBER }}
+      pr_number: ${{ steps.vars.outputs.pr_number }}
 
     steps:
       - name: Checkout PR branch
@@ -18,19 +18,20 @@ jobs:
 
       - name: Set PR variables
         id: vars
-        run: echo "PR_NUMBER=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+        run: |
+          echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
       - name: Build Docker image
         run: |
-          docker build -t agribus/lychee-pr-${{ steps.vars.outputs.PR_NUMBER }} -f ./docker/Dockerfile.lychee .
+          docker build -t agribus/lychee-pr-${{ steps.vars.outputs.pr_number }} -f ./docker/Dockerfile.lychee .
 
       - name: Push Docker image to registry
         run: |
-          docker tag agribus/lychee-pr-${{ steps.vars.outputs.PR_NUMBER }} agribus/lychee:pr-${{ steps.vars.outputs.PR_NUMBER }}
-          docker push agribus/lychee:pr-${{ steps.vars.outputs.PR_NUMBER }}
+          docker tag agribus/lychee-pr-${{ steps.vars.outputs.pr_number }} agribus/lychee:pr-${{ steps.vars.outputs.pr_number }}
+          docker push agribus/lychee:pr-${{ steps.vars.outputs.pr_number }}
 
   ssh-deploy:
     needs: docker-build-and-push
