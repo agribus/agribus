@@ -1,4 +1,4 @@
-using Agribus.Core.Domain.AggregatesModels;
+using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Ports.Spi.Measurement;
 using Agribus.InfluxDB.Mapping;
 using InfluxDB.Client;
