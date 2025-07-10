@@ -59,6 +59,7 @@ services:
       - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PREPROD}`)"
       - "traefik.http.routers.lychee.entrypoints=websecure"
       - "traefik.http.routers.lychee.tls=true"
+      - "traefik.http.routers.lychee.tls.certresolver=tmhttpchallenge"
       - "traefik.http.services.lychee.loadbalancer.server.port=80"
   
   tomato:
@@ -88,6 +89,7 @@ services:
       - "traefik.http.routers.tomato.rule=Host(`${DOMAIN_API_PREPROD}`)"
       - "traefik.http.routers.tomato.entrypoints=websecure"
       - "traefik.http.routers.tomato.tls=true"
+      - "traefik.http.routers.tomato.tls.certresolver=tmhttpchallenge"
       - "traefik.http.services.tomato.loadbalancer.server.port=5001"
 
 volumes:
