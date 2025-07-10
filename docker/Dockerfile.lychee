@@ -1,6 +1,8 @@
 # ---------- BUILD ----------
 FROM node:22-alpine AS build
 
+ARG CONFIG=production
+
 WORKDIR /app
 
 RUN npm install -g pnpm@latest \
@@ -10,7 +12,7 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/lychee_client ./apps/lychee_client
 
 RUN pnpm install
-RUN pnpm --filter lychee build
+RUN pnpm --filter lychee build --configuration=${CONFIG}
 
 # ---------- DEVELOPMENT ----------
 FROM build AS development

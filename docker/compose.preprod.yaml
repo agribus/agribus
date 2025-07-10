@@ -7,12 +7,10 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - agribus-network
+      - agribus-network-preprod
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER" ]
       interval: 10s
@@ -33,8 +31,6 @@ services:
       - --node-id=${INFLUXDB_NODE_ID}
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
-    ports:
-      - "8181:8181"
     volumes:
       - influxdb_data:/var/lib/influxdb3
     healthcheck:
@@ -43,74 +39,58 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - agribus-network
+      - agribus-network-preprod
     depends_on:
       postgres:
         condition: service_healthy
 
   lychee:
-    container_name: lychee_client-preprod
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile.lychee
-      target: production
+    container_name: lychee-client-preprod
+    image: agribus/lychee:preprod
     expose:
       - "80"
     networks:
-      - agribus-network
+      - agribus-network-preprod
+      - proxy
     environment:
       - NODE_ENV=production
-    depends_on:
-      - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PREPROD}`)"
-      - "traefik.http.routers.lychee.entrypoints=web"
-      - "traefik.http.services.lychee.loadbalancer.server.port=80"
-  
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.lychee-preprod.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee-preprod.entrypoints=websecure"
+      - "traefik.http.routers.lychee-preprod.tls=true"
+      - "traefik.http.routers.lychee-preprod.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.lychee-preprod.loadbalancer.server.port=80"
+
   tomato:
     container_name: tomato-backend-preprod
-    build:
-      context: ../apps/tomato_backend
-      dockerfile: ../../docker/Dockerfile.tomato
-    ports:
-      - "5001:5001"
+    image: agribus/tomato:preprod
+    expose:
+      - "5001"
     environment:
       - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:5001
-      - INFLUXDB__URL=http://hot-potato:8181
-      - ConnectionStrings__Postgres=Host=${POSTGRES_HOST_PREPROD};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
-      - DOTNET_RUNNING_IN_CONTAINER=true
+      - INFLUXDB__URL=http://hot-potato-preprod:8181
+      - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     restart: unless-stopped
     depends_on:
       postgres:
         condition: service_healthy
+      influxdb:
+        condition: service_healthy
     networks:
-      - agribus-network
+      - agribus-network-preprod
+      - proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.tomato.rule=Host(`${DOMAIN_API_PREPROD}`)"
-      - "traefik.http.routers.tomato.entrypoints=websecure"
-      - "traefik.http.routers.tomato.tls=true"
-      - "traefik.http.services.tomato.loadbalancer.server.port=5001"
-
-  proxy:
-    container_name: proxy-preprod
-    image: traefik:v2.7
-    restart: always
-    command:
-      - "--global.sendAnonymousUsage=false"
-      - "--providers.docker"
-      - "--providers.docker.exposedByDefault=false"
-      - "--entrypoints.web.address=:80"
-    ports:
-      - "80:80"
-      - "443:443"
-    networks:
-      - agribus-network
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.tomato-preprod.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.tomato-preprod.entrypoints=websecure"
+      - "traefik.http.routers.tomato-preprod.tls=true"
+      - "traefik.http.routers.tomato-preprod.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.tomato-preprod.loadbalancer.server.port=5001"
 
 volumes:
   postgres_data:
@@ -119,6 +99,8 @@ volumes:
     name: agribus-hot-potato-data-preprod
 
 networks:
-  agribus-network:
+  proxy:
+    external: true
+  agribus-network-preprod:
     name: agribus-network-preprod
     driver: bridge
