@@ -24,7 +24,7 @@ services:
     environment:
       - INFLUXDB_USER=${INFLUXDB_USER}
       - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
-      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN_PREPROD}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
     command:
       - influxdb3
       - serve
@@ -72,7 +72,7 @@ services:
       - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:5001
-      - INFLUXDB__URL=http://hot-potato-preprod:8181
+      - INFLUXDB__URL=http://hot-potato:8181
       - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - DOTNET_RUNNING_IN_CONTAINER=true
     restart: unless-stopped
