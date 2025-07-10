@@ -8,4 +8,6 @@ public class Sensor : BaseEntity
     public required string SourceAddress { get; set; }
     public required SensorModel SensorModel { get; set; }
     public required bool IsActive { get; set; }
+
+    protected Sensor() { }
 }
