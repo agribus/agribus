@@ -15,7 +15,6 @@
     <Using Include="Xunit" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Agribus.Api\Agribus.Api.csproj" />
     <ProjectReference Include="..\..\src\Agribus.Core\Agribus.Core.csproj" />
     <ProjectReference Include="..\..\src\Agribus.Application\Agribus.Application.csproj" />
   </ItemGroup>
