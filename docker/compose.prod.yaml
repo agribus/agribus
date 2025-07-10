@@ -7,8 +7,6 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -26,15 +24,13 @@ services:
     environment:
       - INFLUXDB_USER=${INFLUXDB_USER}
       - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
-      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN_PREPROD}
     command:
       - influxdb3
       - serve
       - --node-id=${INFLUXDB_NODE_ID}
       - --object-store=file
       - --data-dir=/var/lib/influxdb3
-    ports:
-      - "8181:8181"
     volumes:
       - influxdb_data:/var/lib/influxdb3
     healthcheck:
@@ -49,11 +45,8 @@ services:
         condition: service_healthy
 
   lychee:
-    container_name: lychee_client
-    build:
-      context: ../
-      dockerfile: docker/Dockerfile.lychee
-      target: production
+    container_name: lychee-client
+    image: agribus/lychee:prod
     expose:
       - "80"
     networks:
@@ -61,14 +54,44 @@ services:
       - proxy
     environment:
       - NODE_ENV=production
-    depends_on:
-      - reverse-proxy
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PROD}`)"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.lychee.rule=Host(`${PUBLIC_DOMAIN}`)"
       - "traefik.http.routers.lychee.entrypoints=websecure"
+      - "traefik.http.routers.lychee.tls=true"
       - "traefik.http.routers.lychee.tls.certresolver=tmhttpchallenge"
       - "traefik.http.services.lychee.loadbalancer.server.port=80"
+
+  tomato:
+    container_name: tomato-backend
+    image: agribus/tomato:prod
+    expose:
+      - "5001"
+    environment:
+      - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - INFLUXDB__URL=http://hot-potato-preprod:8181
+      - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - DOTNET_RUNNING_IN_CONTAINER=true
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      influxdb:
+        condition: service_healthy
+    networks:
+      - agribus-network
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.tomato.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.tomato.entrypoints=websecure"
+      - "traefik.http.routers.tomato.tls=true"
+      - "traefik.http.routers.tomato.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.tomato.loadbalancer.server.port=5001"
 
 volumes:
   postgres_data:
@@ -77,6 +100,8 @@ volumes:
     name: agribus-hot-potato-data
 
 networks:
+  proxy:
+    external: true
   agribus-network:
     name: agribus-network
     driver: bridge
