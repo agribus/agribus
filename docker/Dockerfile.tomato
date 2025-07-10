@@ -18,6 +18,8 @@ RUN groupadd -r agribusgroup && \
 
 # Set environment to listen on all interfaces
 ENV ASPNETCORE_URLS=http://0.0.0.0:5000
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="${PATH}:/root/.dotnet/tools"
 
 USER agribususer
 
