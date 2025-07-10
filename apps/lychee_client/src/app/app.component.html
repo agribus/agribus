@@ -1,4 +1,6 @@
 <tui-root>
   <router-outlet />
-  <app-hello-world />
+  @if (showNavbar) {
+    <app-nav-bar />
+  }
 </tui-root>
