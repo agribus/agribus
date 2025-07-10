@@ -45,7 +45,7 @@ services:
         condition: service_healthy
 
   lychee:
-    container_name: lychee_client-preprod
+    container_name: lychee-client-preprod
     image: agribus/lychee:preprod
     expose:
       - "80"
@@ -58,6 +58,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.lychee.rule=Host(`${DOMAIN_PREPROD}`)"
       - "traefik.http.routers.lychee.entrypoints=websecure"
+      - "traefik.http.routers.tomato.tls=true"
       - "traefik.http.services.lychee.loadbalancer.server.port=80"
   
   tomato:

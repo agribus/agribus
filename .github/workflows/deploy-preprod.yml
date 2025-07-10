@@ -52,12 +52,15 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             echo "==> Pull latest Docker images"
-            cd /srv/agribus-preprod  # chemin vers ton docker-compose.preprod.yaml
+            cd /srv/docker/agribus
+            
+            git fetch origin preprod
+            git checkout preprod
 
-            docker compose -f docker-compose.preprod.yaml pull
+            docker compose -f ./docker/compose.preprod.yaml pull
 
             echo "==> Restarting Preprod stack"
-            docker compose -f docker-compose.preprod.yaml down
-            docker compose -f docker-compose.preprod.yaml up -d --remove-orphans
+            docker compose -f ./docker/compose.preprod.yaml down
+            docker compose -f ./docker/compose.preprod.yaml --env-file .env up -d --remove-orphans 
 
             echo "✅ Preprod updated with image: preprod-${{ needs.build-and-push.outputs.short_sha }}"
