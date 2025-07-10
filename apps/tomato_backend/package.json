@@ -6,7 +6,7 @@
     "dev": "dotnet watch run",
     "lint": "dotnet csharpier check .",
     "format": "dotnet csharpier format .",
-    "test": "dotnet test --configuration Release --no-build",
+    "test": "dotnet test --configuration Release",
     "migrate:up": "dotnet ef database update --project ./src/Agribus.Postgres --startup-project ./src/Agribus.Postgres",
     "migrate:down": "dotnet ef database update 0 --project ./src/Agribus.Postgres --startup-project ./src/Agribus.Postgres",
     "migrate:list": "dotnet ef migrations list --project ./src/Agribus.Postgres --startup-project ./src/Agribus.Postgres"
