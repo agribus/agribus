@@ -6,6 +6,6 @@
     "dev": "dotnet watch run",
     "lint": "dotnet csharpier check .",
     "format": "dotnet csharpier format .",
-    "test": "dotnet test --configuration Release --no-build"
+    "test": "dotnet test --configuration Release"
   }
 }
