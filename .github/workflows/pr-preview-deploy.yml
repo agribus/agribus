@@ -54,6 +54,7 @@ jobs:
               --name lychee-pr-$PR \
               --network proxy \
               --label traefik.enable=true \
+              --label traefik.docker.network=proxy \
               --label "traefik.http.routers.pr-$PR.rule=Host(\"pr-$PR.agribus.fr\")" \
               --label traefik.http.routers.pr-$PR.entrypoints=websecure \
               --label traefik.http.routers.pr-$PR.tls=true \
