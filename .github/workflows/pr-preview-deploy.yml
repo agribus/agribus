@@ -6,8 +6,8 @@ on:
 
 jobs:
   docker-build-and-push:
-    environment: preprod
     runs-on: ubuntu-latest
+    environment: preprod
     outputs:
       pr_number: ${{ steps.vars.outputs.pr_number }}
 

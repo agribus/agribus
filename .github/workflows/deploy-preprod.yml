@@ -11,6 +11,7 @@ jobs:
   build-and-push:
     name: Build Docker Image
     runs-on: ubuntu-latest
+    environment: preprod
     outputs:
       short_sha: ${{ steps.vars.outputs.short_sha }}
 
@@ -51,6 +52,7 @@ jobs:
   deploy:
     name: Deploy docker-compose.preprod.yaml
     runs-on: ubuntu-latest
+    environment: preprod
     needs: build-and-push
 
     steps:
