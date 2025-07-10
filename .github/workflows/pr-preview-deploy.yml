@@ -5,37 +5,7 @@ on:
     branches: [preprod]
 
 jobs:
-  check-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      has_apps_changes: ${{ steps.check.outputs.has_apps_changes }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Fetch base branch
-        run: git fetch origin ${{ github.event.pull_request.base.ref }}
-
-      - id: check
-        run: |
-          echo "Comparing files changed between ${{ github.event.pull_request.base.ref }} and HEAD"
-          FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }} HEAD)
-          echo "Changed files:"
-          echo "$FILES"
-          
-          echo "has_apps_changes=false" >> $GITHUB_OUTPUT
-          for file in $FILES; do
-            if [[ "$file" == apps/* ]]; then
-              echo "has_apps_changes=true" >> $GITHUB_OUTPUT
-              break
-            fi
-          done
-
   docker-build-and-push:
-    needs: check-changes
-    if: needs.check-changes.outputs.has_apps_changes == 'true'
     environment: preprod
     runs-on: ubuntu-latest
     outputs:
