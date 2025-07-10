@@ -56,6 +56,7 @@ services:
       - NODE_ENV=production
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.lychee-preprod.rule=Host(`${DOMAIN_PREPROD}`)"
       - "traefik.http.routers.lychee-preprod.entrypoints=websecure"
       - "traefik.http.routers.lychee-preprod.tls=true"
@@ -86,6 +87,7 @@ services:
       - proxy
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
       - "traefik.http.routers.tomato-preprod.rule=Host(`${DOMAIN_API_PREPROD}`)"
       - "traefik.http.routers.tomato-preprod.entrypoints=websecure"
       - "traefik.http.routers.tomato-preprod.tls=true"
