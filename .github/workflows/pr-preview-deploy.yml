@@ -73,9 +73,21 @@ jobs:
             const url = `https://pr-${prNumber}.agribus.fr`;
             const body = `🚀 Preview deployed: [${url}](${url})`;
             
-            await github.rest.issues.createComment({
+            const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: prNumber,
-              body: body
             });
+            
+            const existingComment = comments.data.find(comment => comment.body.includes(url));
+            
+            if (!existingComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: body,
+              });
+            } else {
+              console.log("Preview URL already posted, skipping comment.");
+            }
