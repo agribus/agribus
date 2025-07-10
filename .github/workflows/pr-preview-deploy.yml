@@ -41,7 +41,7 @@ jobs:
       - name: Deploy to server via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_HOST }}
+          host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
@@ -56,6 +56,7 @@ jobs:
             --label traefik.enable=true \
             --label "traefik.http.routers.pr-$PR.rule=Host(\"pr-$PR.agribus.fr\")" \
             --label traefik.http.routers.pr-$PR.entrypoints=websecure \
+            --label traefik.http.routers.pr-$PR.tls=true \
             --label traefik.http.routers.pr-$PR.tls.certresolver=tmhttpchallenge \
             --label traefik.http.services.pr-$PR.loadbalancer.server.port=80 \
             agribus/lychee:pr-$PR
