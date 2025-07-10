@@ -60,13 +60,9 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            echo "==> Pull latest Docker images"
             cd /srv/docker/agribus
 
-            docker compose -f ./docker/compose.preprod.yaml pull
-
-            echo "==> Restarting Preprod stack"
-            docker compose -f ./docker/compose.preprod.yaml down
-            docker compose -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --remove-orphans 
+            echo "==> Pull & Restarting Preprod stack"
+            docker compose -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --pull always --remove-orphans
 
             echo "✅ Preprod updated with image: preprod-${{ needs.build-and-push.outputs.short_sha }}"

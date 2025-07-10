@@ -61,13 +61,9 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            echo "==> Pull latest Docker images"
             cd /srv/docker/agribus
 
-            docker compose -f ./docker/compose.prod.yaml pull
-
-            echo "==> Restarting Prod stack"
-            docker compose -f ./docker/compose.prod.yaml down
-            docker compose -f ./docker/compose.prod.yaml --env-file .env.prod up -d --remove-orphans 
+            echo "==> Pull & Restarting Prod stack"
+            docker compose -f ./docker/compose.prod.yaml --env-file .env.prod up -d --pull always --remove-orphans
 
             echo "✅ Prod updated with image: ${{ env.VERSION }}"
