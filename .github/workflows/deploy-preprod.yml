@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-and-push:
-    name: Build Frontend Docker Image
+    name: Build Docker Image
     runs-on: ubuntu-latest
     outputs:
       short_sha: ${{ steps.vars.outputs.short_sha }}
@@ -25,17 +25,26 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Build Docker image with dual tag
+      - name: Build Docker image Lychee
         run: |
           docker build \
             -t agribus/lychee:preprod \
             -t agribus/lychee:preprod-${{ steps.vars.outputs.short_sha }} \
             -f ./docker/Dockerfile.lychee .
 
+      - name: Build Docker image Tomato
+        run: |
+          docker build \
+            -t agribus/tomato:preprod \
+            -t agribus/tomato:preprod-${{ steps.vars.outputs.short_sha }} \
+            -f ./docker/Dockerfile.tomato .
+
       - name: Push Docker images
         run: |
           docker push agribus/lychee:preprod
-          docker push agribus/lychee:preprod-${{ steps.vars.outputs.short_sha }}
+          docker push agribus/lychee:preprod-${{ steps.vars.outputs.short_sha }}        
+          docker push agribus/tomato:preprod
+          docker push agribus/tomato:preprod-${{ steps.vars.outputs.short_sha }}
 
   deploy:
     name: Deploy docker-compose.preprod.yaml
@@ -53,9 +62,6 @@ jobs:
           script: |
             echo "==> Pull latest Docker images"
             cd /srv/docker/agribus
-            
-            git fetch origin preprod
-            git checkout preprod
 
             docker compose -f ./docker/compose.preprod.yaml pull
 

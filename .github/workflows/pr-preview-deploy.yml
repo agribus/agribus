@@ -61,7 +61,6 @@ jobs:
             --label traefik.http.services.pr-$PR.loadbalancer.server.port=80 \
             agribus/lychee:pr-$PR
 
-
       - name: Post preview URL as comment on PR
         uses: actions/github-script@v7
         with:

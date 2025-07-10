@@ -22,10 +22,10 @@ jobs:
           script: |
             PR=${{ github.event.pull_request.number }}
             
-            echo "🧹 Removing lychee-pr-$PR container..."
+            echo "Removing lychee-pr-$PR container..."
             docker rm -f lychee-pr-$PR || echo "Container already removed or does not exist"
             
-            echo "🧼 Removing Docker image lychee:pr-$PR..."
+            echo "Removing Docker image lychee:pr-$PR..."
             docker rmi agribus/lychee:pr-$PR || echo "Image already removed or does not exist"
 
       - name: Delete image tag on Docker Hub
@@ -33,7 +33,7 @@ jobs:
           PR=${{ github.event.pull_request.number }}
           TAG="pr-$PR"
 
-          echo "🗑 Deleting tag $TAG from Docker Hub..."
+          echo "Deleting tag $TAG from Docker Hub..."
           curl -s -X DELETE \
             -H "Authorization: JWT ${{ secrets.DOCKERHUB_TOKEN }} " \
             https://hub.docker.com/v2/repositories/agribus/lychee/tags/$TAG/ || echo "Tag not found or already deleted"

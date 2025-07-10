@@ -65,9 +65,7 @@ services:
   
   tomato:
     container_name: tomato-backend-preprod
-    build:
-      context: ../apps/tomato_backend
-      dockerfile: ../../docker/Dockerfile.tomato
+    image: agribus/tomato:preprod
     expose:
       - "5001"
     environment:
