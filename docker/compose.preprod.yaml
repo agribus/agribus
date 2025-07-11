@@ -1,5 +1,5 @@
 services:
-  postgres:
+  cold-potato-preprod:
     container_name: cold-potato-preprod
     image: postgres:17
     restart: unless-stopped
@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 3
 
-  influxdb:
+  hot-potato-preprod:
     container_name: hot-potato-preprod
     image: influxdb:3-core
     restart: unless-stopped
@@ -40,11 +40,8 @@ services:
       retries: 3
     networks:
       - agribus-network-preprod
-    depends_on:
-      postgres:
-        condition: service_healthy
 
-  lychee:
+  lychee-client-preprod:
     container_name: lychee-client-preprod
     image: agribus/lychee:preprod
     expose:
@@ -63,7 +60,7 @@ services:
       - "traefik.http.routers.lychee-preprod.tls.certresolver=tmhttpchallenge"
       - "traefik.http.services.lychee-preprod.loadbalancer.server.port=80"
 
-  tomato:
+  tomato-backend-preprod:
     container_name: tomato-backend-preprod
     image: agribus/tomato:preprod
     expose:
@@ -76,9 +73,9 @@ services:
       - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
     restart: unless-stopped
     depends_on:
-      postgres:
+      cold-potato-preprod:
         condition: service_healthy
-      influxdb:
+      hot-potato-preprod:
         condition: service_healthy
     networks:
       - agribus-network-preprod
