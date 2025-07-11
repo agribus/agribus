@@ -1,5 +1,5 @@
 services:
-  postgres:
+  cold-potato:
     container_name: cold-potato
     image: postgres:17
     restart: unless-stopped
@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 3
 
-  influxdb:
+  hot-potato:
     container_name: hot-potato
     image: influxdb:3-core
     restart: unless-stopped
@@ -40,9 +40,6 @@ services:
       retries: 3
     networks:
       - agribus-network
-    depends_on:
-      postgres:
-        condition: service_healthy
 
   lychee:
     container_name: lychee-client
@@ -77,9 +74,9 @@ services:
       - DOTNET_RUNNING_IN_CONTAINER=true
     restart: unless-stopped
     depends_on:
-      postgres:
+      cold-potato:
         condition: service_healthy
-      influxdb:
+      hot-potato:
         condition: service_healthy
     networks:
       - agribus-network
