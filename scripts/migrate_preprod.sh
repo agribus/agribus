@@ -5,7 +5,7 @@ export ConnectionStrings__Postgres=$(grep -E '^ConnectionStrings__Postgres=' .en
 
 export PATH="/usr/bin:/bin:/usr/local/bin"
 
-cd /srv/agribus || exit 1
+cd srv/docker/agribus || exit 1
 
 docker buildx build -f apps/tomato_backend/Dockerfile.migration -t agribus.migration apps/tomato_backend
 
