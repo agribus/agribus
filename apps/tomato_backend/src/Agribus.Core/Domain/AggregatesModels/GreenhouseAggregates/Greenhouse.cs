@@ -12,9 +12,5 @@ public class Greenhouse : BaseEntity
     public IReadOnlyCollection<Sensor> Sensors => _sensors.AsReadOnly();
     private readonly List<Sensor> _sensors = [];
 
-    // Uncomment to associate a User with the Greenhouse
-    // public Guid UserId { get; set; }
-    // public User? User { get; set; }
-
     protected Greenhouse() { }
 }

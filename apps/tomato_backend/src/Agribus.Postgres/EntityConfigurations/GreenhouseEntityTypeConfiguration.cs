@@ -16,9 +16,9 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
 
         greenhouseConfiguration.Property(g => g.Name).IsRequired().HasColumnType("varchar(100)");
 
-        greenhouseConfiguration.Property(g => g.Country).IsRequired().HasColumnType("varchar(100)");
+        // greenhouseConfiguration.Property(g => g.Country).IsRequired().HasColumnType("varchar(100)");
 
-        greenhouseConfiguration.Property(g => g.City).IsRequired().HasColumnType("varchar(100)");
+        // greenhouseConfiguration.Property(g => g.City).IsRequired().HasColumnType("varchar(100)");
 
         // Configure the one-to-many relationship with Sensors
         greenhouseConfiguration
@@ -27,7 +27,6 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
             .HasForeignKey(s => s.Id) // Assuming Sensor has GreenhouseId property
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Configure the one-to-many relationship with Crops
         greenhouseConfiguration
             .Property(g => g.Crops)
             .HasColumnType("jsonb")
