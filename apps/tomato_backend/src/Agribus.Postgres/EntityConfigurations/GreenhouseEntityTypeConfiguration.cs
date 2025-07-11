@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenhouse>
@@ -34,7 +35,12 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
                 v => JsonSerializer.Serialize(v, JsonSerializerOptions.Default),
                 v =>
                     JsonSerializer.Deserialize<List<Crop>>(v, JsonSerializerOptions.Default)
-                    ?? new List<Crop>()
+                    ?? new List<Crop>(),
+                new ValueComparer<List<Crop>>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => c.ToList()
+                )
             );
 
         // Uncomment to configure the User relationship
