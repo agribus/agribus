@@ -8,7 +8,11 @@ public class AgribusDbContext(DbContextOptions<AgribusDbContext> options) : DbCo
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AgribusDbContext).Assembly);
 
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        foreach (
+            var entityType in modelBuilder
+                .Model.GetEntityTypes()
+                .Where(t => typeof(BaseEntity).IsAssignableFrom(t.ClrType))
+        )
         {
             modelBuilder
                 .Entity(entityType.ClrType)

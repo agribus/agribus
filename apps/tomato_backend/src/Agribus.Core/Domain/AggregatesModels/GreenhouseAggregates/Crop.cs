@@ -1,10 +1,8 @@
 namespace Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 
-public class Crop : BaseEntity
+public record Crop
 {
-    public string ScientificName { get; set; }
-    public string CommonName { get; set; }
-    public int Quantity { get; set; }
-
-    protected Crop() { }
+    public string ScientificName { get; init; }
+    public string CommonName { get; init; }
+    public int Quantity { get; init; }
 }

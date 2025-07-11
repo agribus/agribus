@@ -22,6 +22,55 @@ namespace Agribus.Postgres.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("city");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("country");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("Crops")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("crops");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modified")
+                        .HasDefaultValueSql("NOW()");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id")
+                        .HasName("pk_greenhouse");
+
+                    b.ToTable("greenhouse", null, t =>
+                        {
+                            t.HasComment("Greenhouses table stores information about greenhouse facilities.");
+                        });
+                });
+
             modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.SensorAggregates.Sensor", b =>
                 {
                     b.Property<Guid>("Id")
@@ -72,6 +121,21 @@ namespace Agribus.Postgres.Migrations
 
                             t.HasCheckConstraint("CK_Sensor_Model_IsValid", "sensor_model IN ('RuuviTag', 'RuuviTagPro', 'Unknown')");
                         });
+                });
+
+            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.SensorAggregates.Sensor", b =>
+                {
+                    b.HasOne("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", null)
+                        .WithMany("Sensors")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_sensor_greenhouse_id");
+                });
+
+            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", b =>
+                {
+                    b.Navigation("Sensors");
                 });
 #pragma warning restore 612, 618
         }
