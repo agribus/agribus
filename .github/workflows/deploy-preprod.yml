@@ -66,6 +66,6 @@ jobs:
             cd /srv/docker/agribus
 
             echo "==> Pull & Restarting Preprod stack"
-            docker compose -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --pull always --remove-orphans
+            docker compose -p agribus-preprod -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --pull always --remove-orphans
 
             echo "✅ Preprod updated with image: preprod-${{ needs.build-and-push.outputs.short_sha }}"
