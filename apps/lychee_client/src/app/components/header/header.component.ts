@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, inject, Input, OnInit, signal } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from "@taiga-ui/core";
@@ -36,19 +36,17 @@ export class HeaderComponent implements OnInit {
   private readonly platformService = inject(PlatformService);
   private readonly greenhouseService = inject(GreenhouseService);
   public readonly isMobile = this.platformService.isBrowser();
-  protected isSettingsHeader = false;
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
   public value: Greenhouse | null = this.greenhouses[0];
   public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
   public url: string = "/";
+  @Input() isSettingsHeader!: boolean;
 
   ngOnInit() {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
-        const url = event.urlAfterRedirects;
-        this.isSettingsHeader = url.includes("settings") || url.includes("form");
-        this.url = url;
+        this.url = event.urlAfterRedirects;
       });
   }
 
