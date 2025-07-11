@@ -3,6 +3,11 @@
     "hello-world": {
       "browser": "Bonjour du navigateur",
       "mobile": "Bonjour depuis un téléphone portable"
+    },
+    "header": {
+      "settings": "Paramètres",
+      "settings-account": "Paramètres du compte",
+      "greenhouse-form": "Paramètres de la serre"
     }
   },
   "pages": {

@@ -17,7 +17,12 @@ export class AppComponent {
   private readonly translateService = inject(TranslateService);
   public router = inject(Router);
   // List of routes without navbar
-  private hiddenNavbarRoutes = ["/unsupported-platform"];
+  private hiddenNavbarRoutes = [
+    "/unsupported-platform",
+    "/greenhouse-form",
+    "/settings-account",
+    "/settings",
+  ];
   constructor() {
     this.translateService.addLangs(["fr", "en", "de"]);
     this.translateService.setDefaultLang("fr");

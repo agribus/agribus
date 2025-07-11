@@ -25,7 +25,15 @@
     <tui-app-bar>
       <button title="Back" tuiAppBarBack tuiSlot="left" type="button" (click)="back()"></button>
 
-      <h3 tuiSlot="center">Test</h3>
+      <h3 tuiSlot="center">
+        @if (url === "/settings-account") {
+          {{ "components.header.settings-account" | translate }}
+        } @else if (url === "/greenhouse-form") {
+          {{ "components.header.greenhouse-form" | translate }}
+        } @else {
+          {{ "components.header.settings" | translate }}
+        }
+      </h3>
     </tui-app-bar>
   }
 }

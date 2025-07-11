@@ -8,6 +8,7 @@ import { filter } from "rxjs";
 import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
   selector: "app-header",
@@ -19,6 +20,7 @@ import { Greenhouse } from "@interfaces/greenhouse.interface";
     TuiDataListWrapper,
     TuiSelect,
     TuiTextfield,
+    TranslatePipe,
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
@@ -38,14 +40,16 @@ export class HeaderComponent implements OnInit {
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
   public value: Greenhouse | null = this.greenhouses[0];
   public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
+  public url: string = "/";
+
   ngOnInit() {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: NavigationEnd) => {
         const url = event.urlAfterRedirects;
-        this.isSettingsHeader = url.includes("settings");
+        this.isSettingsHeader = url.includes("settings") || url.includes("form");
+        this.url = url;
       });
-    console.log(this.maxLengthGreenhouse);
   }
 
   gotoPage(pageName: string) {
