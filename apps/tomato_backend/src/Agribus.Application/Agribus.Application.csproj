@@ -1,5 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <ProjectReference Include="../Agribus.Postgres/Agribus.Postgres.csproj" />
     <ProjectReference Include="..\Agribus.Core\Agribus.Core.csproj" />
     <ProjectReference Include="..\Agribus.InfluxDB\Agribus.InfluxDB.csproj" />
   </ItemGroup>
