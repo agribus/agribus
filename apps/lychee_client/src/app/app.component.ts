@@ -5,10 +5,11 @@ import { TranslateModule } from "@ngx-translate/core";
 import { TranslateService } from "@ngx-translate/core";
 import { NavBarComponent } from "@components/nav-bar/nav-bar.component";
 import { Router } from "@angular/router";
+import { HeaderComponent } from "@components/header/header.component";
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, TuiRoot, TranslateModule, NavBarComponent],
+  imports: [RouterOutlet, TuiRoot, TranslateModule, NavBarComponent, HeaderComponent],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })
