@@ -1,5 +1,5 @@
 <tui-root>
-  <app-header />
+  <app-header [isSettingsHeader]="showNavbar" />
   <router-outlet />
   @if (showNavbar) {
     <app-nav-bar />
