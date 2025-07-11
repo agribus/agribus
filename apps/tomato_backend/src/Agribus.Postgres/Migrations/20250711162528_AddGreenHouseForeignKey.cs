@@ -11,21 +11,21 @@ namespace Agribus.Postgres.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "fk_sensor_greenhouse_id",
-                table: "sensor");
+            migrationBuilder.DropForeignKey(name: "fk_sensor_greenhouse_id", table: "sensor");
 
             migrationBuilder.AddColumn<Guid>(
                 name: "geenhouse_id",
                 table: "sensor",
                 type: "uuid",
                 nullable: false,
-                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000")
+            );
 
             migrationBuilder.CreateIndex(
                 name: "ix_sensor_geenhouse_id",
                 table: "sensor",
-                column: "geenhouse_id");
+                column: "geenhouse_id"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "fk_sensor_greenhouse_geenhouse_id",
@@ -33,7 +33,8 @@ namespace Agribus.Postgres.Migrations
                 column: "geenhouse_id",
                 principalTable: "greenhouse",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
 
         /// <inheritdoc />
@@ -41,15 +42,12 @@ namespace Agribus.Postgres.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "fk_sensor_greenhouse_geenhouse_id",
-                table: "sensor");
+                table: "sensor"
+            );
 
-            migrationBuilder.DropIndex(
-                name: "ix_sensor_geenhouse_id",
-                table: "sensor");
+            migrationBuilder.DropIndex(name: "ix_sensor_geenhouse_id", table: "sensor");
 
-            migrationBuilder.DropColumn(
-                name: "geenhouse_id",
-                table: "sensor");
+            migrationBuilder.DropColumn(name: "geenhouse_id", table: "sensor");
 
             migrationBuilder.AddForeignKey(
                 name: "fk_sensor_greenhouse_id",
@@ -57,7 +55,8 @@ namespace Agribus.Postgres.Migrations
                 column: "id",
                 principalTable: "greenhouse",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
     }
 }
