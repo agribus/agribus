@@ -37,7 +37,6 @@ jobs:
       - name: Build Docker image Tomato
         run: |
           docker build \
-            --build-arg CONFIG=preprod \
             -t agribus/tomato:preprod \
             -t agribus/tomato:preprod-${{ steps.vars.outputs.short_sha }} \
             -f ./docker/Dockerfile.tomato .
