@@ -3,6 +3,11 @@
     "hello-world": {
       "browser": "Hello from browser",
       "mobile": "Hello from mobile device"
+    },
+    "header": {
+      "settings": "Settings",
+      "settings-account": "Account Settings",
+      "greenhouse-form": "Greenhouse Settings"
     }
   },
   "pages": {

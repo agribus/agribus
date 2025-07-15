@@ -1,0 +1,39 @@
+@if (isMobile) {
+  @if (!isSettingsHeader) {
+    <tui-app-bar>
+      <img src="/images/logo/agribus_transparent.png" tuiSlot="left" tuiIconButton alt="Agribus" />
+
+      <tui-textfield
+        tuiSlot="center"
+        tuiChevron
+        [tuiTextfieldCleaner]="false"
+        [tuiTextfieldAppearance]="'none'"
+        [style.width.rem]="maxLengthGreenhouse + 1.5">
+        <input tuiSelect [(ngModel)]="value" />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
+      </tui-textfield>
+
+      <button
+        iconStart="@tui.bell"
+        title="Notifications"
+        tuiIconButton
+        tuiSlot="right"
+        type="button"
+        (click)="gotoPage('settings')"></button>
+    </tui-app-bar>
+  } @else {
+    <tui-app-bar>
+      <button title="Back" tuiAppBarBack tuiSlot="left" type="button" (click)="back()"></button>
+
+      <h3 tuiSlot="center">
+        @if (url === "/settings-account") {
+          {{ "components.header.settings-account" | translate }}
+        } @else if (url === "/greenhouse-form") {
+          {{ "components.header.greenhouse-form" | translate }}
+        } @else {
+          {{ "components.header.settings" | translate }}
+        }
+      </h3>
+    </tui-app-bar>
+  }
+}
