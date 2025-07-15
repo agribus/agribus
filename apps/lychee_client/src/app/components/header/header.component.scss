@@ -1,0 +1,16 @@
+[tuiAppearance][data-focus="true"] {
+  outline: none;
+}
+
+tui-textfield {
+  max-width: 200px;
+  align-self: center;
+}
+
+input,
+input:focus {
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

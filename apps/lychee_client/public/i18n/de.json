@@ -3,6 +3,11 @@
     "hello-world": {
       "browser": "Hallo vom Browser",
       "mobile": "Hallo vom mobilen Gerät"
+    },
+    "header": {
+      "settings": "Einstellungen",
+      "settings-account": "Kontoeinstellungen",
+      "greenhouse-form": "Parameter des Gewächshauses"
     }
   },
   "pages": {
