@@ -2,31 +2,21 @@ import { AsyncPipe, NgOptimizedImage } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
-import {
-  TuiAppearance,
-  TuiButton,
-  TuiError,
-  TuiIcon,
-  TuiTextfield,
-  TuiTitle,
-} from "@taiga-ui/core";
+import { TuiButton, TuiError, TuiTextfield, TuiTitle } from "@taiga-ui/core";
 import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
-import { TuiCardLarge, TuiForm, TuiHeader } from "@taiga-ui/layout";
-import { TuiValidationError } from "@taiga-ui/cdk";
+import { TuiCardLarge, TuiHeader } from "@taiga-ui/layout";
+import { AuthLogin } from "@interfaces/auth.interface";
 
 @Component({
   selector: "app-login-form",
   imports: [
     AsyncPipe,
     ReactiveFormsModule,
-    TuiAppearance,
     TuiButton,
     TuiCardLarge,
     TuiError,
     TuiFieldErrorPipe,
-    TuiForm,
     TuiHeader,
-    TuiIcon,
     TuiTextfield,
     TuiTitle,
     NgOptimizedImage,
@@ -42,16 +32,21 @@ import { TuiValidationError } from "@taiga-ui/cdk";
   ],
 })
 export class LoginFormComponent {
-  protected enabled = false;
-
-  protected error = new TuiValidationError("test");
-
-  protected get computedError(): TuiValidationError | null {
-    return this.enabled ? this.error : null;
-  }
-
   protected readonly form = new FormGroup({
-    email: new FormControl("", Validators.required),
+    email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", Validators.required),
   });
+
+  protected onSubmit(event: MouseEvent) {
+    event.preventDefault();
+    if (this.form.valid) {
+      const loginInformation: AuthLogin = {
+        email: this.form.value.email ?? "",
+        password: this.form.value.password ?? "",
+      };
+      console.log(loginInformation);
+    }
+  }
+
+  protected readonly onsubmit = onsubmit;
 }
