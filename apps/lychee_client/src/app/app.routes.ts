@@ -6,6 +6,7 @@ import { DashboardComponent } from "@components/dashboard/dashboard.component";
 import { SettingsAccountComponent } from "@components/settings-account/settings-account.component";
 import { GreenhouseFormComponent } from "@components/greenhouse-form/greenhouse-form.component";
 import { SettingsComponent } from "@pages/settings/settings.component";
+import { LoginFormComponent } from "@components/login-form/login-form.component";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent, canActivate: [mobileOnlyGuard] },
@@ -14,6 +15,7 @@ export const routes: Routes = [
   { path: "greenhouse-form", component: GreenhouseFormComponent, canActivate: [mobileOnlyGuard] },
   { path: "settings", component: SettingsComponent, canActivate: [mobileOnlyGuard] },
   { path: "settings-account", component: SettingsAccountComponent, canActivate: [mobileOnlyGuard] },
+  { path: "login", component: LoginFormComponent, canActivate: [mobileOnlyGuard] },
 
   {
     path: "unsupported-platform",
