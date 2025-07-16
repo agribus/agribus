@@ -1,6 +1,6 @@
-using Agribus.Core.Enums;
+using Agribus.Core.Domain.Enums;
 
-namespace Agribus.Core.Domain.AggregatesModels;
+namespace Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 
 public class SensorMeasurement
 {

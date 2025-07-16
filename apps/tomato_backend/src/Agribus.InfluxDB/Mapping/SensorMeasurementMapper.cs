@@ -1,4 +1,4 @@
-using Agribus.Core.Domain.AggregatesModels;
+using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using InfluxDB.Client.Api.Domain;
 using InfluxDB.Client.Writes;
 
