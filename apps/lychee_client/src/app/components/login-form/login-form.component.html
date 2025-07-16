@@ -1,0 +1,50 @@
+<form class="form-block" tuiCardLarge [formGroup]="form">
+  <div class="logo-div">
+    <img ngSrc="/images/logo/agribus.png" alt="Logo d'Agribus" width="56" height="56" />
+  </div>
+  <header tuiHeader class="header">
+    <h3 tuiTitle class="page-title">
+      Connexion à votre compte
+      <span tuiSubtitle class="page-subtitle">
+        Bon retour parmi nous! Veuillez rentrez vos identifiant.
+      </span>
+    </h3>
+  </header>
+
+  <div class="form-input-div">
+    <div class="input-div">
+      <label for="email" tuiLabel>Mail</label>
+      <tui-textfield>
+        <input
+          class="form-input"
+          formControlName="email"
+          placeholder="Enter votre Mail"
+          type="email"
+          tuiTextfield />
+      </tui-textfield>
+      <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
+    </div>
+
+    <div class="input-div">
+      <label tuiLabel for="password">Mot de passe</label>
+      <tui-textfield>
+        <input
+          class="form-input"
+          formControlName="password"
+          placeholder="********"
+          type="password"
+          tuiTextfield />
+      </tui-textfield>
+      <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
+    </div>
+  </div>
+
+  <footer class="footer">
+    <button class="button" tuiButton type="submit">Connexion</button>
+
+    <p>
+      Pas de compte ?
+      <a href="./register">Inscrivez vous</a>
+    </p>
+  </footer>
+</form>
