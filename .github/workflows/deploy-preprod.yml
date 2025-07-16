@@ -64,8 +64,15 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd /srv/docker/agribus
+            
+            echo "==> Pull Preprod stack"
+            docker pull agribus/lychee:preprod
+            docker pull agribus/tomato:preprod
+            
+            echo "==> Migration"
+            ./scripts/migrate_preprod.sh
 
-            echo "==> Pull & Restarting Preprod stack"
-            docker compose -p agribus-preprod -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --pull always --remove-orphans
+            echo "==> Restarting Preprod stack"
+            docker compose -p agribus-preprod -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --remove-orphans
 
             echo "✅ Preprod updated with image: preprod-${{ needs.build-and-push.outputs.short_sha }}"

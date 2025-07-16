@@ -3,13 +3,9 @@ using System.Text.Json.Serialization;
 namespace Agribus.Core.Domain.Enums;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum SensorType
+public enum SensorModel
 {
-    Temperature,
-    Humidity,
-    Pressure,
-    Motion,
-    Rssi,
-    Neighbors,
+    RuuviTag,
+    RuuviTagPro,
     Unknown,
 }

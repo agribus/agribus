@@ -1,4 +1,4 @@
-﻿using Agribus.Core.Enums;
+﻿using Agribus.Core.Domain.Enums;
 using Agribus.Core.Ports.Api.DTOs;
 using Agribus.Core.Ports.Api.ParseSensorData;
 using Agribus.Core.Ports.Api.Validators;

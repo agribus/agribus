@@ -3,6 +3,7 @@ using System;
 using Agribus.Postgres.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Agribus.Postgres.Migrations
 {
     [DbContext(typeof(AgribusDbContext))]
-    partial class AgribusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250711154427_AddGreenhouseTable")]
+    partial class AddGreenhouseTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,10 +88,6 @@ namespace Agribus.Postgres.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<Guid>("GeenhouseId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("geenhouse_id");
-
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -119,9 +118,6 @@ namespace Agribus.Postgres.Migrations
                     b.HasKey("Id")
                         .HasName("pk_sensor");
 
-                    b.HasIndex("GeenhouseId")
-                        .HasDatabaseName("ix_sensor_geenhouse_id");
-
                     b.ToTable("sensor", null, t =>
                         {
                             t.HasComment("Sensors table stores information about sensors used in the system.");
@@ -132,14 +128,12 @@ namespace Agribus.Postgres.Migrations
 
             modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.SensorAggregates.Sensor", b =>
                 {
-                    b.HasOne("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", "Greenhouse")
+                    b.HasOne("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", null)
                         .WithMany("Sensors")
-                        .HasForeignKey("GeenhouseId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_sensor_greenhouse_geenhouse_id");
-
-                    b.Navigation("Greenhouse");
+                        .HasConstraintName("fk_sensor_greenhouse_id");
                 });
 
             modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", b =>
