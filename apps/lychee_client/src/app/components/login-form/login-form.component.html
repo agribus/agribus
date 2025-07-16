@@ -13,15 +13,16 @@
 
   <div class="form-input-div">
     <div class="input-div">
-      <label for="email" tuiLabel>Mail</label>
+      <label for="email" tuiLabel>Email</label>
       <tui-textfield>
         <input
           class="form-input"
           formControlName="email"
-          placeholder="Enter votre Mail"
+          placeholder="Enter votre Email"
           type="email"
           tuiTextfield />
       </tui-textfield>
+
       <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
     </div>
 
@@ -35,16 +36,17 @@
           type="password"
           tuiTextfield />
       </tui-textfield>
+
       <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
     </div>
   </div>
 
   <footer class="footer">
-    <button class="button" tuiButton type="submit">Connexion</button>
+    <button class="button" tuiButton (click)="onSubmit($event)">Connexion</button>
 
-    <p>
+    <p class="no-account">
       Pas de compte ?
-      <a href="./register">Inscrivez vous</a>
+      <a href="./register" class="register-link">Inscrivez vous</a>
     </p>
   </footer>
 </form>
