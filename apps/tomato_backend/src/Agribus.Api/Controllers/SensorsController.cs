@@ -1,21 +1,15 @@
+using Agribus.Api.Extensions;
 using Agribus.Application;
 using Agribus.Core.Ports.Api.DTOs;
-using Agribus.Core.Ports.Api.ParseSensorData;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
 
 [ApiController]
-public class SensorsController : ControllerBase
+public class SensorsController(ILogger<SensorsController> logger, SensorDataProcessor dataProcessor)
+    : ControllerBase
 {
-    private readonly ILogger<SensorsController> _logger;
-    private readonly SensorDataProcessor _dataProcessor;
-
-    public SensorsController(ILogger<SensorsController> logger, SensorDataProcessor dataProcessor)
-    {
-        _logger = logger;
-        _dataProcessor = dataProcessor;
-    }
+    private readonly ILogger<SensorsController> _logger = logger;
 
     [HttpPost(Endpoints.Sensors.PushSensorData)]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -25,7 +19,7 @@ public class SensorsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        await _dataProcessor.ProcessAsync(payload, cancellationToken);
+        await dataProcessor.ProcessAsync(payload, cancellationToken);
         return Created();
     }
 }
