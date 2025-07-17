@@ -1,1 +1,42 @@
-<p>greenhouse-form works!</p>
+<div class="page-container">
+  <tui-stepper [activeItemIndex]="step()">
+    <button tuiStep type="button" [disabled]="true">Détails</button>
+    <button tuiStep type="button" [disabled]="true">Légumes</button>
+    <button tuiStep type="button" [disabled]="true">Capteurs</button>
+  </tui-stepper>
+
+  @switch (step()) {
+    @case (0) {
+      <ng-container>
+        <form [formGroup]="step0">
+          <tui-textfield>
+            <label tuiLabel for="name">Nom de la serre</label>
+            <input formControlName="name" tuiTextfield placeholder="Serre 1" />
+          </tui-textfield>
+
+          <!--          <app-location-selector formControlName="location" />-->
+
+          <footer style="display: flex; justify-content: flex-end">
+            <button tuiButton appearance="primary" (click)="next()">Suivant</button>
+          </footer>
+        </form>
+      </ng-container>
+    }
+    @case (1) {
+      <ng-container>
+        <form [formGroup]="greenhouseForm">
+          <footer>
+            <button tuiButton appearance="primary" (click)="previous()">Retour</button>
+            <button
+              tuiButton
+              appearance="primary"
+              (click)="next()"
+              [disabled]="!isCurrentStepValid()">
+              Suivant
+            </button>
+          </footer>
+        </form>
+      </ng-container>
+    }
+  }
+</div>
