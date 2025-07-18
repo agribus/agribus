@@ -68,13 +68,16 @@
           </div>
           <div class="sensor-section-header">
             <div tuiSubtitle class="sensor-subtitle">
-              Vous pouvez scanner le QR Code ou saisir l'identifiant manuellement.
+              Vous pouvez scanner le QR Code sur votre capteur ou saisir l'identifiant manuellement.
             </div>
           </div>
           <ul>
             @for (sensor of sensors; track $index) {
               <li>
-                <tui-swipe-actions [style.--tui-item-size.px]="40" [style.--tui-action-gap]="10">
+                <tui-swipe-actions
+                  [style.--tui-item-size.px]="40"
+                  [style.--tui-action-gap]="10"
+                  [autoClose]="true">
                   <div tuiAppearance="floating" tuiCardLarge tuiCell>
                     <tui-avatar appearance="primary" [src]="'@tui.cpu'" />
                     <div tuiTitle>

@@ -18,6 +18,9 @@
         "crops": "Cultures présentes",
         "sensors": "Capteurs connectés"
       },
+      "alert": {
+        "remove-sensor": "Suppression de "
+      },
       "sensor": "Capteur"
     },
     "ui": {
@@ -25,6 +28,10 @@
         "save": "Enregistrer",
         "next": "Suivant",
         "return": "Retour"
+      },
+      "alert": {
+        "info": "Information",
+        "error": "Erreur"
       }
     }
   },

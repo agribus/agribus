@@ -1,4 +1,4 @@
-import { Component, Inject } from "@angular/core";
+import { Component } from "@angular/core";
 import { ZXingScannerModule } from "@zxing/ngx-scanner";
 import { BarcodeFormat } from "@zxing/library";
 import { TuiDialogContext } from "@taiga-ui/core";
@@ -13,18 +13,9 @@ import { injectContext } from "@taiga-ui/polymorpheus";
 export class ScanQrCodeComponent {
   allowedFormats = [BarcodeFormat.QR_CODE];
 
-  public readonly context = injectContext<TuiDialogContext<number>>();
+  public readonly context = injectContext<TuiDialogContext<string>>();
 
   handleQrCodeResult(result: string): void {
-    console.log("QR Code Result:", result);
-    // Supposons que le QR code contient un chiffre
-    const number = parseInt(result, 10);
-    if (!isNaN(number)) {
-      console.log("Nombre détecté :", number);
-    } else {
-      console.warn("QR code ne contient pas un nombre valide");
-    }
-
-    this.context.completeWith(number);
+    this.context.completeWith(result);
   }
 }

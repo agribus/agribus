@@ -2,6 +2,7 @@ import { Component, inject, Injector, signal } from "@angular/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
+  TuiAlertService,
   TuiAppearance,
   TuiButton,
   TuiDialogContext,
@@ -16,9 +17,8 @@ import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.compo
 import { PolymorpheusComponent, PolymorpheusContent } from "@taiga-ui/polymorpheus";
 import { take } from "rxjs";
 import { Sensor } from "@interfaces/sensor.interface";
-import { TuiCardLarge, TuiCell, TuiItemGroup } from "@taiga-ui/layout";
-import { TuiSwipeActions } from "@taiga-ui/addon-mobile";
-import { AsyncPipe } from "@angular/common";
+import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
+import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobile";
 import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor-form-dialog.component";
 
 @Component({
@@ -42,8 +42,8 @@ import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor
     TuiCell,
     TuiSwipeActions,
     TuiTitle,
-    TuiItemGroup,
     TuiIcon,
+    TuiSwipeActionsAutoClose,
   ],
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
@@ -56,6 +56,7 @@ export class GreenhouseFormComponent {
   private readonly dialogs = inject(TuiDialogService);
   private readonly translate = inject(TranslateService);
   private injector = inject(Injector);
+  private readonly alerts = inject(TuiAlertService);
 
   public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
 
@@ -169,6 +170,16 @@ export class GreenhouseFormComponent {
 
   removeCapteur(index: number): void {
     console.log(index);
+    this.alerts
+      .open(
+        this.translate.instant(`components.greenhouse-form.alert.remove-sensor`) +
+          this.sensors[index].name,
+        {
+          appearance: "info",
+          label: this.translate.instant("components.ui.alert.info"),
+        }
+      )
+      .subscribe();
     this.sensors.splice(index, 1);
   }
 
