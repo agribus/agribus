@@ -1,8 +1,14 @@
 <div class="page-container">
   <tui-stepper [activeItemIndex]="step()">
-    <button tuiStep type="button" [disabled]="true">Détails</button>
-    <button tuiStep type="button" [disabled]="true">Légumes</button>
-    <button tuiStep type="button" [disabled]="true">Capteurs</button>
+    <button tuiStep type="button" [disabled]="true">
+      {{ "components.greenhouse-form.step-details" | translate }}
+    </button>
+    <button tuiStep type="button" [disabled]="true">
+      {{ "components.greenhouse-form.step-crops" | translate }}
+    </button>
+    <button tuiStep type="button" [disabled]="true">
+      {{ "components.greenhouse-form.step-sensors" | translate }}
+    </button>
   </tui-stepper>
 
   @switch (step()) {
@@ -17,26 +23,92 @@
           <!--          <app-location-selector formControlName="location" />-->
 
           <footer style="display: flex; justify-content: flex-end">
-            <button tuiButton appearance="primary" (click)="next()">Suivant</button>
+            <button tuiButton appearance="primary" (click)="next()">
+              {{ "components.greenhouse-form.next" | translate }}
+            </button>
           </footer>
         </form>
       </ng-container>
     }
     @case (1) {
       <ng-container>
-        <form [formGroup]="greenhouseForm">
+        <form [formGroup]="step1">
           <footer>
-            <button tuiButton appearance="primary" (click)="previous()">Retour</button>
+            <button tuiButton appearance="primary" (click)="previous()">
+              {{ "components.greenhouse-form.return" | translate }}
+            </button>
+            <button tuiButton appearance="primary" (click)="next()">Suivant</button>
+          </footer>
+        </form>
+      </ng-container>
+    }
+    @case (2) {
+      <ng-container>
+        <form [formGroup]="greenhouseForm">
+          <button
+            size="m"
+            tuiButton
+            type="button"
+            (click)="openScanQrCode(content, header, 'fullscreen')">
+            Show fullscreen
+          </button>
+
+          <ul>
+            @for (sensor of sensors; track $index) {
+              <li>
+                <tui-swipe-actions [style.--tui-item-size.px]="40" [style.--tui-action-gap]="10">
+                  <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                    <tui-avatar appearance="primary" [src]="'@tui.cpu'" />
+                    <div tuiTitle>
+                      <strong>{{ sensor.sourceAddress }}</strong>
+                      <div tuiSubtitle>{{ sensor.name }}</div>
+                    </div>
+                  </div>
+                  <button
+                    iconStart="@tui.pencil-line"
+                    size="m"
+                    tuiIconButton
+                    tuiSwipeAction
+                    (click)="onEdit(sensor)">
+                    Edit
+                  </button>
+
+                  <button
+                    appearance="secondary-destructive"
+                    iconStart="@tui.trash"
+                    size="m"
+                    tuiIconButton
+                    tuiSwipeAction
+                    type="button"
+                    (click)="removeCapteur($index)">
+                    Delete
+                  </button>
+                </tui-swipe-actions>
+              </li>
+            }
+          </ul>
+
+          <footer>
+            <button tuiButton appearance="primary" (click)="previous()">
+              {{ "components.greenhouse-form.return" | translate }}
+            </button>
             <button
               tuiButton
               appearance="primary"
               (click)="next()"
               [disabled]="!isCurrentStepValid()">
-              Suivant
+              {{ "components.greenhouse-form.next" | translate }}
             </button>
           </footer>
         </form>
       </ng-container>
     }
   }
+  <ng-template #content>
+    <app-scan-qr-code [formGroup]="step2" />
+  </ng-template>
+
+  <ng-template #header>
+    <p>{{ "components.greenhouse-form.dialog.title" | translate }}</p>
+  </ng-template>
 </div>

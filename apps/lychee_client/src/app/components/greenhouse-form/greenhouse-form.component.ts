@@ -1,11 +1,46 @@
 import { Component, inject, signal } from "@angular/core";
-import { TuiStepper } from "@taiga-ui/kit";
+import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TuiButton, TuiTextfield } from "@taiga-ui/core";
+import {
+  TuiAppearance,
+  TuiButton,
+  TuiDialogContext,
+  TuiDialogService,
+  TuiDialogSize,
+  TuiTextfield,
+  TuiTitle,
+} from "@taiga-ui/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
+import { PolymorpheusContent } from "@taiga-ui/polymorpheus";
+import { take } from "rxjs";
+import { Sensor } from "@interfaces/sensor.interface";
+import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
+import { TuiSwipeActions } from "@taiga-ui/addon-mobile";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "app-greenhouse-form",
-  imports: [TuiStepper, ReactiveFormsModule, TuiTextfield, TuiButton],
+  imports: [
+    TuiStepper,
+    ReactiveFormsModule,
+    TuiTextfield,
+    TuiButton,
+    TranslatePipe,
+    ScanQrCodeComponent,
+    TuiAvatar,
+    TuiAppearance,
+    TuiSwipeActions,
+    TuiCell,
+    TuiTitle,
+    TuiAppearance,
+    TuiAvatar,
+    TuiButton,
+    TuiCardLarge,
+    TuiCell,
+    TuiSwipeActions,
+    TuiTitle,
+  ],
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
 })
@@ -14,6 +49,10 @@ export class GreenhouseFormComponent {
 
   protected readonly greenhouseForm: FormGroup;
   private fb = inject(FormBuilder);
+  private readonly dialogs = inject(TuiDialogService);
+  private readonly translate = inject(TranslateService);
+
+  public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
 
   constructor() {
     this.greenhouseForm = this.fb.group({
@@ -64,5 +103,50 @@ export class GreenhouseFormComponent {
       default:
         return false;
     }
+  }
+
+  public openScanQrCode(
+    content: PolymorpheusContent<TuiDialogContext>,
+    header: PolymorpheusContent,
+    size: TuiDialogSize
+  ) {
+    this.dialogs
+      .open(content, {
+        header,
+        size,
+      })
+      .pipe(take(1))
+      .subscribe(result => {
+        this.addSensor(result);
+      });
+  }
+
+  public addSensor(sourceAddress: string | void): void {
+    if (!sourceAddress) return;
+
+    const exists = this.sensors.some(sensor => sensor.sourceAddress === sourceAddress);
+    if (exists) {
+      console.error(`Sensor with sourceAddress "${sourceAddress}" already exists.`);
+      return;
+    }
+
+    const sensorLabel = this.translate.instant("components.greenhouse-form.sensor");
+    const id = this.sensors.length + 1;
+
+    this.sensors.push({
+      id,
+      sourceAddress,
+      name: `${sensorLabel} ${id}`,
+    });
+  }
+
+  removeCapteur(index: number): void {
+    console.log(index);
+    this.sensors.splice(index, 1);
+  }
+
+  onEdit(sensor: Sensor): void {
+    // Optionnel : ouvrir un dialog pour modifier nom ou ID
+    console.log("Edit", sensor);
   }
 }

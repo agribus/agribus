@@ -8,6 +8,14 @@
       "settings": "Paramètres",
       "settings-account": "Paramètres du compte",
       "greenhouse-form": "Paramètres de la serre"
+    },
+    "greenhouse-form": {
+      "next": "Suivant",
+      "return": "Retour",
+      "dialog": {
+        "title": "Ajouter un capteur"
+      },
+      "sensor": "Capteur"
     }
   },
   "pages": {

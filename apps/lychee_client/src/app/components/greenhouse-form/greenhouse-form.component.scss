@@ -16,3 +16,22 @@ footer {
   display: flex;
   justify-content: space-between;
 }
+
+ul {
+  padding: 0;
+  li {
+    list-style: none;
+  }
+}
+
+[tuiCardLarge] {
+  margin: 1.5rem 1rem;
+}
+
+tui-swipe-actions {
+  margin: -1.5rem -1rem;
+}
+
+button[tuiSwipeAction] {
+  border-radius: 100%;
+}
