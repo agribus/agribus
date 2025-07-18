@@ -1,0 +1,63 @@
+using Agribus.Application.GreenhouseUsecases;
+using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
+using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
+using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
+using Agribus.Core.Ports.Spi.AuthContext;
+using Agribus.Core.Ports.Spi.GreenhouseContext;
+using NSubstitute;
+
+namespace Agribus.UnitTests.GreenhouseUsecase;
+
+public class GreenhouseUsecaseTests
+{
+    [Fact]
+    public async Task ShouldCreateGreenhouse_GivenValidInput()
+    {
+        // Given
+        var fakeUserId = Guid.NewGuid();
+        var authContext = Substitute.For<IAuthContextService>();
+        authContext.GetCurrentUserId().Returns(fakeUserId);
+
+        var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+
+        var dto = new CreateGreenhouseDto
+        {
+            Name = "Serre 01",
+            City = "Lyon",
+            Country = "France",
+            Crops = new List<Crop>
+            {
+                new()
+                {
+                    CommonName = "Y",
+                    ScientificName = "Y",
+                    Quantity = 3,
+                },
+                new()
+                {
+                    CommonName = "X",
+                    ScientificName = "X",
+                    Quantity = 2,
+                },
+            },
+            Sensors = new List<Sensor>(),
+        };
+
+        var expectedGreenhouse = dto.MapToGreenhouse();
+        greenhouseRepository
+            .AddAsync(Arg.Any<Greenhouse>(), fakeUserId, Arg.Any<CancellationToken>())
+            .Returns(callInfo => callInfo.Arg<Greenhouse>());
+
+        var usecase = new CreateGreenhouseUsecase(authContext, greenhouseRepository);
+
+        // When
+        var result = await usecase.Handle(dto, fakeUserId, CancellationToken.None);
+
+        // Then
+        Assert.NotNull(result);
+        Assert.Equal(dto.Name, result.Name);
+        Assert.Equal(dto.City, result.City);
+        Assert.Equal(dto.Country, result.Country);
+        Assert.Equal(dto.Crops.Count, result.Crops.Count);
+    }
+}
