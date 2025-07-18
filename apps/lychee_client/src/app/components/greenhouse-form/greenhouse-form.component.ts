@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, Injector, signal } from "@angular/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import {
@@ -12,12 +12,13 @@ import {
 } from "@taiga-ui/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
-import { PolymorpheusContent } from "@taiga-ui/polymorpheus";
+import { PolymorpheusComponent, PolymorpheusContent } from "@taiga-ui/polymorpheus";
 import { take } from "rxjs";
 import { Sensor } from "@interfaces/sensor.interface";
 import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
 import { TuiSwipeActions } from "@taiga-ui/addon-mobile";
 import { AsyncPipe } from "@angular/common";
+import { EditSensorDialogComponent } from "@components/edit-sensor-dialog/edit-sensor-dialog.component";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -51,6 +52,7 @@ export class GreenhouseFormComponent {
   private fb = inject(FormBuilder);
   private readonly dialogs = inject(TuiDialogService);
   private readonly translate = inject(TranslateService);
+  private injector = inject(Injector);
 
   public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
 
@@ -117,11 +119,11 @@ export class GreenhouseFormComponent {
       })
       .pipe(take(1))
       .subscribe(result => {
-        this.addSensor(result);
+        this.addSensor(result, null);
       });
   }
 
-  public addSensor(sourceAddress: string | void): void {
+  public addSensor(sourceAddress: string | void, name: string | null): void {
     if (!sourceAddress) return;
 
     const exists = this.sensors.some(sensor => sensor.sourceAddress === sourceAddress);
@@ -130,14 +132,36 @@ export class GreenhouseFormComponent {
       return;
     }
 
-    const sensorLabel = this.translate.instant("components.greenhouse-form.sensor");
     const id = this.sensors.length + 1;
+
+    if (!name) {
+      const sensorLabel = this.translate.instant("components.greenhouse-form.sensor");
+      name = `${sensorLabel} ${id}`;
+    }
 
     this.sensors.push({
       id,
       sourceAddress,
-      name: `${sensorLabel} ${id}`,
+      name: name,
     });
+  }
+
+  manualAddSensor(): void {
+    this.dialogs
+      .open(new PolymorpheusComponent(EditSensorDialogComponent, this.injector), {
+        data: {
+          sourceAddress: null,
+          name: null,
+        },
+        label: "Ajouter un capteur",
+        size: "fullscreen",
+        closeable: true,
+      })
+      .pipe(take(1))
+      .subscribe(result => {
+        const r = result as unknown as Sensor;
+        this.addSensor(r.sourceAddress, r.name);
+      });
   }
 
   removeCapteur(index: number): void {
@@ -146,7 +170,21 @@ export class GreenhouseFormComponent {
   }
 
   onEdit(sensor: Sensor): void {
-    // Optionnel : ouvrir un dialog pour modifier nom ou ID
-    console.log("Edit", sensor);
+    this.dialogs
+      .open(new PolymorpheusComponent(EditSensorDialogComponent, this.injector), {
+        data: {
+          sourceAddress: sensor.sourceAddress,
+          name: sensor.name,
+        },
+        label: "Modifier un capteur",
+        size: "fullscreen",
+        closeable: true,
+      })
+      .pipe(take(1))
+      .subscribe(result => {
+        const r = result as unknown as Sensor;
+        sensor.sourceAddress = r.sourceAddress;
+        sensor.name = r.name;
+      });
   }
 }

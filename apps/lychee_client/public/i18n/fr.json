@@ -10,12 +10,17 @@
       "greenhouse-form": "Paramètres de la serre"
     },
     "greenhouse-form": {
-      "next": "Suivant",
-      "return": "Retour",
       "dialog": {
         "title": "Ajouter un capteur"
       },
       "sensor": "Capteur"
+    },
+    "ui": {
+      "button": {
+        "save": "Enregistrer",
+        "next": "Suivant",
+        "return": "Retour"
+      }
     }
   },
   "pages": {

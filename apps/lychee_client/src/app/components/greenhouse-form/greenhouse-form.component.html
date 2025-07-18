@@ -24,7 +24,7 @@
 
           <footer style="display: flex; justify-content: flex-end">
             <button tuiButton appearance="primary" (click)="next()">
-              {{ "components.greenhouse-form.next" | translate }}
+              {{ "components.ui.button.next" | translate }}
             </button>
           </footer>
         </form>
@@ -35,9 +35,11 @@
         <form [formGroup]="step1">
           <footer>
             <button tuiButton appearance="primary" (click)="previous()">
-              {{ "components.greenhouse-form.return" | translate }}
+              {{ "components.ui.button.return" | translate }}
             </button>
-            <button tuiButton appearance="primary" (click)="next()">Suivant</button>
+            <button tuiButton appearance="primary" (click)="next()">
+              {{ "components.ui.button.next" | translate }}
+            </button>
           </footer>
         </form>
       </ng-container>
@@ -45,13 +47,16 @@
     @case (2) {
       <ng-container>
         <form [formGroup]="greenhouseForm">
-          <button
-            size="m"
-            tuiButton
-            type="button"
-            (click)="openScanQrCode(content, header, 'fullscreen')">
-            Show fullscreen
-          </button>
+          <div>
+            <button
+              size="m"
+              tuiButton
+              type="button"
+              (click)="openScanQrCode(content, header, 'fullscreen')">
+              Camera
+            </button>
+            <button size="m" tuiButton type="button" (click)="manualAddSensor()">Manual</button>
+          </div>
 
           <ul>
             @for (sensor of sensors; track $index) {
@@ -90,14 +95,14 @@
 
           <footer>
             <button tuiButton appearance="primary" (click)="previous()">
-              {{ "components.greenhouse-form.return" | translate }}
+              {{ "components.ui.button.return" | translate }}
             </button>
             <button
               tuiButton
               appearance="primary"
               (click)="next()"
               [disabled]="!isCurrentStepValid()">
-              {{ "components.greenhouse-form.next" | translate }}
+              {{ "components.ui.button.next" | translate }}
             </button>
           </footer>
         </form>
