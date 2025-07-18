@@ -35,3 +35,16 @@ tui-swipe-actions {
 button[tuiSwipeAction] {
   border-radius: 100%;
 }
+.sensor-button-group {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.compact-button {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+  min-height: 2.25rem;
+  border-radius: 0.5rem;
+  flex: 1;
+}

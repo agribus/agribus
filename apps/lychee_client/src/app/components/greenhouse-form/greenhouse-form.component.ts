@@ -7,6 +7,7 @@ import {
   TuiDialogContext,
   TuiDialogService,
   TuiDialogSize,
+  TuiIcon,
   TuiTextfield,
   TuiTitle,
 } from "@taiga-ui/core";
@@ -15,10 +16,10 @@ import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.compo
 import { PolymorpheusComponent, PolymorpheusContent } from "@taiga-ui/polymorpheus";
 import { take } from "rxjs";
 import { Sensor } from "@interfaces/sensor.interface";
-import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
+import { TuiCardLarge, TuiCell, TuiItemGroup } from "@taiga-ui/layout";
 import { TuiSwipeActions } from "@taiga-ui/addon-mobile";
 import { AsyncPipe } from "@angular/common";
-import { EditSensorDialogComponent } from "@components/edit-sensor-dialog/edit-sensor-dialog.component";
+import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor-form-dialog.component";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -41,6 +42,8 @@ import { EditSensorDialogComponent } from "@components/edit-sensor-dialog/edit-s
     TuiCell,
     TuiSwipeActions,
     TuiTitle,
+    TuiItemGroup,
+    TuiIcon,
   ],
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
@@ -148,7 +151,7 @@ export class GreenhouseFormComponent {
 
   manualAddSensor(): void {
     this.dialogs
-      .open(new PolymorpheusComponent(EditSensorDialogComponent, this.injector), {
+      .open(new PolymorpheusComponent(SensorFormDialogComponent, this.injector), {
         data: {
           sourceAddress: null,
           name: null,
@@ -171,7 +174,7 @@ export class GreenhouseFormComponent {
 
   onEdit(sensor: Sensor): void {
     this.dialogs
-      .open(new PolymorpheusComponent(EditSensorDialogComponent, this.injector), {
+      .open(new PolymorpheusComponent(SensorFormDialogComponent, this.injector), {
         data: {
           sourceAddress: sensor.sourceAddress,
           name: sensor.name,

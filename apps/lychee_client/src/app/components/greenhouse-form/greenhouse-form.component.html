@@ -1,13 +1,13 @@
 <div class="page-container">
   <tui-stepper [activeItemIndex]="step()">
     <button tuiStep type="button" [disabled]="true">
-      {{ "components.greenhouse-form.step-details" | translate }}
+      {{ "components.greenhouse-form.step.details" | translate }}
     </button>
     <button tuiStep type="button" [disabled]="true">
-      {{ "components.greenhouse-form.step-crops" | translate }}
+      {{ "components.greenhouse-form.step.crops" | translate }}
     </button>
     <button tuiStep type="button" [disabled]="true">
-      {{ "components.greenhouse-form.step-sensors" | translate }}
+      {{ "components.greenhouse-form.step.sensors" | translate }}
     </button>
   </tui-stepper>
 
@@ -47,17 +47,30 @@
     @case (2) {
       <ng-container>
         <form [formGroup]="greenhouseForm">
-          <div>
+          <div class="sensor-button-group">
             <button
-              size="m"
               tuiButton
               type="button"
+              appearance="primary"
+              class="compact-button"
               (click)="openScanQrCode(content, header, 'fullscreen')">
-              Camera
+              <tui-icon icon="@tui.camera" [style.height.rem]="1" />
             </button>
-            <button size="m" tuiButton type="button" (click)="manualAddSensor()">Manual</button>
-          </div>
 
+            <button
+              tuiButton
+              type="button"
+              appearance="primary"
+              class="compact-button"
+              (click)="manualAddSensor()">
+              <tui-icon icon="@tui.keyboard" [style.height.rem]="1" />
+            </button>
+          </div>
+          <div class="sensor-section-header">
+            <div tuiSubtitle class="sensor-subtitle">
+              Vous pouvez scanner le QR Code ou saisir l'identifiant manuellement.
+            </div>
+          </div>
           <ul>
             @for (sensor of sensors; track $index) {
               <li>

@@ -13,6 +13,11 @@
       "dialog": {
         "title": "Ajouter un capteur"
       },
+      "step": {
+        "details": "Identification de la serre",
+        "crops": "Cultures présentes",
+        "sensors": "Capteurs connectés"
+      },
       "sensor": "Capteur"
     },
     "ui": {

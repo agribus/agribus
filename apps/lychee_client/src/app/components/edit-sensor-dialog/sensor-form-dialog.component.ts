@@ -12,12 +12,12 @@ import { Sensor } from "@interfaces/sensor.interface";
 import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
-  selector: "app-edit-sensor-dialog",
+  selector: "app-sensor-form-dialog",
   imports: [ReactiveFormsModule, TuiButton, FormsModule, TuiTextfield, TranslatePipe],
-  templateUrl: "./edit-sensor-dialog.component.html",
-  styleUrl: "./edit-sensor-dialog.component.scss",
+  templateUrl: "./sensor-form-dialog.component.html",
+  styleUrl: "./sensor-form-dialog.component.scss",
 })
-export class EditSensorDialogComponent implements OnInit {
+export class SensorFormDialogComponent implements OnInit {
   private fb = inject(FormBuilder);
   public readonly context = injectContext<TuiDialogContext<Sensor, null>>();
 
