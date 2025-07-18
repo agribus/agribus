@@ -8,12 +8,9 @@ namespace Agribus.UnitTests.ProcessSensorData;
 
 public class ProcessSensorDataTests
 {
-    private readonly IParseSensorData _parser;
-
-    public ProcessSensorDataTests()
-    {
-        _parser = new ParseSensorData(new RawSensorPayloadValidator());
-    }
+    private readonly IParseSensorData _parser = new ParseSensorData(
+        new RawSensorPayloadValidator()
+    );
 
     [Theory]
     [InlineData("temperature", 22.5f, SensorType.Temperature)]
@@ -45,7 +42,6 @@ public class ProcessSensorDataTests
         );
     }
 
-    // TODO UNKNOWN TYPE SHOULD THROW
     [Fact]
     public async Task Should_ThrowValidationException_GivenInvalidPayload()
     {
