@@ -1,0 +1,88 @@
+<form class="form-block" tuiCardLarge [formGroup]="form">
+  <div class="logo-div">
+    <img ngSrc="/images/logo/agribus.png" alt="Logo d'Agribus" width="56" height="56" />
+  </div>
+  <header tuiHeader class="header">
+    <h3 tuiTitle class="page-title">
+      {{ "components.register-form.title" | translate }}
+      <span tuiSubtitle class="page-subtitle">
+        {{ "components.register-form.subtitle" | translate }}
+      </span>
+    </h3>
+  </header>
+
+  <div class="form-input-div">
+    <div class="input-div">
+      <label for="username" tuiLabel>{{ "components.register-form.nickname" | translate }}</label>
+      <tui-textfield>
+        <input
+          id="username"
+          class="form-input"
+          formControlName="username"
+          placeholder="{{ 'components.register-form.nickname-placeholder' | translate }}"
+          type="username"
+          tuiTextfield />
+      </tui-textfield>
+
+      <tui-error formControlName="username" [error]="[] | tuiFieldError | async" />
+    </div>
+
+    <div class="input-div">
+      <label for="email" tuiLabel>{{ "components.register-form.email" | translate }}</label>
+      <tui-textfield>
+        <input
+          id="email"
+          class="form-input"
+          formControlName="email"
+          placeholder="{{ 'components.register-form.email-placeholder' | translate }}"
+          type="text"
+          tuiTextfield />
+      </tui-textfield>
+
+      <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
+    </div>
+
+    <div class="input-div">
+      <label tuiLabel for="password">{{ "components.register-form.password" | translate }}</label>
+      <tui-textfield>
+        <input
+          id="password"
+          class="form-input"
+          formControlName="password"
+          placeholder="********"
+          type="password"
+          tuiTextfield />
+      </tui-textfield>
+
+      <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
+    </div>
+
+    <div class="input-div">
+      <label tuiLabel for="confirm-password">
+        {{ "components.register-form.confirm-password" | translate }}
+      </label>
+      <tui-textfield>
+        <input
+          id="confirm-password"
+          class="form-input"
+          formControlName="confirmPassword"
+          placeholder="********"
+          type="password"
+          tuiTextfield />
+      </tui-textfield>
+
+      <tui-error formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
+    </div>
+  </div>
+
+  <footer class="footer">
+    <button class="button" tuiButton (click)="onSubmit($event)">
+      {{ "components.register-form.register" | translate }}
+    </button>
+
+    <p class="already-account">
+      {{ "components.register-form.already-account" | translate }}
+      <a href="./login" class="link">{{ "components.register-form.sign-in" | translate }}</a>
+    </p>
+  </footer>
+</form>
