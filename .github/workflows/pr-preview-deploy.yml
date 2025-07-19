@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t agribus/lychee-pr-${{ steps.vars.outputs.pr_number }} -f ./docker/Dockerfile.lychee .
+          docker build --no-cache -t agribus/lychee-pr-${{ steps.vars.outputs.pr_number }} -f ./docker/Dockerfile.lychee .
 
       - name: Push Docker image to registry
         run: |
