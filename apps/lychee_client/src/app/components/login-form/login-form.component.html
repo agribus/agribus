@@ -4,22 +4,22 @@
   </div>
   <header tuiHeader class="header">
     <h3 tuiTitle class="page-title">
-      Connexion à votre compte
+      {{ "components.login-form.title" | translate }}
       <span tuiSubtitle class="page-subtitle">
-        Bon retour parmi nous! Veuillez rentrez vos identifiant.
+        {{ "components.login-form.subtitle" | translate }}
       </span>
     </h3>
   </header>
 
   <div class="form-input-div">
     <div class="input-div">
-      <label for="email" tuiLabel>Email</label>
+      <label for="email" tuiLabel>{{ "components.login-form.email" | translate }}</label>
       <tui-textfield>
         <input
           class="form-input"
           formControlName="email"
-          placeholder="Enter votre Email"
-          type="email"
+          placeholder="{{ 'components.login-form.email-placeholder' | translate }}"
+          type="text"
           tuiTextfield />
       </tui-textfield>
 
@@ -27,7 +27,7 @@
     </div>
 
     <div class="input-div">
-      <label tuiLabel for="password">Mot de passe</label>
+      <label tuiLabel for="password">{{ "components.login-form.password" | translate }}</label>
       <tui-textfield>
         <input
           class="form-input"
@@ -42,11 +42,22 @@
   </div>
 
   <footer class="footer">
-    <button class="button" tuiButton (click)="onSubmit($event)">Connexion</button>
+    <button class="button" tuiButton (click)="onSubmit($event)">
+      {{ "components.login-form.connection" | translate }}
+    </button>
 
-    <p class="no-account">
-      Pas de compte ?
-      <a href="./register" class="register-link">Inscrivez vous</a>
-    </p>
+    <div>
+      <p class="no-account">
+        {{ "components.login-form.no-account" | translate }}
+        <a href="./register" class="link">{{ "components.login-form.register" | translate }}</a>
+      </p>
+
+      <p class="no-account">
+        {{ "components.login-form.forgot-password" | translate }}
+        <a href="./forgot-password" class="link">
+          {{ "components.login-form.click-here" | translate }}
+        </a>
+      </p>
+    </div>
   </footer>
 </form>
