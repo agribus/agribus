@@ -1,7 +1,9 @@
 <button (click)="captureAndIdentify()">Identifier une plante</button>
 
-<ul>
-  <li *ngFor="let plant of identifiedPlants">
-    {{ plant.species.scientificName }} — {{ plant.species.commonNames[0] || "N/A" }}
-  </li>
-</ul>
+<div *ngFor="let plant of identifiedPlants">
+  <h4>{{ getCommonName(plant) }}</h4>
+  <p>
+    <em>{{ plant.species.scientificNameWithoutAuthor }}</em>
+  </p>
+  <p>Score: {{ plant.score | percent: "1.0-0" }}</p>
+</div>

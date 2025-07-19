@@ -1,27 +1,55 @@
 import { Component, inject } from "@angular/core";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { CropsService } from "@services/crops.service";
-import { Http } from "@capacitor-community/http";
+import { NgForOf, NgIf, PercentPipe } from "@angular/common";
+
 @Component({
   selector: "app-crops-capture",
-  imports: [],
+  imports: [NgIf, PercentPipe, NgForOf],
   templateUrl: "./crops-capture.component.html",
   styleUrl: "./crops-capture.component.scss",
 })
 export class CropsCaptureComponent {
   identifiedPlants: any[] = [];
   apiKey = "2b100QmmsiK4AzC4vTpJ7Ve";
+  commonName = "";
   private readonly cropsService = inject(CropsService);
 
   async captureAndIdentify() {
     const base64 = await this.takePicture();
-    try {
-      const res = await this.cropsService.identifyPlant(base64, this.apiKey);
-      this.identifiedPlants = res.results || [];
-      console.log("Pl@ntNet response:", res);
-    } catch (e) {
-      console.error("Erreur identification:", e);
-    }
+    this.cropsService.identifyPlant(base64, this.apiKey).subscribe({
+      next: (res: any) => {
+        this.identifiedPlants = res.results || [];
+
+        if (this.identifiedPlants.length > 0) {
+          this.identifiedPlants = (res.results || [])
+            .sort((a: any, b: any) => b.score - a.score)
+            .slice(0, 3);
+          const bestResult = this.identifiedPlants[0];
+
+          const commonNames = bestResult.species.commonNames || [];
+          const commonName =
+            commonNames.length > 0
+              ? commonNames[0]
+              : bestResult.species.scientificNameWithoutAuthor || "Nom non disponible";
+
+          console.log("Meilleure correspondance:", bestResult);
+          console.log("Nom commun:", commonName);
+
+          this.commonName = commonName;
+        }
+      },
+      error: err => {
+        console.error("Erreur identification:", err);
+      },
+    });
+  }
+
+  getCommonName(result: any): string {
+    const commonNames = result.species.commonNames || [];
+    return commonNames.length > 0
+      ? commonNames[0]
+      : result.species.scientificNameWithoutAuthor || "Nom non disponible";
   }
 
   async takePicture(): Promise<string> {
