@@ -39,7 +39,8 @@
       "subtitle": "Geben Sie Ihre E-Mail ein, um das Passwort zurückzusetzen",
       "email": "E-Mail",
       "email-placeholder": "Geben Sie Ihre E-Mail ein",
-      "send": "Senden"
+      "send": "Senden",
+      "connection-page": "Anmeldeseite"
     }
   },
   "pages": {

@@ -39,7 +39,8 @@
       "subtitle": "Enter your email to reset your password",
       "email": "Email",
       "email-placeholder": "Enter your email",
-      "send": "Send"
+      "send": "Send",
+      "connection-page": "Connection page"
     }
   },
   "pages": {
