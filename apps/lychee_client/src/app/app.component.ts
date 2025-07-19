@@ -22,6 +22,8 @@ export class AppComponent {
     "/greenhouse-form",
     "/settings-account",
     "/settings",
+    "/login",
+    "/register",
   ];
   constructor() {
     this.translateService.addLangs(["fr", "en", "de"]);
