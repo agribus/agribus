@@ -20,6 +20,7 @@ import { Sensor } from "@interfaces/sensor.interface";
 import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
 import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobile";
 import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor-form-dialog.component";
+import { CropsCaptureComponent } from "@components/crops-capture/crops-capture.component";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -44,6 +45,7 @@ import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor
     TuiTitle,
     TuiIcon,
     TuiSwipeActionsAutoClose,
+    CropsCaptureComponent,
   ],
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",

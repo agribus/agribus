@@ -33,6 +33,7 @@
     @case (1) {
       <ng-container>
         <form [formGroup]="step1">
+          <app-crops-capture />
           <footer>
             <button tuiButton appearance="primary" (click)="previous()">
               {{ "components.ui.button.return" | translate }}

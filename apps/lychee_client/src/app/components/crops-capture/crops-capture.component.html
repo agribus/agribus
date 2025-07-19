@@ -1,0 +1,7 @@
+<button (click)="captureAndIdentify()">Identifier une plante</button>
+
+<ul>
+  <li *ngFor="let plant of identifiedPlants">
+    {{ plant.species.scientificName }} — {{ plant.species.commonNames[0] || "N/A" }}
+  </li>
+</ul>
