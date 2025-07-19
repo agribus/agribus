@@ -5,12 +5,12 @@ import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs";
 
 @Component({
-  selector: "app-nav-bar",
+  selector: "app-navbar",
   imports: [TuiIcon, TuiSegmented],
-  templateUrl: "./nav-bar.component.html",
-  styleUrl: "./nav-bar.component.scss",
+  templateUrl: "./navbar.component.html",
+  styleUrl: "./navbar.component.scss",
 })
-export class NavBarComponent implements OnInit {
+export class NavbarComponent implements OnInit {
   private readonly router = inject(Router);
   protected activeIndex = 0;
 
