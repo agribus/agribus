@@ -8,6 +8,38 @@
       "settings": "Settings",
       "settings-account": "Account Settings",
       "greenhouse-form": "Greenhouse Settings"
+    },
+    "login-form": {
+      "title": "Log in to your account",
+      "subtitle": "Welcome back! Please enter your credentials.",
+      "email": "Email",
+      "email-placeholder": "Enter your email",
+      "password": "Password",
+      "connection": "Login",
+      "no-account": "No account?",
+      "register": "Sign up",
+      "forgot-password": "Forgot your password?",
+      "click-here": "Click here"
+    },
+    "register-form": {
+      "title": "Create your account",
+      "subtitle": "Welcome! Please enter your credentials.",
+      "nickname": "Username",
+      "nickname-placeholder": "Enter your username",
+      "email": "Email",
+      "email-placeholder": "Enter your email",
+      "password": "Password",
+      "confirm-password": "Confirm password",
+      "register": "Sign up",
+      "already-account": "Already have an account?",
+      "sign-in": "Sign in"
+    },
+    "forgot-password": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email to reset your password",
+      "email": "Email",
+      "email-placeholder": "Enter your email",
+      "send": "Send"
     }
   },
   "pages": {

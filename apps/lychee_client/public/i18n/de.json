@@ -8,6 +8,38 @@
       "settings": "Einstellungen",
       "settings-account": "Kontoeinstellungen",
       "greenhouse-form": "Parameter des Gewächshauses"
+    },
+    "login-form": {
+      "title": "Melden Sie sich bei Ihrem Konto an",
+      "subtitle": "Willkommen zurück! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "email": "E-Mail",
+      "email-placeholder": "Geben Sie Ihre E-Mail ein",
+      "password": "Passwort",
+      "connection": "Anmelden",
+      "no-account": "Noch kein Konto?",
+      "register": "Registrieren",
+      "forgot-password": "Passwort vergessen?",
+      "click-here": "Hier klicken"
+    },
+    "register-form": {
+      "title": "Erstellen Sie Ihr Konto",
+      "subtitle": "Willkommen! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "nickname": "Benutzername",
+      "nickname-placeholder": "Geben Sie Ihren Benutzernamen ein",
+      "email": "E-Mail",
+      "email-placeholder": "Geben Sie Ihre E-Mail ein",
+      "password": "Passwort",
+      "confirm-password": "Passwort bestätigen",
+      "register": "Registrieren",
+      "already-account": "Sie haben bereits ein Konto?",
+      "sign-in": "Anmelden"
+    },
+    "forgot-password": {
+      "title": "Passwort vergessen",
+      "subtitle": "Geben Sie Ihre E-Mail ein, um das Passwort zurückzusetzen",
+      "email": "E-Mail",
+      "email-placeholder": "Geben Sie Ihre E-Mail ein",
+      "send": "Senden"
     }
   },
   "pages": {
