@@ -3,9 +3,9 @@ import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslateService } from "@ngx-translate/core";
-import { NavbarComponent } from "@components/navbar/navbar.component";
+import { NavbarComponent } from "@components/ui/navbar/navbar.component";
 import { Router } from "@angular/router";
-import { HeaderComponent } from "@components/header/header.component";
+import { HeaderComponent } from "@components/ui/header/header.component";
 
 @Component({
   selector: "app-root",

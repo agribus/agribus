@@ -4,11 +4,6 @@
       "browser": "Bonjour du navigateur",
       "mobile": "Bonjour depuis un téléphone portable"
     },
-    "header": {
-      "settings": "Paramètres",
-      "settings-account": "Paramètres du compte",
-      "greenhouse-form": "Paramètres de la serre"
-    },
     "greenhouse-form": {
       "dialog": {
         "title": "Ajouter un capteur"
@@ -24,14 +19,19 @@
       "sensor": "Capteur"
     },
     "ui": {
+      "alert": {
+        "info": "Information",
+        "error": "Erreur"
+      },
       "button": {
         "save": "Enregistrer",
         "next": "Suivant",
         "return": "Retour"
       },
-      "alert": {
-        "info": "Information",
-        "error": "Erreur"
+      "header": {
+        "settings": "Paramètres",
+        "settings-account": "Paramètres du compte",
+        "greenhouse-form": "Paramètres de la serre"
       }
     }
   },
