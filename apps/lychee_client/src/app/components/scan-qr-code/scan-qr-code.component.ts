@@ -11,8 +11,6 @@ import { PlatformService } from "@services/platform/platform.service";
   styleUrl: "./scan-qr-code.component.scss",
 })
 export class ScanQrCodeComponent implements OnInit {
-  public readonly context = injectContext<TuiDialogContext<string>>();
-
   private platformService = inject(PlatformService);
 
   ngOnInit() {
@@ -32,7 +30,7 @@ export class ScanQrCodeComponent implements OnInit {
       const { barcodes } = await BarcodeScanner.scan();
 
       if (barcodes.length > 0 && barcodes[0].rawValue) {
-        this.context.completeWith(barcodes[0].rawValue);
+        console.log(barcodes[0].rawValue);
       } else {
         this.error = "Aucun QR code détecté.";
       }
