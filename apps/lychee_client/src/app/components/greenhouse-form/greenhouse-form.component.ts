@@ -21,6 +21,7 @@ import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
 import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobile";
 import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor-form-dialog.component";
 import { CropsCaptureComponent } from "@components/crops-capture/crops-capture.component";
+import { CropsService } from "@services/crops.service";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -59,6 +60,7 @@ export class GreenhouseFormComponent {
   private readonly translate = inject(TranslateService);
   private injector = inject(Injector);
   private readonly alerts = inject(TuiAlertService);
+  private readonly cropsService = inject(CropsService);
 
   public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
   public isScanning = false;
@@ -116,6 +118,10 @@ export class GreenhouseFormComponent {
 
   public openScanQrCode() {
     this.isScanning = true;
+  }
+
+  public openScanCrop() {
+    this.cropsService.captureAndIdentify();
   }
 
   public addSensor(sourceAddress: string | void, name: string | null): void {

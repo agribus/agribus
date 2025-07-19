@@ -33,7 +33,25 @@
     @case (1) {
       <ng-container>
         <form [formGroup]="step1">
-          <app-crops-capture />
+          <div class="sensor-button-group">
+            <button
+              tuiButton
+              type="button"
+              appearance="primary"
+              class="compact-button"
+              (click)="openScanCrop()">
+              <tui-icon icon="@tui.camera" [style.height.rem]="1" />
+            </button>
+
+            <!--            <button-->
+            <!--              tuiButton-->
+            <!--              type="button"-->
+            <!--              appearance="primary"-->
+            <!--              class="compact-button"-->
+            <!--              (click)="manualAddSensor()">-->
+            <!--              <tui-icon icon="@tui.keyboard" [style.height.rem]="1" />-->
+            <!--            </button>-->
+          </div>
           <footer>
             <button tuiButton appearance="primary" (click)="previous()">
               {{ "components.ui.button.return" | translate }}
