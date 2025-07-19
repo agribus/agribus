@@ -1,7 +1,9 @@
 <tui-root>
-  <app-header [isSettingsHeader]="!showNavbar" />
-  <router-outlet />
-  @if (showNavbar) {
-    <app-navbar />
-  }
+  <div class="safe-wrapper">
+    <app-header [isSettingsHeader]="!showNavbar" />
+    <router-outlet />
+    @if (showNavbar) {
+      <app-navbar />
+    }
+  </div>
 </tui-root>
