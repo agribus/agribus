@@ -1,3 +1,9 @@
-<zxing-scanner
-  [formats]="allowedFormats"
-  (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+@if (isDesktop) {
+  <zxing-scanner
+    [formats]="allowedFormats"
+    (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+}
+
+@if (error) {
+  <p>{{ error }}</p>
+}
