@@ -1,5 +1,6 @@
 import { AsyncPipe, NgOptimizedImage } from "@angular/common";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
+import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
 import { TuiButton, TuiError, TuiTextfield, TuiTitle } from "@taiga-ui/core";
@@ -20,6 +21,7 @@ import { AuthLogin } from "@interfaces/auth.interface";
     TuiTextfield,
     TuiTitle,
     NgOptimizedImage,
+    TranslatePipe,
   ],
   templateUrl: "./login-form.component.html",
   styleUrl: "./login-form.component.scss",
@@ -32,10 +34,16 @@ import { AuthLogin } from "@interfaces/auth.interface";
   ],
 })
 export class LoginFormComponent {
+  private readonly translateService = inject(TranslateService);
   protected readonly form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
     password: new FormControl("", Validators.required),
   });
+  private readonly lang = localStorage.getItem("lang") || "fr";
+
+  constructor() {
+    this.translateService.use(this.lang);
+  }
 
   protected onSubmit(event: MouseEvent) {
     event.preventDefault();
@@ -47,6 +55,4 @@ export class LoginFormComponent {
       console.log(loginInformation);
     }
   }
-
-  protected readonly onsubmit = onsubmit;
 }
