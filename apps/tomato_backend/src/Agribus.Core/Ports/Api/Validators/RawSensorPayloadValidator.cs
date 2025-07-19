@@ -1,5 +1,5 @@
 using Agribus.Core.Domain.Enums;
-using Agribus.Core.Ports.Api.DTOs;
+using Agribus.Core.Ports.Api.ParseSensorData.DTOs;
 using FluentValidation;
 
 namespace Agribus.Core.Ports.Api.Validators;

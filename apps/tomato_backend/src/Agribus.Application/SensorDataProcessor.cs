@@ -1,5 +1,5 @@
-﻿using Agribus.Core.Ports.Api.DTOs;
-using Agribus.Core.Ports.Api.ParseSensorData;
+﻿using Agribus.Core.Ports.Api.ParseSensorData;
+using Agribus.Core.Ports.Api.ParseSensorData.DTOs;
 using Agribus.Core.Ports.Spi.Measurement;
 
 namespace Agribus.Application;
