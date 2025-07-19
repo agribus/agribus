@@ -1,0 +1,16 @@
+<tui-action-bar *tuiActionBar="openDevTools" size="s">
+  <button tuiButton appearance="primary" size="s" (click)="useLanguage('en')">en</button>
+  <button tuiButton appearance="accent" size="s" (click)="useLanguage('fr')">fr</button>
+  <button tuiButton appearance="neutral" size="s" (click)="useLanguage('de')">de</button>
+
+  <button iconStart="@tui.trash" tuiIconButton type="button" (click)="closeDevTools(false)">
+    Close
+  </button>
+  <button iconStart="@tui.brush-cleaning" tuiIconButton type="button" (click)="clear()"></button>
+
+  <div class="log-panel">
+    @for (log of logs(); track $index) {
+      <div>{{ log }}</div>
+    }
+  </div>
+</tui-action-bar>

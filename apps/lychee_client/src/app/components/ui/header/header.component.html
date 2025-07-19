@@ -13,6 +13,16 @@
         <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
       </tui-textfield>
 
+      @if (showDevTools) {
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
+      }
+
       <button
         iconStart="@tui.bell"
         title="Notifications"
@@ -34,6 +44,15 @@
           {{ "components.ui.header.settings" | translate }}
         }
       </h3>
+      @if (showDevTools) {
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
+      }
     </tui-app-bar>
   }
 }

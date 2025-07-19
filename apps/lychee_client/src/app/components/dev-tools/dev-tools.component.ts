@@ -1,0 +1,82 @@
+import { Component, inject, Injectable, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { TuiActionBar } from "@taiga-ui/kit";
+import { TuiButton } from "@taiga-ui/core";
+import { DevToolsService } from "@services/dev-tools/dev-tools.service";
+import { TranslateService } from "@ngx-translate/core";
+
+@Component({
+  selector: "app-dev-tools",
+  imports: [FormsModule, TuiActionBar, TuiButton],
+  templateUrl: "./dev-tools.component.html",
+  styleUrl: "./dev-tools.component.scss",
+})
+@Injectable({ providedIn: "root" })
+export class DevToolsComponent {
+  private devToolsService = inject(DevToolsService);
+  private readonly translateService = inject(TranslateService);
+
+  logs = signal<string[]>([]);
+
+  constructor() {
+    this.interceptConsole();
+  }
+
+  get openDevTools() {
+    return this.devToolsService.open();
+  }
+
+  closeDevTools(value: boolean) {
+    this.devToolsService.open.set(value);
+  }
+
+  useLanguage(language: string): void {
+    this.translateService.use(language);
+  }
+
+  private interceptConsole() {
+    const originalLog = console.log;
+    const originalError = console.error;
+    const originalWarn = console.warn;
+
+    console.log = (...args: any[]) => {
+      this.appendLog("LOG", args);
+      originalLog.apply(console, args);
+    };
+
+    console.error = (...args: any[]) => {
+      this.appendLog("ERROR", args);
+      originalError.apply(console, args);
+    };
+
+    console.warn = (...args: any[]) => {
+      this.appendLog("WARN", args);
+      originalWarn.apply(console, args);
+    };
+  }
+
+  private appendLog(type: string, args: any[]) {
+    const formatted = args.map(arg => {
+      if (arg instanceof Error) {
+        return `${arg.name}: ${arg.message}\n${arg.stack}`;
+      }
+
+      if (typeof arg === "object") {
+        try {
+          return JSON.stringify(arg, null, 2);
+        } catch {
+          return "[Circular Object]";
+        }
+      }
+
+      return String(arg);
+    });
+
+    const message = `[${type}] ${formatted.join(" ")}`;
+    this.logs.update(current => [...current, message]);
+  }
+
+  clear() {
+    this.logs.set([]);
+  }
+}
