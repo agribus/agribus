@@ -39,7 +39,8 @@
       "subtitle": "Entre votre email pour changer de mot de passe",
       "email": "Email",
       "email-placeholder": "Entrer votre email",
-      "send": "Envoyer"
+      "send": "Envoyer",
+      "connection-page": "Page de connexion"
     }
   },
   "pages": {
