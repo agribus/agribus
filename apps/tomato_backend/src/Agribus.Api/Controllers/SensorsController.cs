@@ -1,5 +1,6 @@
 using Agribus.Api.Extensions;
 using Agribus.Application;
+using Agribus.Application.SensorUsecases;
 using Agribus.Core.Ports.Api.ParseSensorData.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
