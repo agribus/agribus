@@ -53,7 +53,7 @@
               type="button"
               appearance="primary"
               class="compact-button"
-              (click)="openScanQrCode(content, header, 'fullscreen')">
+              (click)="openScanQrCode()">
               <tui-icon icon="@tui.camera" [style.height.rem]="1" />
             </button>
 
@@ -125,11 +125,8 @@
       </ng-container>
     }
   }
-  <ng-template #content>
-    <app-scan-qr-code [formGroup]="step2" />
-  </ng-template>
-
-  <ng-template #header>
-    <p>{{ "components.greenhouse-form.dialog.title" | translate }}</p>
-  </ng-template>
 </div>
+
+@if (isScanning) {
+  <app-scan-qr-code [formGroup]="step2" />
+}

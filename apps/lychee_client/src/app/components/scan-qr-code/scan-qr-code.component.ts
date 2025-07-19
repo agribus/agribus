@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { ZXingScannerModule } from "@zxing/ngx-scanner";
-import { BarcodeFormat } from "@zxing/library";
 import { TuiDialogContext } from "@taiga-ui/core";
 import { injectContext } from "@taiga-ui/polymorpheus";
 import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
@@ -8,27 +6,16 @@ import { PlatformService } from "@services/platform/platform.service";
 
 @Component({
   selector: "app-scan-qr-code",
-  imports: [ZXingScannerModule],
+  imports: [],
   templateUrl: "./scan-qr-code.component.html",
   styleUrl: "./scan-qr-code.component.scss",
 })
 export class ScanQrCodeComponent implements OnInit {
-  allowedFormats = [BarcodeFormat.QR_CODE];
-
   public readonly context = injectContext<TuiDialogContext<string>>();
 
-  handleQrCodeResult(result: string): void {
-    this.context.completeWith(result);
-  }
-
   private platformService = inject(PlatformService);
-  isDesktop = this.platformService.isBrowser();
 
   ngOnInit() {
-    if (this.isDesktop) {
-      BarcodeScanner.requestPermissions();
-    }
-
     if (this.platformService.isMobile()) {
       this.startScan();
     }
@@ -39,7 +26,7 @@ export class ScanQrCodeComponent implements OnInit {
 
   async startScan() {
     this.isScanning = true;
-    this.error = null;
+    this.error = "coucou";
 
     try {
       const { barcodes } = await BarcodeScanner.scan();

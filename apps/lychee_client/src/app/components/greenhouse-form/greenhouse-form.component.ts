@@ -59,6 +59,7 @@ export class GreenhouseFormComponent {
   private readonly alerts = inject(TuiAlertService);
 
   public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
+  public isScanning = false;
 
   constructor() {
     this.greenhouseForm = this.fb.group({
@@ -111,20 +112,8 @@ export class GreenhouseFormComponent {
     }
   }
 
-  public openScanQrCode(
-    content: PolymorpheusContent<TuiDialogContext>,
-    header: PolymorpheusContent,
-    size: TuiDialogSize
-  ) {
-    this.dialogs
-      .open(content, {
-        header,
-        size,
-      })
-      .pipe(take(1))
-      .subscribe(result => {
-        this.addSensor(result, null);
-      });
+  public openScanQrCode() {
+    this.isScanning = true;
   }
 
   public addSensor(sourceAddress: string | void, name: string | null): void {
