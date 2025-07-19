@@ -9,3 +9,7 @@ export interface AuthRegister {
   readonly password: string;
   readonly confirmPassword: string;
 }
+
+export interface ForgotPassword {
+  readonly email: string;
+}
