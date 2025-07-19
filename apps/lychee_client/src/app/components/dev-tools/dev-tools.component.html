@@ -3,14 +3,16 @@
   <button tuiButton appearance="accent" size="s" (click)="useLanguage('fr')">fr</button>
   <button tuiButton appearance="neutral" size="s" (click)="useLanguage('de')">de</button>
 
-  <button iconStart="@tui.trash" tuiIconButton type="button" (click)="closeDevTools(false)">
+  @if (isMobile) {
+    <button iconStart="@tui.brush-cleaning" tuiIconButton type="button" (click)="clear()"></button>
+
+    <div class="log-panel">
+      @for (log of logs(); track $index) {
+        <div>{{ log }}</div>
+      }
+    </div>
+  }
+  <button iconStart="@tui.x" tuiIconButton type="button" (click)="closeDevTools(false)">
     Close
   </button>
-  <button iconStart="@tui.brush-cleaning" tuiIconButton type="button" (click)="clear()"></button>
-
-  <div class="log-panel">
-    @for (log of logs(); track $index) {
-      <div>{{ log }}</div>
-    }
-  </div>
 </tui-action-bar>

@@ -4,6 +4,7 @@ import { TuiActionBar } from "@taiga-ui/kit";
 import { TuiButton } from "@taiga-ui/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { TranslateService } from "@ngx-translate/core";
+import { PlatformService } from "@services/platform/platform.service";
 
 @Component({
   selector: "app-dev-tools",
@@ -15,11 +16,15 @@ import { TranslateService } from "@ngx-translate/core";
 export class DevToolsComponent {
   private devToolsService = inject(DevToolsService);
   private readonly translateService = inject(TranslateService);
+  private readonly platformService = inject(PlatformService);
 
   logs = signal<string[]>([]);
+  isMobile = this.platformService.isMobile();
 
   constructor() {
-    this.interceptConsole();
+    if (this.isMobile) {
+      this.interceptConsole();
+    }
   }
 
   get openDevTools() {

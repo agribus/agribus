@@ -1,11 +1,11 @@
 import { Component, inject } from "@angular/core";
 import { Camera, CameraResultType } from "@capacitor/camera";
 import { CropsService } from "@services/crops.service";
-import { NgForOf, NgIf, PercentPipe } from "@angular/common";
+import { NgForOf, PercentPipe } from "@angular/common";
 
 @Component({
   selector: "app-crops-capture",
-  imports: [NgIf, PercentPipe, NgForOf],
+  imports: [PercentPipe, NgForOf],
   templateUrl: "./crops-capture.component.html",
   styleUrl: "./crops-capture.component.scss",
 })
@@ -33,9 +33,6 @@ export class CropsCaptureComponent {
               ? commonNames[0]
               : bestResult.species.scientificNameWithoutAuthor || "Nom non disponible";
 
-          console.log("Meilleure correspondance:", bestResult);
-          console.log("Nom commun:", commonName);
-
           this.commonName = commonName;
         }
       },
@@ -43,13 +40,6 @@ export class CropsCaptureComponent {
         console.error("Erreur identification:", err);
       },
     });
-  }
-
-  getCommonName(result: any): string {
-    const commonNames = result.species.commonNames || [];
-    return commonNames.length > 0
-      ? commonNames[0]
-      : result.species.scientificNameWithoutAuthor || "Nom non disponible";
   }
 
   async takePicture(): Promise<string> {

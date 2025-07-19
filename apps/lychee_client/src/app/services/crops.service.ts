@@ -22,12 +22,6 @@ export class CropsService {
     return this.http.post(this.apiUrl, formData, { params });
   }
 
-  getLanguages(apiKey: string) {
-    const params = new HttpParams().set("api-key", apiKey);
-
-    return this.http.get("https://my-api.plantnet.org/v2/languages", { params });
-  }
-
   private base64ToBlob(base64: string): Blob {
     const byteString = window.atob(base64);
     const arrayBuffer = new ArrayBuffer(byteString.length);
