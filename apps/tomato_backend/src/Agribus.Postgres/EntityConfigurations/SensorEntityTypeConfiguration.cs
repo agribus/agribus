@@ -24,7 +24,7 @@ public class SensorEntityTypeConfiguration : IEntityTypeConfiguration<Sensor>
             .IsRequired()
             .HasColumnType("varchar(50)");
         sensorConfiguration
-            .Property(sensor => sensor.SensorModel)
+            .Property(sensor => sensor.Model)
             .IsRequired()
             .HasColumnType("varchar(50)");
         sensorConfiguration.Property(sensor => sensor.IsActive).IsRequired().HasDefaultValue(true);
