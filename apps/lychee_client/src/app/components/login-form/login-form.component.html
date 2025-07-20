@@ -1,18 +1,6 @@
-<form class="form-block" tuiCardLarge [formGroup]="form">
-  <div class="logo-div">
-    <img ngSrc="/images/logo/agribus.png" alt="Logo d'Agribus" width="56" height="56" />
-  </div>
-  <header tuiHeader class="header">
-    <h3 tuiTitle class="page-title">
-      {{ "components.login-form.title" | translate }}
-      <span tuiSubtitle class="page-subtitle">
-        {{ "components.login-form.subtitle" | translate }}
-      </span>
-    </h3>
-  </header>
-
-  <div class="form-input-div">
-    <div class="input-div">
+<form class="form-block" [formGroup]="form">
+  <div class="form-input-container">
+    <div class="input-container">
       <label for="email" tuiLabel>{{ "components.login-form.email" | translate }}</label>
       <tui-textfield>
         <input
@@ -26,8 +14,14 @@
       <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
     </div>
 
-    <div class="input-div">
-      <label tuiLabel for="password">{{ "components.login-form.password" | translate }}</label>
+    <div class="input-container">
+      <div class="password-label-container">
+        <label tuiLabel for="password">{{ "components.login-form.password" | translate }}</label>
+        <a href="/forgot-password" class="link">
+          {{ "components.login-form.forgot-password" | translate }}
+        </a>
+      </div>
+
       <tui-textfield>
         <input
           class="form-input"
@@ -41,23 +35,7 @@
     </div>
   </div>
 
-  <footer class="footer">
-    <button class="button" tuiButton (click)="onSubmit($event)">
-      {{ "components.login-form.connection" | translate }}
-    </button>
-
-    <div>
-      <p class="no-account">
-        {{ "components.login-form.no-account" | translate }}
-        <a href="./register" class="link">{{ "components.login-form.register" | translate }}</a>
-      </p>
-
-      <p class="no-account">
-        {{ "components.login-form.forgot-password" | translate }}
-        <a href="./forgot-password" class="link">
-          {{ "components.login-form.click-here" | translate }}
-        </a>
-      </p>
-    </div>
-  </footer>
+  <button class="button" tuiButton (click)="onSubmit($event)">
+    {{ "components.login-form.connection" | translate }}
+  </button>
 </form>
