@@ -5,7 +5,6 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 
 import { TuiButton, TuiError, TuiTextfield } from "@taiga-ui/core";
 import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
-import { TuiCardLarge } from "@taiga-ui/layout";
 import { AuthLogin } from "@interfaces/auth.interface";
 
 @Component({
@@ -14,7 +13,6 @@ import { AuthLogin } from "@interfaces/auth.interface";
     AsyncPipe,
     ReactiveFormsModule,
     TuiButton,
-    TuiCardLarge,
     TuiError,
     TuiFieldErrorPipe,
     TuiTextfield,
