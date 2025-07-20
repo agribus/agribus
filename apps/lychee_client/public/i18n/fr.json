@@ -26,13 +26,10 @@
       "confirm-password": "Confirmer le mot de passe",
       "register": "Inscription"
     },
-    "forgot-password": {
-      "title": "Mot de passe oublié",
-      "subtitle": "Entre votre email pour changer de mot de passe",
+    "forgot-password-form": {
       "email": "Email",
       "email-placeholder": "Entrer votre email",
-      "send": "Envoyer",
-      "connection-page": "Page de connexion"
+      "send": "Envoyer"
     }
   },
   "pages": {
@@ -53,6 +50,11 @@
       "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
       "already-account": "Vous avez déjà un compte ?",
       "sign-in": "Connectez vous"
+    },
+    "forgot-password": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entre votre email pour changer de mot de passe",
+      "connection-page": "Page de connexion"
     }
   }
 }
