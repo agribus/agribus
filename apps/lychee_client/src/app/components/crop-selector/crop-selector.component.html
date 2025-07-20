@@ -1,0 +1,39 @@
+<ng-template [tuiSheetDialogOptions]="optionsSheet" [(tuiSheetDialog)]="openSheet">
+  <div>
+    @if (loading) {
+      <tui-loader size="m"></tui-loader>
+      <p>{{ "components.crop-selector.loading" | translate }}</p>
+    }
+    @if (!loading && !crops.length) {
+      <p>{{ "components.crop-selector.no" | translate }}</p>
+    }
+    @if (!loading && crops.length) {
+      <h3>{{ "components.crop-selector.identify-title" | translate }}</h3>
+      @for (crop of crops; track $index) {
+        <div>
+          <div class="w-100">
+            <label for="commonName{{ $index }}" class="label">Nom commun</label>
+            <tui-textfield tuiChevron>
+              <input tuiSelect [(ngModel)]="crop.commonName" />
+
+              <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="crop.commonNames" />
+            </tui-textfield>
+            <h4>{{ crop.scientificName }}</h4>
+            <div>
+              <progress max="100" tuiProgressBar [value]="crop.score * 100"></progress>
+              <span>{{ crop.score * 100 | number: "1.0-0" }}%</span>
+            </div>
+            <tui-textfield>
+              <label tuiLabel>{{ "components.crop-selector.enter-quantity" | translate }}</label>
+
+              <input tuiInputNumber [(ngModel)]="crop.quantity" [min]="0" [step]="1" />
+            </tui-textfield>
+          </div>
+          <button tuiButton appearance="primary" size="m" (click)="selectCrop(crop)">
+            {{ "components.crop-selector.select-crop" | translate }}
+          </button>
+        </div>
+      }
+    }
+  </div>
+</ng-template>

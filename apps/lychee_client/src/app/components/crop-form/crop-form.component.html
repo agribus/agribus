@@ -1,0 +1,33 @@
+<ng-template [(tuiSheetDialog)]="openSheet" [tuiSheetDialogOptions]="optionsSheet">
+  <form (ngSubmit)="submit()" class="form-grid">
+    <tui-textfield>
+      <label tuiLabel>Nom commun</label>
+      <input tuiTextfield name="commonName" [(ngModel)]="form.commonName" required />
+    </tui-textfield>
+
+    <tui-textfield>
+      <label tuiLabel>Nom scientifique</label>
+      <input tuiTextfield name="scientificName" [(ngModel)]="form.scientificName" />
+    </tui-textfield>
+
+    <tui-textfield>
+      <label tuiLabel>Date de plantation</label>
+      <input tuiInputDate name="plantingDate" [(ngModel)]="form.plantingDate" />
+      <tui-calendar *tuiTextfieldDropdown />
+    </tui-textfield>
+
+    <tui-textfield tuiTextfieldSize="m">
+      <label tuiLabel>Quantité</label>
+      <input tuiInputNumber name="quantity" [(ngModel)]="form.quantity" />
+    </tui-textfield>
+
+    <label tuiInputFiles>
+      <input accept="image/*" type="file" name="image" tuiInputFiles [(ngModel)]="form.image" />
+    </label>
+
+    <div class="flex justify-end gap-2 mt-4">
+      <button tuiButton type="button" (click)="reset()" appearance="secondary">Annuler</button>
+      <button tuiButton type="submit" appearance="primary">Ajouter</button>
+    </div>
+  </form>
+</ng-template>

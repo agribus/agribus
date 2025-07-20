@@ -1,0 +1,23 @@
+<ng-template [tuiSheetDialogOptions]="optionsSheet" [(tuiSheetDialog)]="openSheet">
+  <form [formGroup]="form" (ngSubmit)="save()" class="sensor-form">
+    <tui-textfield>
+      <label tuiLabel>
+        {{ "components.greenhouse.sensor-form.label.name" | translate }}
+      </label>
+      <input tuiTextfield formControlName="name" />
+    </tui-textfield>
+
+    <tui-textfield class="mt-4">
+      <label tuiLabel>
+        {{ "components.greenhouse.sensor-form.label.sourceAddress" | translate }}
+      </label>
+      <input tuiTextfield formControlName="sourceAddress" />
+    </tui-textfield>
+
+    <div class="footer">
+      <button tuiButton appearance="primary" type="submit" [disabled]="form.invalid">
+        {{ "components.ui.button.submit" | translate }}
+      </button>
+    </div>
+  </form>
+</ng-template>
