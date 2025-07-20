@@ -1,4 +1,5 @@
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
+using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 
 namespace Agribus.Postgres.Persistence.GreenhouseContext;
@@ -38,11 +39,13 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
         return true;
     }
 
-    public async Task<bool> UpdateAsync(Greenhouse greenhouse, CancellationToken cancellationToken)
+    public async Task<bool> UpdateAsync(
+        Greenhouse greenhouse,
+        UpdateGreenhouseDto dto,
+        CancellationToken cancellationToken
+    )
     {
-        context.Greenhouse.Update(greenhouse);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return true;
+        greenhouse.Update(dto);
+        return await context.SaveChangesAsync(cancellationToken) > 0;
     }
 }

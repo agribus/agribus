@@ -10,5 +10,4 @@ public class UpdateGreenhouseDto
 
     public string? City { get; init; }
     public List<Crop>? Crops { get; init; }
-    public List<UpdateSensorDto>? Sensors { get; set; }
 }
