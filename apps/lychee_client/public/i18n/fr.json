@@ -8,6 +8,28 @@
       "settings": "Paramètres",
       "settings-account": "Paramètres du compte",
       "greenhouse-form": "Paramètres de la serre"
+    },
+    "login-form": {
+      "email": "Email",
+      "email-placeholder": "Entrer votre email",
+      "password": "Mot de passe",
+      "connection": "Connexion",
+      "forgot-password": "Mot de passe oublié ?",
+      "click-here": "Cliquez ici"
+    },
+    "register-form": {
+      "nickname": "Pseudo",
+      "nickname-placeholder": "Entrer votre pseudo",
+      "email": "Email",
+      "email-placeholder": "Entrer votre email",
+      "password": "Mot de passe",
+      "confirm-password": "Confirmer le mot de passe",
+      "register": "Inscription"
+    },
+    "forgot-password-form": {
+      "email": "Email",
+      "email-placeholder": "Entrer votre email",
+      "send": "Envoyer"
     }
   },
   "pages": {
@@ -16,6 +38,23 @@
       "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
       "progress": "Vous pouvez suivre notre avancement",
       "here": "ici"
+    },
+    "login": {
+      "title": "Connexion à votre compte",
+      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
+      "no-account": "Pas de compte ?",
+      "register": "Inscrivez vous"
+    },
+    "register": {
+      "title": "Créer votre compte",
+      "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
+      "already-account": "Vous avez déjà un compte ?",
+      "sign-in": "Connectez vous"
+    },
+    "forgot-password": {
+      "title": "Mot de passe oublié",
+      "subtitle": "Entre votre email pour changer de mot de passe",
+      "connection-page": "Page de connexion"
     }
   }
 }
