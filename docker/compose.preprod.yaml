@@ -58,6 +58,10 @@ services:
       - "traefik.http.routers.lychee-preprod.entrypoints=websecure"
       - "traefik.http.routers.lychee-preprod.tls=true"
       - "traefik.http.routers.lychee-preprod.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.routers.lychee-preprod-http.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee-preprod-http.entrypoints=web"
+      - "traefik.http.routers.lychee-preprod-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.services.lychee-preprod.loadbalancer.server.port=80"
 
   tomato-backend-preprod:
