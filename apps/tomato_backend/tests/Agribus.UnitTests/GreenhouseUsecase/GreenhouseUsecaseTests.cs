@@ -94,9 +94,7 @@ public class GreenhouseUsecaseTests
     public async Task ShouldUpdateGreenhouse_GivenValidInput()
     {
         // Given
-        var greenhouseId = Guid.NewGuid();
         var userId = Guid.NewGuid();
-
         var originalGreenhouse = new Greenhouse
         {
             Name = "Old Name",
@@ -104,14 +102,12 @@ public class GreenhouseUsecaseTests
             Country = "Old Country",
             Crops = new List<Crop>(),
         };
-
         var dto = new UpdateGreenhouseDto
         {
             Name = "New Name",
             City = "New City",
             Country = "New Country",
             Crops = new List<Crop> { },
-            Sensors = new List<UpdateSensorDto>(),
         };
 
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
@@ -120,25 +116,26 @@ public class GreenhouseUsecaseTests
             .Returns(originalGreenhouse);
 
         greenhouseRepository
-            .UpdateAsync(Arg.Any<Greenhouse>(), Arg.Any<CancellationToken>())
+            .UpdateAsync(
+                Arg.Any<Greenhouse>(),
+                Arg.Any<UpdateGreenhouseDto>(),
+                Arg.Any<CancellationToken>()
+            )
             .Returns(true);
 
         var usecase = new UpdateGreenhouseUsecase(greenhouseRepository);
 
         // When
-        var result = await usecase.Handle(greenhouseId, userId, dto, CancellationToken.None);
+        var result = await usecase.Handle(
+            originalGreenhouse.Id,
+            userId,
+            dto,
+            CancellationToken.None
+        );
 
         // Then
         await greenhouseRepository
             .Received(1)
-            .UpdateAsync(
-                Arg.Is<Greenhouse>(g =>
-                    g.Id == greenhouseId
-                    && g.Name == dto.Name
-                    && g.City == dto.City
-                    && g.Country == dto.Country
-                ),
-                Arg.Any<CancellationToken>()
-            );
+            .UpdateAsync(originalGreenhouse, dto, CancellationToken.None);
     }
 }

@@ -30,6 +30,5 @@ public class Greenhouse : BaseEntity
         Country = dto.Country ?? Country;
         City = dto.City ?? City;
         Crops = dto.Crops ?? Crops;
-        // Todo: Sensors individual update
     }
 }

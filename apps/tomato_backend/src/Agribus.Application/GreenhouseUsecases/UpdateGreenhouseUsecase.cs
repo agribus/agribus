@@ -21,8 +21,6 @@ public class UpdateGreenhouseUsecase(
         if (greenhouse == null)
             return false;
 
-        greenhouse.Update(dto);
-
-        return await greenhouseRepository.UpdateAsync(greenhouse, cancellationToken);
+        return await greenhouseRepository.UpdateAsync(greenhouse, dto, cancellationToken);
     }
 }
