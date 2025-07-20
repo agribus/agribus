@@ -63,4 +63,35 @@ public class GreenhouseUsecaseTests
         Assert.Equal(dto.Crops.Count, result.Crops.Count);
         Assert.Equal(dto.Sensors.Count, result.Sensors.Count);
     }
+
+    [Fact]
+    public async Task ShouldDeleteGreenhouse_GivenValidInput()
+    {
+        // Given
+        var fakeUserId = Guid.NewGuid();
+        var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        var greenhouse = new Greenhouse
+        {
+            Name = "Test Greenhouse",
+            City = "Paris",
+            Country = "France",
+            Crops = new List<Crop>(),
+        };
+        greenhouseRepository
+            .Exists(greenhouse.Id, fakeUserId, CancellationToken.None)
+            .Returns(greenhouse);
+        greenhouseRepository
+            .DeleteAsync(greenhouse.Id, fakeUserId, CancellationToken.None)
+            .Returns(true);
+
+        var usecase = new DeleteGreenhouseUsecase(greenhouseRepository);
+
+        // When
+        await usecase.Handle(greenhouse.Id, fakeUserId, CancellationToken.None);
+
+        // Then
+        await greenhouseRepository
+            .Received(1)
+            .DeleteAsync(greenhouse.Id, fakeUserId, CancellationToken.None);
+    }
 }
