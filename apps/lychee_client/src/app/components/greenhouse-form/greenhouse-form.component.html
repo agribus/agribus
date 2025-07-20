@@ -100,7 +100,9 @@
             </li>
           }
         </ul>
-        <app-scan-qr-code />
+        @if (isScanning) {
+          <app-scan-qr-code />
+        }
 
         <app-sensor-form
           #sensorForm
