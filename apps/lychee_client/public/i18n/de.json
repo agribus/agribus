@@ -26,9 +26,7 @@
       "email-placeholder": "Geben Sie Ihre E-Mail ein",
       "password": "Passwort",
       "confirm-password": "Passwort bestätigen",
-      "register": "Registrieren",
-      "already-account": "Sie haben bereits ein Konto?",
-      "sign-in": "Anmelden"
+      "register": "Registrieren"
     },
     "forgot-password": {
       "title": "Passwort vergessen",
@@ -51,6 +49,12 @@
       "subtitle": "Willkommen zurück! Bitte geben Sie Ihre Anmeldedaten ein.",
       "no-account": "Noch kein Konto?",
       "register": "Registrieren"
+    },
+    "register": {
+      "title": "Erstellen Sie Ihr Konto",
+      "subtitle": "Willkommen! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "already-account": "Sie haben bereits ein Konto?",
+      "sign-in": "Anmelden"
     }
   }
 }

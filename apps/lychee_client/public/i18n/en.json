@@ -18,17 +18,13 @@
       "click-here": "Click here"
     },
     "register-form": {
-      "title": "Create your account",
-      "subtitle": "Welcome! Please enter your credentials.",
       "nickname": "Username",
       "nickname-placeholder": "Enter your username",
       "email": "Email",
       "email-placeholder": "Enter your email",
       "password": "Password",
       "confirm-password": "Confirm password",
-      "register": "Sign up",
-      "already-account": "Already have an account?",
-      "sign-in": "Sign in"
+      "register": "Sign up"
     },
     "forgot-password": {
       "title": "Forgot password",
@@ -51,6 +47,12 @@
       "subtitle": "Welcome back! Please enter your credentials.",
       "no-account": "No account?",
       "register": "Sign up"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Welcome! Please enter your credentials.",
+      "already-account": "Already have an account?",
+      "sign-in": "Sign in"
     }
   }
 }
