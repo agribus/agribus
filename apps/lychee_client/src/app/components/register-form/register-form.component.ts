@@ -1,11 +1,11 @@
-import { AsyncPipe, NgOptimizedImage } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TuiButton, TuiError, TuiTextfield, TuiTitle } from "@taiga-ui/core";
+import { TuiButton, TuiError, TuiTextfield } from "@taiga-ui/core";
 import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
-import { TuiCardLarge, TuiHeader } from "@taiga-ui/layout";
 import { AuthRegister } from "@interfaces/auth.interface";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
+import { TuiValidationError } from "@taiga-ui/cdk";
 
 @Component({
   selector: "app-register-form",
@@ -13,13 +13,9 @@ import { TranslateService, TranslatePipe } from "@ngx-translate/core";
     AsyncPipe,
     ReactiveFormsModule,
     TuiButton,
-    TuiCardLarge,
     TuiError,
     TuiFieldErrorPipe,
-    TuiHeader,
     TuiTextfield,
-    TuiTitle,
-    NgOptimizedImage,
     TranslatePipe,
   ],
   templateUrl: "./register-form.component.html",
@@ -41,22 +37,34 @@ export class RegisterFormComponent {
     confirmPassword: new FormControl("", [Validators.required]),
   });
 
-  private readonly lang = localStorage.getItem("lang") || "fr";
+  private readonly lang: string = localStorage.getItem("lang") || "fr";
 
+  protected confirmPasswordError: boolean = false;
   constructor() {
     this.translateService.use(this.lang);
   }
 
-  protected onSubmit(event: MouseEvent) {
+  protected error = new TuiValidationError("Les mots de passes ne correspondents pas");
+
+  protected get passwordError(): TuiValidationError | null {
+    return this.confirmPasswordError ? this.error : null;
+  }
+
+  protected onSubmit(event: MouseEvent): void {
     event.preventDefault();
     if (this.form.valid) {
-      const registerInformation: AuthRegister = {
-        username: this.form.value.username ?? "",
-        email: this.form.value.email ?? "",
-        password: this.form.value.password ?? "",
-        confirmPassword: this.form.value.confirmPassword ?? "",
-      };
-      console.log(registerInformation);
+      if (this.form.value.password !== this.form.value.confirmPassword) {
+        this.confirmPasswordError = true;
+      } else {
+        this.confirmPasswordError = false;
+        const registerInformation: AuthRegister = {
+          username: this.form.value.username ?? "",
+          email: this.form.value.email ?? "",
+          password: this.form.value.password ?? "",
+          confirmPassword: this.form.value.confirmPassword ?? "",
+        };
+        console.log(registerInformation);
+      }
     }
   }
 }

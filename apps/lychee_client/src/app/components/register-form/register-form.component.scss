@@ -4,44 +4,17 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 1rem;
+  padding: 0;
   gap: 1.5rem;
 }
 
-.logo-div {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 6.25rem;
-  width: 100%;
-}
-
-.header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.page-title {
-  text-align: center;
-  color: #374141;
-  font-weight: bold;
-  font-size: 1.2rem;
-}
-
-.page-subtitle {
-  color: #065132;
-  font-weight: bold;
-  font-size: 0.875rem;
-}
-
-.form-input-div {
+.form-input-container {
   display: flex;
   flex-direction: column;
   row-gap: 0.625rem;
 }
 
-.input-div {
+.input-container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -70,15 +43,4 @@
   width: 100%;
   height: 3.5rem;
   background: #065132;
-}
-
-.already-account {
-  color: #374141;
-  font-weight: bold;
-}
-
-.link {
-  color: #065132;
-  font-weight: bold;
-  text-decoration: none;
 }
