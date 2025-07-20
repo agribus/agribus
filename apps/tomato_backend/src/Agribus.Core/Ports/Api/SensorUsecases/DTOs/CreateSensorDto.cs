@@ -8,14 +8,16 @@ public class CreateSensorDto
     public required string Name { get; set; }
     public required string SourceAddress { get; set; }
     public SensorModel SensorModel { get; set; } = SensorModel.RuuviTagPro;
+    public bool? IsActive { get; set; }
 
     public Sensor MapToSensor()
     {
         var sensor = new Sensor()
         {
-            Name = this.Name,
-            SourceAddress = this.SourceAddress,
-            SensorModel = this.SensorModel,
+            Name = Name,
+            SourceAddress = SourceAddress,
+            SensorModel = SensorModel,
+            IsActive = IsActive,
         };
 
         return sensor;
