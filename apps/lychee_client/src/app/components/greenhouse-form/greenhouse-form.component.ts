@@ -1,27 +1,46 @@
 import { Component, inject, Injector, signal } from "@angular/core";
-import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import {
+  TuiAvatar,
+  TuiChevron,
+  TuiDataListWrapper,
+  TuiInputNumber,
+  TuiProgress,
+  TuiSelect,
+  TuiStepper,
+} from "@taiga-ui/kit";
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import {
   TuiAlertService,
   TuiAppearance,
   TuiButton,
-  TuiDialogContext,
   TuiDialogService,
-  TuiDialogSize,
   TuiIcon,
+  TuiLoader,
   TuiTextfield,
   TuiTitle,
 } from "@taiga-ui/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
-import { PolymorpheusComponent, PolymorpheusContent } from "@taiga-ui/polymorpheus";
+import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { take } from "rxjs";
 import { Sensor } from "@interfaces/sensor.interface";
-import { TuiCardLarge, TuiCell } from "@taiga-ui/layout";
-import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobile";
+import { TuiCard, TuiCardLarge, TuiCell } from "@taiga-ui/layout";
+import {
+  TuiSheetDialog,
+  TuiSheetDialogOptions,
+  TuiSwipeActions,
+  TuiSwipeActionsAutoClose,
+} from "@taiga-ui/addon-mobile";
 import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor-form-dialog.component";
-import { CropsCaptureComponent } from "@components/crops-capture/crops-capture.component";
 import { CropsService } from "@services/crops.service";
+import { Crop } from "@interfaces/crop.interface";
+import { DecimalPipe } from "@angular/common";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -46,15 +65,21 @@ import { CropsService } from "@services/crops.service";
     TuiTitle,
     TuiIcon,
     TuiSwipeActionsAutoClose,
-    CropsCaptureComponent,
+    TuiCard,
+    TuiSheetDialog,
+    DecimalPipe,
+    TuiChevron,
+    TuiSelect,
+    FormsModule,
+    TuiDataListWrapper,
+    TuiProgress,
+    TuiLoader,
+    TuiInputNumber,
   ],
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
 })
 export class GreenhouseFormComponent {
-  protected readonly step = signal(0);
-
-  protected readonly greenhouseForm: FormGroup;
   private fb = inject(FormBuilder);
   private readonly dialogs = inject(TuiDialogService);
   private readonly translate = inject(TranslateService);
@@ -62,8 +87,22 @@ export class GreenhouseFormComponent {
   private readonly alerts = inject(TuiAlertService);
   private readonly cropsService = inject(CropsService);
 
+  protected readonly step = signal(0);
+
+  protected readonly greenhouseForm: FormGroup;
+
   public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
+  public crops: Crop[] = [];
+  public selectedCrops: Crop[] = [];
+
   public isScanning = false;
+  public openSheet = false;
+  public loading = false;
+
+  protected readonly optionsSheet: Partial<TuiSheetDialogOptions> = {
+    label: "Résultats de l’identification",
+    closeable: false,
+  };
 
   constructor() {
     this.greenhouseForm = this.fb.group({
@@ -107,8 +146,6 @@ export class GreenhouseFormComponent {
           <boolean>this.greenhouseForm.get("name")?.valid &&
           <boolean>this.greenhouseForm.get("location")?.valid
         );
-      // case 1:
-      //   return this.selectedVegetables().length > 0;
       // case 2:
       //   return this.availableSensors().some(sensor => sensor.selected);
       default:
@@ -121,7 +158,40 @@ export class GreenhouseFormComponent {
   }
 
   public openScanCrop() {
-    this.cropsService.captureAndIdentify();
+    this.loading = true;
+    this.crops = [];
+    this.cropsService.identifyPlantFromCamera().subscribe({
+      next: (crops: Crop[]) => {
+        console.log("Plantes identifiées:", crops);
+        this.crops = crops;
+        this.loading = false;
+      },
+      error: error => {
+        console.error("Erreur identification:", error);
+        this.crops = [];
+        this.loading = false;
+      },
+    });
+    this.openSheet = true;
+  }
+
+  selectCrop(crop: Crop) {
+    this.selectedCrops.push(crop);
+    this.openSheet = false;
+  }
+
+  public removeCrop(index: number): void {
+    this.alerts
+      .open(
+        this.translate.instant(`components.greenhouse-form.alert.remove-crop`) +
+          this.selectedCrops[index].commonName,
+        {
+          appearance: "info",
+          label: this.translate.instant("components.ui.alert.info"),
+        }
+      )
+      .subscribe();
+    this.selectedCrops.splice(index, 1);
   }
 
   public addSensor(sourceAddress: string | void, name: string | null): void {
@@ -180,7 +250,7 @@ export class GreenhouseFormComponent {
     this.sensors.splice(index, 1);
   }
 
-  onEdit(sensor: Sensor): void {
+  onEditSensor(sensor: Sensor): void {
     this.dialogs
       .open(new PolymorpheusComponent(SensorFormDialogComponent, this.injector), {
         data: {

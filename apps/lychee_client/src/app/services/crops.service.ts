@@ -75,6 +75,7 @@ export class CropsService {
         commonNames: result.species.commonNames,
         scientificName: result.species.scientificNameWithoutAuthor,
         score: Math.round(result.score * 100) / 100,
+        quantity: 0,
         date_plantation: new Date(),
       }));
   }

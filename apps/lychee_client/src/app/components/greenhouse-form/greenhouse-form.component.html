@@ -52,6 +52,41 @@
             <!--              <tui-icon icon="@tui.keyboard" [style.height.rem]="1" />-->
             <!--            </button>-->
           </div>
+          @if (selectedCrops.length) {
+            <ul>
+              @for (crop of selectedCrops; track $index) {
+                <li>
+                  <tui-swipe-actions
+                    [style.--tui-item-size.px]="40"
+                    [style.--tui-action-gap]="10"
+                    [autoClose]="true">
+                    <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                      <tui-avatar appearance="primary" [src]="crop.imageUrl" />
+                      <div tuiTitle>
+                        <strong>{{ crop.commonName }}</strong>
+                        <div tuiSubtitle>{{ crop.scientificName }}</div>
+                      </div>
+                      <p style="margin: auto 0">{{ crop.quantity }}x</p>
+                    </div>
+                    <button iconStart="@tui.pencil-line" size="m" tuiIconButton tuiSwipeAction>
+                      Edit
+                    </button>
+
+                    <button
+                      appearance="secondary-destructive"
+                      iconStart="@tui.trash"
+                      size="m"
+                      tuiIconButton
+                      tuiSwipeAction
+                      type="button"
+                      (click)="removeCrop($index)">
+                      Delete Crop
+                    </button>
+                  </tui-swipe-actions>
+                </li>
+              }
+            </ul>
+          }
           <footer>
             <button tuiButton appearance="primary" (click)="previous()">
               {{ "components.ui.button.return" | translate }}
@@ -109,7 +144,7 @@
                     size="m"
                     tuiIconButton
                     tuiSwipeAction
-                    (click)="onEdit(sensor)">
+                    (click)="onEditSensor(sensor)">
                     Edit
                   </button>
 
@@ -149,3 +184,43 @@
 @if (isScanning) {
   <app-scan-qr-code [formGroup]="step2" />
 }
+
+<ng-template [tuiSheetDialogOptions]="optionsSheet" [(tuiSheetDialog)]="openSheet">
+  <div>
+    <h2>Nous avons trouvé ces plantes :</h2>
+
+    @if (loading) {
+      <tui-loader size="m"></tui-loader>
+      <p>Chargement en cours...</p>
+    }
+    @if (!loading && !crops.length) {
+      <p>Aucune correspondance trouvée.</p>
+    }
+
+    @for (crop of crops; track $index) {
+      <div>
+        <div class="w-100">
+          <label for="commonName{{ $index }}" class="label">Nom commun</label>
+          <tui-textfield tuiChevron>
+            <input tuiSelect [(ngModel)]="crop.commonName" />
+
+            <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="crop.commonNames" />
+          </tui-textfield>
+          <h4>{{ crop.scientificName }}</h4>
+          <div>
+            <progress max="100" tuiProgressBar [value]="crop.score * 100"></progress>
+            <span>{{ crop.score * 100 | number: "1.0-0" }}%</span>
+          </div>
+          <tui-textfield>
+            <label tuiLabel>Enter a quantity</label>
+
+            <input tuiInputNumber [(ngModel)]="crop.quantity" [min]="0" [step]="1" />
+          </tui-textfield>
+        </div>
+        <button tuiButton appearance="primary" size="m" (click)="selectCrop(crop)">
+          Sélectionner ce légume
+        </button>
+      </div>
+    }
+  </div>
+</ng-template>
