@@ -10,14 +10,10 @@
       "greenhouse-form": "Paramètres de la serre"
     },
     "login-form": {
-      "title": "Connexion à votre compte",
-      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
       "email": "Email",
       "email-placeholder": "Entrer votre email",
       "password": "Mot de passe",
       "connection": "Connexion",
-      "no-account": "Pas de compte ?",
-      "register": "Inscrivez vous",
       "forgot-password": "Mot de passe oublié ?",
       "click-here": "Cliquez ici"
     },
@@ -49,6 +45,12 @@
       "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
       "progress": "Vous pouvez suivre notre avancement",
       "here": "ici"
+    },
+    "login": {
+      "title": "Connexion à votre compte",
+      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
+      "no-account": "Pas de compte ?",
+      "register": "Inscrivez vous"
     }
   }
 }

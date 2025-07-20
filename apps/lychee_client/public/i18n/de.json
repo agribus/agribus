@@ -10,14 +10,10 @@
       "greenhouse-form": "Parameter des Gewächshauses"
     },
     "login-form": {
-      "title": "Melden Sie sich bei Ihrem Konto an",
-      "subtitle": "Willkommen zurück! Bitte geben Sie Ihre Anmeldedaten ein.",
       "email": "E-Mail",
       "email-placeholder": "Geben Sie Ihre E-Mail ein",
       "password": "Passwort",
       "connection": "Anmelden",
-      "no-account": "Noch kein Konto?",
-      "register": "Registrieren",
       "forgot-password": "Passwort vergessen?",
       "click-here": "Hier klicken"
     },
@@ -49,6 +45,12 @@
       "description": "Wir arbeiten intensiv an einer Desktop-Version. Derzeit ist die App nur auf mobilen Geräten verfügbar.",
       "progress": "Du kannst unseren Fortschritt verfolgen",
       "here": "hier"
+    },
+    "login": {
+      "title": "Melden Sie sich bei Ihrem Konto an",
+      "subtitle": "Willkommen zurück! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "no-account": "Noch kein Konto?",
+      "register": "Registrieren"
     }
   }
 }

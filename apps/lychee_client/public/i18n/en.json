@@ -10,14 +10,10 @@
       "greenhouse-form": "Greenhouse Settings"
     },
     "login-form": {
-      "title": "Log in to your account",
-      "subtitle": "Welcome back! Please enter your credentials.",
       "email": "Email",
       "email-placeholder": "Enter your email",
       "password": "Password",
       "connection": "Login",
-      "no-account": "No account?",
-      "register": "Sign up",
       "forgot-password": "Forgot your password?",
       "click-here": "Click here"
     },
@@ -49,6 +45,12 @@
       "description": "We're working hard on a desktop version. For now, the application is only available on mobile devices.",
       "progress": "You can follow our progress",
       "here": "here"
+    },
+    "login": {
+      "title": "Log in to your account",
+      "subtitle": "Welcome back! Please enter your credentials.",
+      "no-account": "No account?",
+      "register": "Sign up"
     }
   }
 }
