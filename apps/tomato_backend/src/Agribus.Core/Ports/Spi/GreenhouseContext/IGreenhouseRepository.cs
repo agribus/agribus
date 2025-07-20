@@ -10,4 +10,7 @@ public interface IGreenhouseRepository
         Guid userId,
         CancellationToken cancellationToken
     );
+
+    Task<Greenhouse?> Exists(Guid greenhouseId, Guid userId, CancellationToken none);
+    Task<bool> DeleteAsync(Guid greenhouseId, Guid userId, CancellationToken none);
 }
