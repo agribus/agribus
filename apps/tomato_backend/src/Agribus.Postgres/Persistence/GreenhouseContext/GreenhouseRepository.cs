@@ -30,18 +30,17 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
         return greenhouse;
     }
 
-    public async Task<bool> DeleteAsync(
-        Guid greenhouseId,
-        Guid userId,
-        CancellationToken cancellationToken
-    )
+    public async Task<bool> DeleteAsync(Greenhouse greenhouse, CancellationToken cancellationToken)
     {
-        var greenhouseExists = await Exists(greenhouseId, userId, cancellationToken);
+        context.Greenhouse.Remove(greenhouse);
+        await context.SaveChangesAsync(cancellationToken);
 
-        if (greenhouseExists == null)
-            return false;
+        return true;
+    }
 
-        context.Greenhouse.Remove(greenhouseExists);
+    public async Task<bool> UpdateAsync(Greenhouse greenhouse, CancellationToken cancellationToken)
+    {
+        context.Greenhouse.Update(greenhouse);
         await context.SaveChangesAsync(cancellationToken);
 
         return true;
