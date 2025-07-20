@@ -12,6 +12,7 @@ public static class ApplicationModule
         services.AddScoped<SensorDataProcessor, SensorDataProcessor>();
         services.AddScoped<ICreateGreenhouseUsecase, CreateGreenhouseUsecase>();
         services.AddScoped<IDeleteGreenhouseUsecase, DeleteGreenhouseUsecase>();
+        services.AddScoped<IUpdateGreenhouseUsecase, UpdateGreenhouseUsecase>();
 
         return services;
     }

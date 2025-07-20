@@ -12,5 +12,6 @@ public interface IGreenhouseRepository
     );
 
     Task<Greenhouse?> Exists(Guid greenhouseId, Guid userId, CancellationToken none);
-    Task<bool> DeleteAsync(Guid greenhouseId, Guid userId, CancellationToken none);
+    Task<bool> DeleteAsync(Greenhouse greenhouse, CancellationToken none);
+    Task<bool> UpdateAsync(Greenhouse greenhouse, CancellationToken cancellationToken);
 }

@@ -16,7 +16,7 @@ public class CreateSensorDto
         {
             Name = Name,
             SourceAddress = SourceAddress,
-            SensorModel = SensorModel,
+            Model = SensorModel,
             IsActive = IsActive,
         };
 
