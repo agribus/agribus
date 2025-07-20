@@ -12,8 +12,14 @@ public class Greenhouse : BaseEntity
     public IReadOnlyCollection<Sensor> Sensors => _sensors.AsReadOnly();
     private readonly List<Sensor> _sensors = [];
 
-    public void AddSensor(IEnumerable<Sensor> sensors)
+    public void AddSensors(IEnumerable<Sensor> sensors)
     {
-        _sensors.AddRange(sensors);
+        _sensors.AddRange(
+            sensors.Select(s =>
+            {
+                s.Greenhouse = this;
+                return s;
+            })
+        );
     }
 }

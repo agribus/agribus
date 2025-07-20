@@ -19,8 +19,8 @@ public static class Endpoints
     {
         private const string BasePath = $"{ApiBasePath}/greenhouses";
         public const string GetUserGreenhouses = $"{BasePath}";
-        public const string Create = $"{BasePath}/create";
-        public const string Delete = $"{BasePath}/{{id:guid}}";
-        public const string Update = $"{BasePath}/update/{{id:guid}}";
+        public const string CreateGreenhouse = $"{BasePath}";
+        public const string DeleteGreenhouse = $"{BasePath}/{{id:guid}}";
+        public const string EditGreenhouse = $"{BasePath}/{{id:guid}}";
     }
 }

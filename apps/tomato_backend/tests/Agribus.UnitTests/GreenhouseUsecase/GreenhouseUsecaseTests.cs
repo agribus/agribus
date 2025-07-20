@@ -2,6 +2,7 @@ using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
+using Agribus.Core.Ports.Api.SensorUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using NSubstitute;
@@ -40,7 +41,7 @@ public class GreenhouseUsecaseTests
                     Quantity = 2,
                 },
             },
-            Sensors = new List<Sensor>(),
+            Sensors = new List<CreateSensorDto>(),
         };
 
         var expectedGreenhouse = dto.MapToGreenhouse();
@@ -48,7 +49,8 @@ public class GreenhouseUsecaseTests
             .AddAsync(Arg.Any<Greenhouse>(), fakeUserId, Arg.Any<CancellationToken>())
             .Returns(callInfo => callInfo.Arg<Greenhouse>());
 
-        var usecase = new CreateGreenhouseUsecase(authContext, greenhouseRepository);
+        // var usecase = new CreateGreenhouseUsecase(authContext, greenhouseRepository);
+        var usecase = new CreateGreenhouseUsecase(greenhouseRepository);
 
         // When
         var result = await usecase.Handle(dto, fakeUserId, CancellationToken.None);
@@ -59,5 +61,6 @@ public class GreenhouseUsecaseTests
         Assert.Equal(dto.City, result.City);
         Assert.Equal(dto.Country, result.Country);
         Assert.Equal(dto.Crops.Count, result.Crops.Count);
+        Assert.Equal(dto.Sensors.Count, result.Sensors.Count);
     }
 }

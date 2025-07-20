@@ -1,8 +1,35 @@
+using Agribus.Api.Extensions;
+using Agribus.Core.Ports.Api.GreenhouseUsecases;
+using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
 
-public class GreenhousesController(ILogger<GreenhousesController> logger) : ControllerBase
+public class GreenhousesController(
+    ILogger<GreenhousesController> logger,
+    ICreateGreenhouseUsecase createGreenhouseUsecase
+) : ControllerBase
 {
-    private readonly ILogger<GreenhousesController> _logger = logger;
+    [HttpPost(Endpoints.Greenhouses.CreateGreenhouse)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> CreateGreenhouse(
+        [FromBody] CreateGreenhouseDto dto,
+        CancellationToken cancellationToken = default
+    )
+    {
+        // TODO: Authorization when Clerk done
+        var fakeUserId = Guid.NewGuid();
+
+        try
+        {
+            var created = await createGreenhouseUsecase.Handle(dto, fakeUserId, cancellationToken);
+            return Created(Endpoints.Greenhouses.CreateGreenhouse, created);
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error creating greenhouse");
+            throw;
+        }
+    }
 }
