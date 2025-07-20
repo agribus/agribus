@@ -10,10 +10,14 @@ public class DeleteGreenhouseUsecase(
 {
     public async Task<bool> Handle(
         Guid greenhouseId,
-        Guid fakeUserId,
+        Guid userId,
         CancellationToken cancellationToken
     )
     {
-        return await greenhouseRepository.DeleteAsync(greenhouseId, fakeUserId, cancellationToken);
+        var greenhouse = await greenhouseRepository.Exists(greenhouseId, userId, cancellationToken);
+        if (greenhouse == null)
+            return false;
+
+        return await greenhouseRepository.DeleteAsync(greenhouse, cancellationToken);
     }
 }
