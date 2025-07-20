@@ -26,13 +26,10 @@
       "confirm-password": "Confirm password",
       "register": "Sign up"
     },
-    "forgot-password": {
-      "title": "Forgot password",
-      "subtitle": "Enter your email to reset your password",
+    "forgot-password-form": {
       "email": "Email",
       "email-placeholder": "Enter your email",
-      "send": "Send",
-      "connection-page": "Connection page"
+      "send": "Send"
     }
   },
   "pages": {
@@ -53,6 +50,12 @@
       "subtitle": "Welcome! Please enter your credentials.",
       "already-account": "Already have an account?",
       "sign-in": "Sign in"
+    },
+    "forgot-password": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email to reset your password",
+
+      "connection-page": "Connection page"
     }
   }
 }

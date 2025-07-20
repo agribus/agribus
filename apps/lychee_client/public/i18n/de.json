@@ -28,13 +28,10 @@
       "confirm-password": "Passwort bestätigen",
       "register": "Registrieren"
     },
-    "forgot-password": {
-      "title": "Passwort vergessen",
-      "subtitle": "Geben Sie Ihre E-Mail ein, um das Passwort zurückzusetzen",
+    "forgot-password-form": {
       "email": "E-Mail",
       "email-placeholder": "Geben Sie Ihre E-Mail ein",
-      "send": "Senden",
-      "connection-page": "Anmeldeseite"
+      "send": "Senden"
     }
   },
   "pages": {
@@ -55,6 +52,11 @@
       "subtitle": "Willkommen! Bitte geben Sie Ihre Anmeldedaten ein.",
       "already-account": "Sie haben bereits ein Konto?",
       "sign-in": "Anmelden"
+    },
+    "forgot-password": {
+      "title": "Passwort vergessen",
+      "subtitle": "Geben Sie Ihre E-Mail ein, um das Passwort zurückzusetzen",
+      "connection-page": "Anmeldeseite"
     }
   }
 }
