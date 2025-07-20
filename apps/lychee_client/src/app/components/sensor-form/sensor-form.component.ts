@@ -1,4 +1,3 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import {
   FormBuilder,
   FormGroup,
@@ -6,11 +5,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import { TuiButton, TuiTextfield } from "@taiga-ui/core";
 import { Sensor } from "@interfaces/sensor.interface";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { TuiSheetDialog, TuiSheetDialogOptions } from "@taiga-ui/addon-mobile";
-import { Crop } from "@interfaces/crop.interface";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { TuiButton, TuiTextfield } from "@taiga-ui/core";
 
 @Component({
   selector: "app-sensor-form",
@@ -29,7 +28,6 @@ export class SensorFormComponent implements OnInit {
   private fb = inject(FormBuilder);
   private translateService = inject(TranslateService);
 
-  @Input() sensor: Sensor | null = null;
   @Output() sensorSubmitted = new EventEmitter<Sensor>();
 
   private _openSheet = false;
@@ -43,30 +41,63 @@ export class SensorFormComponent implements OnInit {
     this._openSheet = value;
   }
 
-  public form: FormGroup = this.fb.group({
-    id: [null],
-    sourceAddress: ["", Validators.required],
-    name: ["", Validators.required],
-  });
+  public form!: FormGroup;
 
   protected readonly optionsSheet: Partial<TuiSheetDialogOptions> = {
-    label: this.translateService.instant("components.crop-selector.label"),
+    label: this.translateService.instant("components.sensor-form.title"),
     closeable: true,
   };
 
+  private _sensor: Sensor | null = null;
+
+  @Input()
+  set sensor(value: Sensor | null) {
+    this._sensor = value;
+    if (this.form) {
+      this.patchForm();
+    }
+  }
+
+  get sensor(): Sensor | null {
+    return this._sensor;
+  }
+
   ngOnInit(): void {
     this.initForm();
+    if (this.sensor) {
+      this.patchForm();
+    }
   }
 
   private initForm(): void {
     this.form = this.fb.group({
-      id: [this.sensor?.id ?? null],
-      sourceAddress: [this.sensor?.sourceAddress ?? "", Validators.required],
-      name: [this.sensor?.name ?? "", Validators.required],
+      id: [null],
+      sourceAddress: ["", Validators.required],
+      name: ["", Validators.required],
+    });
+  }
+
+  private patchForm(): void {
+    this.form.patchValue({
+      id: this.sensor?.id ?? null,
+      sourceAddress: this.sensor?.sourceAddress ?? "",
+      name: this.sensor?.name ?? "",
     });
   }
 
   public open(): void {
+    if (!this.sensor) {
+      this.form.reset({
+        id: null,
+        sourceAddress: "",
+        name: "",
+      });
+    } else {
+      this.patchForm();
+    }
+
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
     this.openSheet = true;
   }
 
@@ -78,8 +109,7 @@ export class SensorFormComponent implements OnInit {
   }
 
   private resetForm(): void {
+    this.sensor = null;
     this.initForm();
-    this.form.markAsPristine();
-    this.form.markAsUntouched();
   }
 }

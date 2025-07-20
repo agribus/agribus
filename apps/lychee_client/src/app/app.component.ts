@@ -27,7 +27,7 @@ export class AppComponent {
   // List of routes without navbar
   private hiddenNavbarRoutes = [
     "/unsupported-platform",
-    "/greenhouse-form",
+    "/greenhouse-settings",
     "/settings-account",
     "/settings",
   ];

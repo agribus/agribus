@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
           case url.includes("dashboard"):
             this.activeIndex = 1;
             break;
-          case url.includes("greenhouse-form"):
+          case url.includes("greenhouse-settings"):
             this.activeIndex = 2;
             break;
           case url.includes("settings-account"):

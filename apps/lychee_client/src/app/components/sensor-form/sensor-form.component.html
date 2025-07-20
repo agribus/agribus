@@ -1,4 +1,4 @@
-<ng-template [tuiSheetDialogOptions]="optionsSheet" [(tuiSheetDialog)]="openSheet">
+<ng-template [tuiSheetDialog]="openSheet" [tuiSheetDialogOptions]="optionsSheet">
   <form [formGroup]="form" (ngSubmit)="save()" class="sensor-form">
     <tui-textfield>
       <label tuiLabel>

@@ -4,8 +4,9 @@ import { UnsupportedPlatformComponent } from "@pages/unsupported-platform/unsupp
 import { HomeComponent } from "@components/home/home.component";
 import { DashboardComponent } from "@components/dashboard/dashboard.component";
 import { SettingsAccountComponent } from "@components/settings-account/settings-account.component";
-import { GreenhouseFormComponent } from "@components/greenhouse-form/greenhouse-form.component";
+import { GreenhouseFormOldComponent } from "@components/greenhouse-form-old/greenhouse-form-old.component";
 import { SettingsComponent } from "@pages/settings/settings.component";
+import { GreenhouseSettingsComponent } from "@pages/greenhouse-settings/greenhouse-settings.component";
 
 export const routes: Routes = [
   { path: "", component: HomeComponent, canActivate: [mobileOnlyGuard] },
@@ -16,8 +17,8 @@ export const routes: Routes = [
     canActivate: [mobileOnlyGuard],
   },
   {
-    path: "greenhouse-form",
-    component: GreenhouseFormComponent,
+    path: "greenhouse-settings",
+    component: GreenhouseSettingsComponent,
     canActivate: [mobileOnlyGuard],
   },
   {
