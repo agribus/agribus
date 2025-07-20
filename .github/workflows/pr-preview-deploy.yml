@@ -58,11 +58,11 @@ jobs:
               --network proxy \
               --label traefik.enable=true \
               --label traefik.docker.network=proxy \
-              --label traefik.http.routers.pr-$PR-http.rule=Host(\"pr-$PR.agribus.fr\") \
+              --label "traefik.http.routers.pr-$PR-http.rule=Host(\"pr-$PR.agribus.fr\")" \
               --label traefik.http.routers.pr-$PR-http.entrypoints=web \
               --label traefik.http.routers.pr-$PR-http.middlewares=redirect-to-https \
               --label traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https \
-              --label traefik.http.routers.pr-$PR.rule=Host(\"pr-$PR.agribus.fr\") \
+              --label "traefik.http.routers.pr-$PR.rule=Host(\"pr-$PR.agribus.fr\")" \
               --label traefik.http.routers.pr-$PR.entrypoints=websecure \
               --label traefik.http.routers.pr-$PR.tls=true \
               --label traefik.http.routers.pr-$PR.tls.certresolver=tmhttpchallenge \
