@@ -22,6 +22,8 @@ import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobil
 import { Sensor } from "@interfaces/sensor.interface";
 import { Crop } from "@interfaces/crop.interface";
 import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
+import { CropFormComponent } from "@components/crop-form/crop-form.component";
+import { CropSelectorComponent } from "@components/crop-selector/crop-selector.component";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -49,6 +51,8 @@ import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.compo
     TuiCard,
     FormsModule,
     SensorFormComponent,
+    CropFormComponent,
+    CropSelectorComponent,
   ],
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
@@ -67,6 +71,7 @@ export class GreenhouseFormComponent {
   public editingSensor: Sensor | null = null;
 
   public crops: Crop[] = [];
+  public editingCrop: Crop | null = null;
 
   public isScanning = false;
 
@@ -81,6 +86,8 @@ export class GreenhouseFormComponent {
   }
 
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
+  @ViewChild("cropForm") cropForm?: { open: () => void };
+  @ViewChild("cropSelector") cropSelector?: { open: () => void };
 
   constructor() {
     this.greenhouseForm = this.fb.group({
@@ -104,6 +111,39 @@ export class GreenhouseFormComponent {
 
   protected previous(): void {
     this.step.update(i => i - 1);
+  }
+
+  /* ############################## CROPS ############################## */
+  public openCropForm(crop: Crop | null): void {
+    this.editingCrop = crop;
+    this.cdr.detectChanges();
+    this.cropForm?.open();
+  }
+
+  public openCropSelector() {
+    this.cropSelector?.open();
+  }
+
+  public onCropSelected(crop: Crop): void {
+    this.crops.push(crop);
+  }
+
+  public removeCrop(index: number): void {
+    const crop = this.crops[index];
+    if (!crop) return;
+
+    this.alerts
+      .open(
+        this.translateService.instant("components.greenhouse-form.alert.remove-sensor") +
+          crop.commonName,
+        {
+          appearance: "info",
+          label: this.translateService.instant("components.ui.alert.info"),
+        }
+      )
+      .subscribe();
+
+    this.crops.splice(index, 1);
   }
 
   /* ############################## SENSORS ############################## */

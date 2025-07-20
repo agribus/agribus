@@ -32,11 +32,80 @@
     </ng-container>
   }
   @case (1) {
-    <footer style="display: flex; justify-content: flex-end">
-      <button tuiButton appearance="primary" (click)="next()">
-        {{ "components.ui.button.next" | translate }}
-      </button>
-    </footer>
+    <ng-container>
+      <form [formGroup]="greenhouseForm">
+        <div class="button-group">
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="compact-button"
+            (click)="openCropSelector()">
+            <tui-icon icon="@tui.camera" [style.height.rem]="1" />
+          </button>
+
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="compact-button"
+            (click)="openCropForm(null)">
+            <tui-icon icon="@tui.keyboard" [style.height.rem]="1" />
+          </button>
+        </div>
+
+        @if (crops.length) {
+          <ul>
+            @for (crop of crops; track $index) {
+              <li>
+                <tui-swipe-actions [autoClose]="true">
+                  <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                    <tui-avatar appearance="primary" [src]="crop.imageUrl" />
+                    <div tuiTitle>
+                      <strong>{{ crop.commonName }}</strong>
+                      <div tuiSubtitle>{{ crop.scientificName }}</div>
+                    </div>
+                    <p style="margin: auto 0">{{ crop.quantity }}x</p>
+                  </div>
+
+                  <button
+                    iconStart="@tui.pencil-line"
+                    size="m"
+                    tuiIconButton
+                    tuiSwipeAction
+                    (click)="openCropForm(crop)">
+                    Edit Crop
+                  </button>
+                  <button
+                    appearance="secondary-destructive"
+                    iconStart="@tui.trash"
+                    size="m"
+                    tuiIconButton
+                    tuiSwipeAction
+                    type="button"
+                    (click)="removeCrop($index)">
+                    Delete Crop
+                  </button>
+                </tui-swipe-actions>
+              </li>
+            }
+          </ul>
+        }
+
+        <footer class="button-group">
+          <button tuiButton appearance="primary" (click)="previous()">
+            {{ "components.ui.button.return" | translate }}
+          </button>
+          <button tuiButton appearance="primary" (click)="next()">
+            {{ "components.ui.button.next" | translate }}
+          </button>
+        </footer>
+        <app-crop-form #cropForm [label]="'Editer un crop'"></app-crop-form>
+        <app-crop-selector
+          #cropSelector
+          (cropSelected)="onCropSelected($event)"></app-crop-selector>
+      </form>
+    </ng-container>
   }
   @case (2) {
     <ng-container>

@@ -48,15 +48,29 @@ export class CropSelectorComponent {
   private readonly cropsService = inject(CropsService);
 
   public crops: Crop[] = [];
-  public openSheet = false;
+  private _openSheet = false;
   public loading = false;
 
   @Output() cropSelected = new EventEmitter<Crop>();
 
-  protected readonly optionsSheet: Partial<TuiSheetDialogOptions> = {
-    label: this.translateService.instant("components.crop-selector.label"),
-    closeable: !this.loading && !this.crops.length ? true : false,
-  };
+  // optionsSheet recalculé dynamiquement à chaque accès pour refléter l'état actuel
+  public get optionsSheet(): Partial<TuiSheetDialogOptions> {
+    return {
+      label: this.translateService.instant("components.crop-selector.label"),
+      closeable: !this.loading && this.crops.length === 0,
+    };
+  }
+
+  public get openSheet(): boolean {
+    return this._openSheet;
+  }
+
+  public set openSheet(value: boolean) {
+    if (!value && this._openSheet) {
+      this.reset();
+    }
+    this._openSheet = value;
+  }
 
   public open(): void {
     this.loading = true;
@@ -74,6 +88,11 @@ export class CropSelectorComponent {
     });
 
     this.openSheet = true;
+  }
+
+  private reset(): void {
+    this.crops = [];
+    this.loading = false;
   }
 
   public selectCrop(crop: Crop): void {

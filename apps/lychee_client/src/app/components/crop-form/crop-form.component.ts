@@ -1,8 +1,14 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { TuiSheetDialog, TuiSheetDialogOptions } from "@taiga-ui/addon-mobile";
-import { FormBuilder, FormGroup, FormsModule } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { TuiButton, TuiTextfield } from "@taiga-ui/core";
-import { TuiFiles, TuiInputDate, TuiInputNumber } from "@taiga-ui/kit";
+import { TuiInputDate, TuiInputNumber } from "@taiga-ui/kit";
 import { Crop } from "@interfaces/crop.interface";
 
 @Component({
@@ -13,75 +19,108 @@ import { Crop } from "@interfaces/crop.interface";
     TuiTextfield,
     TuiInputNumber,
     TuiInputDate,
-    TuiFiles,
     TuiSheetDialog,
+    ReactiveFormsModule,
   ],
   templateUrl: "./crop-form.component.html",
   styleUrl: "./crop-form.component.scss",
 })
 export class CropFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  public openSheet = false;
 
-  // Form data
-  form = {
-    commonName: "",
-    scientificName: "",
-    plantingDate: null as Date | null,
-    quantity: 1,
-    image: [] as File[],
-  };
+  private _openSheet = false;
+  public get openSheet() {
+    return this._openSheet;
+  }
+  public set openSheet(value: boolean) {
+    if (!value && this._openSheet) {
+      this.reset();
+    }
+    this._openSheet = value;
+  }
 
-  cropForm: FormGroup = this.fb.group({});
-  @Input() label: string = "";
-  @Input() crop: Crop | null = null;
+  @Input() label: string = "Ajouter une culture";
 
-  @Output() cropCreated = new EventEmitter<any>();
+  @Input()
+  set crop(value: Crop | null) {
+    this._crop = value;
+    if (this.form) {
+      this.patchForm();
+    }
+  }
+  get crop(): Crop | null {
+    return this._crop;
+  }
+  private _crop: Crop | null = null;
 
+  @Output() cropCreated = new EventEmitter<Crop>();
+
+  public form!: FormGroup;
   public optionsSheet: Partial<TuiSheetDialogOptions> = {
     label: this.label,
     closeable: true,
   };
 
-  ngOnInit() {
-    this.optionsSheet = {
-      label: this.label,
-      closeable: true,
-    };
+  ngOnInit(): void {
+    this.initForm();
+    if (this.crop) {
+      this.patchForm();
+    }
+  }
 
-    this.cropForm = this.fb.group({
-      commonName: this.crop?.commonName || "",
-      scientificName: this.crop?.scientificName || "",
-      plantingDate: this.crop?.date_plantation,
-      quantity: this.crop?.quantity,
-      image: [] as File[],
+  private initForm(): void {
+    this.form = this.fb.group({
+      commonName: ["", Validators.required],
+      scientificName: [""],
+      plantingDate: [null],
+      quantity: [1, [Validators.min(1)]],
+      image: [null],
     });
   }
 
-  open() {
+  private patchForm(): void {
+    this.form.patchValue({
+      commonName: this.crop?.commonName ?? "",
+      scientificName: this.crop?.scientificName ?? "",
+      plantingDate: this.crop?.date_plantation ?? null,
+      quantity: this.crop?.quantity ?? 1,
+      image: null,
+    });
+  }
+
+  public open(): void {
+    if (!this.crop) {
+      this.form.reset({
+        commonName: "",
+        scientificName: "",
+        plantingDate: null,
+        quantity: 1,
+        image: null,
+      });
+    } else {
+      this.patchForm();
+    }
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
     this.openSheet = true;
   }
 
-  submit() {
-    if (!this.form.commonName.trim()) return;
-
-    const crop = {
-      ...this.form,
-      image: this.form.image[0] || null,
-    };
-
-    this.cropCreated.emit(crop);
-    this.reset();
+  public submit(): void {
+    if (this.form.valid) {
+      // Emission du Crop avec l’image au format File ou null
+      this.cropCreated.emit(this.form.value);
+      this.openSheet = false;
+    }
   }
 
-  reset() {
-    this.form = {
+  public reset(): void {
+    this.form.reset({
       commonName: "",
       scientificName: "",
       plantingDate: null,
       quantity: 1,
-      image: [],
-    };
+      image: null,
+    });
     this.openSheet = false;
   }
 }
