@@ -18,11 +18,10 @@ footer {
 }
 
 ul {
-  padding: 0 0 1rem 0;
+  padding: 0;
   li {
     list-style: none;
   }
-  margin-bottom: 1rem;
 }
 
 [tuiCardLarge] {
@@ -36,7 +35,7 @@ tui-swipe-actions {
 button[tuiSwipeAction] {
   border-radius: 100%;
 }
-.button-group {
+.sensor-button-group {
   display: flex;
   flex-direction: row;
   gap: 0.5rem;
@@ -48,16 +47,4 @@ button[tuiSwipeAction] {
   min-height: 2.25rem;
   border-radius: 0.5rem;
   flex: 1;
-}
-
-.btn-submit {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 1rem;
-
-  button {
-    width: 100%;
-  }
 }
