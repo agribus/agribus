@@ -1,3 +1,6 @@
+using Agribus.Application.GreenhouseUsecases;
+using Agribus.Application.SensorUsecases;
+using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Agribus.Application.Extensions;
@@ -7,6 +10,7 @@ public static class ApplicationModule
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<SensorDataProcessor, SensorDataProcessor>();
+        services.AddScoped<ICreateGreenhouseUsecase, CreateGreenhouseUsecase>();
         return services;
     }
 }

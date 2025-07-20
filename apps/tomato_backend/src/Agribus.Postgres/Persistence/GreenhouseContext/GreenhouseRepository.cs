@@ -12,7 +12,8 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
         CancellationToken cancellationToken
     )
     {
-        var result = context.Greenhouse.AddAsync(greenhouse, cancellationToken);
-        return result.Result.Entity;
+        var result = await context.Greenhouse.AddAsync(greenhouse, cancellationToken);
+        await context.SaveChangesAsync(cancellationToken);
+        return result.Entity;
     }
 }
