@@ -22,11 +22,18 @@ export class AppComponent {
     "/greenhouse-form",
     "/settings-account",
     "/settings",
+    "/login",
+    "/register",
+    "/forgot-password",
   ];
+  private readonly lang = localStorage.getItem("lang");
   constructor() {
     this.translateService.addLangs(["fr", "en", "de"]);
-    this.translateService.setDefaultLang("fr");
-    this.translateService.use("fr");
+    if (!this.lang) {
+      this.lang = "fr";
+    }
+    this.translateService.setDefaultLang(this.lang);
+    this.translateService.use(this.lang);
   }
   get showNavbar(): boolean {
     return !this.hiddenNavbarRoutes.some(route => this.router.url.startsWith(route));

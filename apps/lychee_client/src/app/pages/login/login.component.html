@@ -1,0 +1,22 @@
+<div class="login">
+  <header class="header">
+    <div class="logo-container">
+      <img ngSrc="/images/logo/agribus.png" alt="Logo d'Agribus" width="100" height="100" />
+    </div>
+    <h3 tuiTitle class="page-title">
+      {{ "pages.login.title" | translate }}
+    </h3>
+    <span class="page-subtitle">
+      {{ "pages.login.subtitle" | translate }}
+    </span>
+  </header>
+
+  <app-login-form></app-login-form>
+
+  <footer class="footer">
+    <p class="no-account">
+      {{ "pages.login.no-account" | translate }}
+      <a href="./register" class="link">{{ "pages.login.register" | translate }}</a>
+    </p>
+  </footer>
+</div>

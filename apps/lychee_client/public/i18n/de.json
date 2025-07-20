@@ -8,6 +8,30 @@
       "settings": "Einstellungen",
       "settings-account": "Kontoeinstellungen",
       "greenhouse-form": "Parameter des Gewächshauses"
+    },
+    "login-form": {
+      "email": "E-Mail",
+      "email-placeholder": "Geben Sie Ihre E-Mail ein",
+      "password": "Passwort",
+      "connection": "Anmelden",
+      "forgot-password": "Passwort vergessen?",
+      "click-here": "Hier klicken"
+    },
+    "register-form": {
+      "title": "Erstellen Sie Ihr Konto",
+      "subtitle": "Willkommen! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "nickname": "Benutzername",
+      "nickname-placeholder": "Geben Sie Ihren Benutzernamen ein",
+      "email": "E-Mail",
+      "email-placeholder": "Geben Sie Ihre E-Mail ein",
+      "password": "Passwort",
+      "confirm-password": "Passwort bestätigen",
+      "register": "Registrieren"
+    },
+    "forgot-password-form": {
+      "email": "E-Mail",
+      "email-placeholder": "Geben Sie Ihre E-Mail ein",
+      "send": "Senden"
     }
   },
   "pages": {
@@ -16,6 +40,23 @@
       "description": "Wir arbeiten intensiv an einer Desktop-Version. Derzeit ist die App nur auf mobilen Geräten verfügbar.",
       "progress": "Du kannst unseren Fortschritt verfolgen",
       "here": "hier"
+    },
+    "login": {
+      "title": "Melden Sie sich bei Ihrem Konto an",
+      "subtitle": "Willkommen zurück! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "no-account": "Noch kein Konto?",
+      "register": "Registrieren"
+    },
+    "register": {
+      "title": "Erstellen Sie Ihr Konto",
+      "subtitle": "Willkommen! Bitte geben Sie Ihre Anmeldedaten ein.",
+      "already-account": "Sie haben bereits ein Konto?",
+      "sign-in": "Anmelden"
+    },
+    "forgot-password": {
+      "title": "Passwort vergessen",
+      "subtitle": "Geben Sie Ihre E-Mail ein, um das Passwort zurückzusetzen",
+      "connection-page": "Anmeldeseite"
     }
   }
 }

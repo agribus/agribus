@@ -26,5 +26,6 @@ export class HelloWorldComponent {
 
   useLanguage(language: string): void {
     this.translateService.use(language);
+    localStorage.setItem("lang", language);
   }
 }

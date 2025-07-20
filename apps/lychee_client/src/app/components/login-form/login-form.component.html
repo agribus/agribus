@@ -1,0 +1,41 @@
+<form class="form-block" [formGroup]="form">
+  <div class="form-input-container">
+    <div class="input-container">
+      <label for="email" tuiLabel>{{ "components.login-form.email" | translate }}</label>
+      <tui-textfield>
+        <input
+          class="form-input"
+          formControlName="email"
+          placeholder="{{ 'components.login-form.email-placeholder' | translate }}"
+          type="text"
+          tuiTextfield />
+      </tui-textfield>
+
+      <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
+    </div>
+
+    <div class="input-container">
+      <div class="password-label-container">
+        <label tuiLabel for="password">{{ "components.login-form.password" | translate }}</label>
+        <a href="/forgot-password" class="link">
+          {{ "components.login-form.forgot-password" | translate }}
+        </a>
+      </div>
+
+      <tui-textfield>
+        <input
+          class="form-input"
+          formControlName="password"
+          placeholder="********"
+          type="password"
+          tuiTextfield />
+      </tui-textfield>
+
+      <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
+    </div>
+  </div>
+
+  <button class="button" tuiButton (click)="onSubmit($event)">
+    {{ "components.login-form.connection" | translate }}
+  </button>
+</form>
