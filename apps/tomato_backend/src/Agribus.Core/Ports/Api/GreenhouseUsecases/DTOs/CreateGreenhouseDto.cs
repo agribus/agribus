@@ -1,5 +1,6 @@
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
+using Agribus.Core.Ports.Api.SensorUsecases.DTOs;
 
 namespace Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 
@@ -9,7 +10,7 @@ public class CreateGreenhouseDto
     public required string City { get; set; }
     public required string Country { get; set; }
     public required List<Crop> Crops { get; set; }
-    public required List<Sensor> Sensors { get; set; }
+    public required List<CreateSensorDto> Sensors { get; set; }
 
     public Greenhouse MapToGreenhouse()
     {
@@ -21,7 +22,8 @@ public class CreateGreenhouseDto
             Crops = Crops,
         };
 
-        greenhouse.AddSensor(Sensors);
+        var sensorEntities = Sensors.Select(s => s.MapToSensor());
+        greenhouse.AddSensors(sensorEntities);
 
         return greenhouse;
     }

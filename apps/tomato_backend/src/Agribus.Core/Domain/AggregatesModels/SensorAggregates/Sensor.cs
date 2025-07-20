@@ -8,10 +8,8 @@ public class Sensor : BaseEntity
     public required string Name { get; set; }
     public required string SourceAddress { get; set; }
     public required SensorModel SensorModel { get; set; }
-    public required bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
-    public Guid GeenhouseId { get; set; }
+    public Guid GreenhouseId { get; set; }
     public Greenhouse? Greenhouse { get; set; }
-
-    protected Sensor() { }
 }
