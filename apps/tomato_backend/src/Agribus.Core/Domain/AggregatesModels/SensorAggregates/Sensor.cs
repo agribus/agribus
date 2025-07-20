@@ -8,7 +8,7 @@ public class Sensor : BaseEntity
 {
     public required string Name { get; set; }
     public required string SourceAddress { get; set; }
-    public required SensorModel SensorModel { get; set; }
+    public required SensorModel Model { get; set; }
     public bool? IsActive { get; set; } = true;
 
     [JsonIgnore]
