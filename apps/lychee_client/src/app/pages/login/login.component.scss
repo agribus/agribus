@@ -1,0 +1,53 @@
+@import "@taiga-ui/core/styles/taiga-ui-local.scss";
+
+.login {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 1rem;
+  gap: 2rem;
+}
+
+.logo-container {
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-title {
+  text-align: center;
+  color: #374141;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.page-subtitle {
+  color: #065132;
+  font-weight: bold;
+  font-size: 0.875rem;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 2rem;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.no-account {
+  color: #374141;
+  font-weight: bold;
+}
+
+.link {
+  color: #065132;
+  font-weight: bold;
+  text-decoration: none;
+}
