@@ -4,5 +4,6 @@ export interface Crop {
   scientificName: string;
   date_plantation?: Date;
   score: number;
+  quantity?: number;
   imageUrl?: string;
 }

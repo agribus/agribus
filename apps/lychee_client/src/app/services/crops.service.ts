@@ -17,7 +17,16 @@ export class CropsService {
    */
   identifyPlantFromCamera(): Observable<Crop[]> {
     return from(this.takePicture()).pipe(
-      switchMap(base64 => this.identifyPlant(base64, environment.planetApiKey))
+      switchMap(base64 =>
+        this.identifyPlant(base64, environment.planetApiKey).pipe(
+          map((crops: Crop[]) =>
+            crops.map(crop => ({
+              ...crop,
+              imageUrl: `data:image/jpeg;base64,${base64}`,
+            }))
+          )
+        )
+      )
     );
   }
 
