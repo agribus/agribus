@@ -1,6 +1,5 @@
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
-using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Agribus.Core.Ports.Api.SensorUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
@@ -80,9 +79,7 @@ public class GreenhouseUsecaseTests
         greenhouseRepository
             .Exists(greenhouse.Id, fakeUserId, CancellationToken.None)
             .Returns(greenhouse);
-        greenhouseRepository
-            .DeleteAsync(greenhouse.Id, fakeUserId, CancellationToken.None)
-            .Returns(true);
+        greenhouseRepository.DeleteAsync(greenhouse, CancellationToken.None).Returns(true);
 
         var usecase = new DeleteGreenhouseUsecase(greenhouseRepository);
 
@@ -90,8 +87,58 @@ public class GreenhouseUsecaseTests
         await usecase.Handle(greenhouse.Id, fakeUserId, CancellationToken.None);
 
         // Then
+        await greenhouseRepository.Received(1).DeleteAsync(greenhouse, CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task ShouldUpdateGreenhouse_GivenValidInput()
+    {
+        // Given
+        var greenhouseId = Guid.NewGuid();
+        var userId = Guid.NewGuid();
+
+        var originalGreenhouse = new Greenhouse
+        {
+            Name = "Old Name",
+            City = "Old City",
+            Country = "Old Country",
+            Crops = new List<Crop>(),
+        };
+
+        var dto = new UpdateGreenhouseDto
+        {
+            Name = "New Name",
+            City = "New City",
+            Country = "New Country",
+            Crops = new List<Crop> { },
+            Sensors = new List<UpdateSensorDto>(),
+        };
+
+        var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        greenhouseRepository
+            .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
+            .Returns(originalGreenhouse);
+
+        greenhouseRepository
+            .UpdateAsync(Arg.Any<Greenhouse>(), Arg.Any<CancellationToken>())
+            .Returns(true);
+
+        var usecase = new UpdateGreenhouseUsecase(greenhouseRepository);
+
+        // When
+        var result = await usecase.Handle(greenhouseId, userId, dto, CancellationToken.None);
+
+        // Then
         await greenhouseRepository
             .Received(1)
-            .DeleteAsync(greenhouse.Id, fakeUserId, CancellationToken.None);
+            .UpdateAsync(
+                Arg.Is<Greenhouse>(g =>
+                    g.Id == greenhouseId
+                    && g.Name == dto.Name
+                    && g.City == dto.City
+                    && g.Country == dto.Country
+                ),
+                Arg.Any<CancellationToken>()
+            );
     }
 }

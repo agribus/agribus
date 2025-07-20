@@ -1,4 +1,5 @@
 using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
+using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 
 namespace Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 
@@ -21,5 +22,14 @@ public class Greenhouse : BaseEntity
                 return s;
             })
         );
+    }
+
+    public void Update(UpdateGreenhouseDto dto)
+    {
+        Name = dto.Name ?? Name;
+        Country = dto.Country ?? Country;
+        City = dto.City ?? City;
+        Crops = dto.Crops ?? Crops;
+        // Todo: Sensors individual update
     }
 }

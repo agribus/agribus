@@ -8,7 +8,8 @@ namespace Agribus.Api.Controllers;
 public class GreenhousesController(
     ILogger<GreenhousesController> logger,
     ICreateGreenhouseUsecase createGreenhouseUsecase,
-    IDeleteGreenhouseUsecase deleteGreenhouseUsecase
+    IDeleteGreenhouseUsecase deleteGreenhouseUsecase,
+    IUpdateGreenhouseUsecase updateGreenhouseUsecase
 ) : ControllerBase
 {
     [HttpPost(Endpoints.Greenhouses.CreateGreenhouse)]
@@ -47,5 +48,21 @@ public class GreenhousesController(
         var deleted = await deleteGreenhouseUsecase.Handle(id, fakeUserId, cancellationToken);
 
         return deleted ? NoContent() : NotFound();
+    }
+
+    [HttpPut(Endpoints.Greenhouses.EditGreenhouse)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> EditGreenhouse(
+        [FromRoute] Guid id,
+        [FromBody] UpdateGreenhouseDto dto,
+        CancellationToken cancellationToken = default
+    )
+    {
+        // TODO: Authorization when Clerk done
+        var fakeUserId = Guid.NewGuid();
+        var updated = await updateGreenhouseUsecase.Handle(id, fakeUserId, dto, cancellationToken);
+
+        return updated != null ? NoContent() : NotFound();
     }
 }
