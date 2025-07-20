@@ -1,29 +1,24 @@
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { AsyncPipe, NgOptimizedImage } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TuiButton, TuiError, TuiTextfield, TuiTitle } from "@taiga-ui/core";
-import { TuiCardLarge, TuiHeader } from "@taiga-ui/layout";
+import { TuiButton, TuiError, TuiTextfield } from "@taiga-ui/core";
 import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
 import { ForgotPassword } from "@interfaces/auth.interface";
 
 @Component({
-  selector: "app-forgot-password",
+  selector: "app-forgot-password-form",
   imports: [
     AsyncPipe,
     ReactiveFormsModule,
     TuiButton,
-    TuiCardLarge,
     TuiError,
     TuiFieldErrorPipe,
-    TuiHeader,
     TuiTextfield,
-    TuiTitle,
-    NgOptimizedImage,
     TranslatePipe,
   ],
-  templateUrl: "./forgot-password.component.html",
-  styleUrl: "./forgot-password.component.scss",
+  templateUrl: "./forgot-password-form.component.html",
+  styleUrl: "./forgot-password-form.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     tuiValidationErrorsProvider({
@@ -32,7 +27,7 @@ import { ForgotPassword } from "@interfaces/auth.interface";
     }),
   ],
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordFormComponent {
   private readonly translateService = inject(TranslateService);
   protected readonly form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
