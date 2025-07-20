@@ -100,7 +100,11 @@
             {{ "components.ui.button.next" | translate }}
           </button>
         </footer>
-        <app-crop-form #cropForm [label]="'Editer un crop'"></app-crop-form>
+        <app-crop-form
+          #cropForm
+          [label]="'Editer un crop'"
+          [crop]="editingCrop"
+          (cropSubmitted)="onCropSaved($event)"></app-crop-form>
         <app-crop-selector
           #cropSelector
           (cropSelected)="onCropSelected($event)"></app-crop-selector>

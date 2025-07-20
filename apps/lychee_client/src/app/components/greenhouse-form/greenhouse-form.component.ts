@@ -128,6 +128,10 @@ export class GreenhouseFormComponent {
     this.crops.push(crop);
   }
 
+  public onCropSaved(crop: Crop) {
+    this.upsertCrop(crop);
+  }
+
   public removeCrop(index: number): void {
     const crop = this.crops[index];
     if (!crop) return;
@@ -144,6 +148,24 @@ export class GreenhouseFormComponent {
       .subscribe();
 
     this.crops.splice(index, 1);
+  }
+
+  /**
+   * Ajoute ou met à jour un crop.
+   * @param crop Le crop à ajouter ou modifier.
+   */
+  public upsertCrop(crop: Crop): void {
+    if (!crop || !crop.scientificName || !crop.commonName) return;
+
+    const index = this.crops.findIndex(
+      c => c.scientificName === crop.scientificName && c.commonName === crop.commonName
+    );
+
+    if (index === -1) {
+      this.crops.push(crop);
+    } else {
+      this.crops[index].quantity = (this.crops[index].quantity || 0) + (crop.quantity || 1);
+    }
   }
 
   /* ############################## SENSORS ############################## */

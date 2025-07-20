@@ -53,7 +53,7 @@ export class CropFormComponent implements OnInit {
   }
   private _crop: Crop | null = null;
 
-  @Output() cropCreated = new EventEmitter<Crop>();
+  @Output() cropSubmitted = new EventEmitter<Crop>();
 
   public form!: FormGroup;
   public optionsSheet: Partial<TuiSheetDialogOptions> = {
@@ -62,6 +62,7 @@ export class CropFormComponent implements OnInit {
   };
 
   ngOnInit(): void {
+    console.log(this.crop);
     this.initForm();
     if (this.crop) {
       this.patchForm();
@@ -107,8 +108,7 @@ export class CropFormComponent implements OnInit {
 
   public submit(): void {
     if (this.form.valid) {
-      // Emission du Crop avec l’image au format File ou null
-      this.cropCreated.emit(this.form.value);
+      this.cropSubmitted.emit(this.form.value);
       this.openSheet = false;
     }
   }
@@ -121,6 +121,5 @@ export class CropFormComponent implements OnInit {
       quantity: 1,
       image: null,
     });
-    this.openSheet = false;
   }
 }
