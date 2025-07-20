@@ -1,18 +1,6 @@
-<form class="form-block" tuiCardLarge [formGroup]="form">
-  <div class="logo-div">
-    <img ngSrc="/images/logo/agribus.png" alt="Logo d'Agribus" width="56" height="56" />
-  </div>
-  <header tuiHeader class="header">
-    <h3 tuiTitle class="page-title">
-      {{ "components.register-form.title" | translate }}
-      <span tuiSubtitle class="page-subtitle">
-        {{ "components.register-form.subtitle" | translate }}
-      </span>
-    </h3>
-  </header>
-
-  <div class="form-input-div">
-    <div class="input-div">
+<form class="form-block" [formGroup]="form">
+  <div class="form-input-container">
+    <div class="input-container">
       <label for="username" tuiLabel>{{ "components.register-form.nickname" | translate }}</label>
       <tui-textfield>
         <input
@@ -27,7 +15,7 @@
       <tui-error formControlName="username" [error]="[] | tuiFieldError | async" />
     </div>
 
-    <div class="input-div">
+    <div class="input-container">
       <label for="email" tuiLabel>{{ "components.register-form.email" | translate }}</label>
       <tui-textfield>
         <input
@@ -42,7 +30,7 @@
       <tui-error formControlName="email" [error]="[] | tuiFieldError | async" />
     </div>
 
-    <div class="input-div">
+    <div class="input-container">
       <label tuiLabel for="password">{{ "components.register-form.password" | translate }}</label>
       <tui-textfield>
         <input
@@ -57,7 +45,7 @@
       <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
     </div>
 
-    <div class="input-div">
+    <div class="input-container">
       <label tuiLabel for="confirm-password">
         {{ "components.register-form.confirm-password" | translate }}
       </label>
@@ -72,17 +60,11 @@
       </tui-textfield>
 
       <tui-error formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
+      <tui-error [error]="passwordError" />
     </div>
-  </div>
 
-  <footer class="footer">
     <button class="button" tuiButton (click)="onSubmit($event)">
       {{ "components.register-form.register" | translate }}
     </button>
-
-    <p class="already-account">
-      {{ "components.register-form.already-account" | translate }}
-      <a href="./login" class="link">{{ "components.register-form.sign-in" | translate }}</a>
-    </p>
-  </footer>
+  </div>
 </form>
