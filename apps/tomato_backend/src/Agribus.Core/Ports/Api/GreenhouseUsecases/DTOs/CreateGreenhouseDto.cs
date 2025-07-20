@@ -10,6 +10,7 @@ public class CreateGreenhouseDto
     public required string City { get; set; }
     public required string Country { get; set; }
     public required List<Crop> Crops { get; set; }
+
     public required List<CreateSensorDto> Sensors { get; set; }
 
     public Greenhouse MapToGreenhouse()

@@ -9,7 +9,7 @@ public class Sensor : BaseEntity
     public required string Name { get; set; }
     public required string SourceAddress { get; set; }
     public required SensorModel SensorModel { get; set; }
-    public bool IsActive { get; set; } = true;
+    public bool? IsActive { get; set; } = true;
 
     [JsonIgnore]
     public Guid GreenhouseId { get; set; }
