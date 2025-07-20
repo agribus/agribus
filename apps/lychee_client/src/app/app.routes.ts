@@ -7,7 +7,7 @@ import { SettingsAccountComponent } from "@components/settings-account/settings-
 import { GreenhouseFormComponent } from "@components/greenhouse-form/greenhouse-form.component";
 import { SettingsComponent } from "@pages/settings/settings.component";
 import { LoginComponent } from "@pages/login/login.component";
-import { RegisterFormComponent } from "@components/register-form/register-form.component";
+import { RegisterComponent } from "@pages/register/register.component";
 import { ForgotPasswordComponent } from "@components/forgot-password/forgot-password.component";
 
 export const routes: Routes = [
@@ -17,7 +17,6 @@ export const routes: Routes = [
   { path: "greenhouse-form", component: GreenhouseFormComponent, canActivate: [mobileOnlyGuard] },
   { path: "settings", component: SettingsComponent, canActivate: [mobileOnlyGuard] },
   { path: "settings-account", component: SettingsAccountComponent, canActivate: [mobileOnlyGuard] },
-  { path: "register", component: RegisterFormComponent, canActivate: [mobileOnlyGuard] },
   { path: "forgot-password", component: ForgotPasswordComponent, canActivate: [mobileOnlyGuard] },
 
   {
@@ -27,6 +26,11 @@ export const routes: Routes = [
   {
     path: "login",
     component: LoginComponent,
+    canActivate: [mobileOnlyGuard],
+  },
+  {
+    path: "register",
+    component: RegisterComponent,
     canActivate: [mobileOnlyGuard],
   },
 ];
