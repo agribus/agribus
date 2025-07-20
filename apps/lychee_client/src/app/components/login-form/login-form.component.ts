@@ -1,11 +1,11 @@
-import { AsyncPipe, NgOptimizedImage } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { TranslateService, TranslatePipe } from "@ngx-translate/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
-import { TuiButton, TuiError, TuiTextfield, TuiTitle } from "@taiga-ui/core";
+import { TuiButton, TuiError, TuiTextfield } from "@taiga-ui/core";
 import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
-import { TuiCardLarge, TuiHeader } from "@taiga-ui/layout";
+import { TuiCardLarge } from "@taiga-ui/layout";
 import { AuthLogin } from "@interfaces/auth.interface";
 
 @Component({
@@ -17,10 +17,7 @@ import { AuthLogin } from "@interfaces/auth.interface";
     TuiCardLarge,
     TuiError,
     TuiFieldErrorPipe,
-    TuiHeader,
     TuiTextfield,
-    TuiTitle,
-    NgOptimizedImage,
     TranslatePipe,
   ],
   templateUrl: "./login-form.component.html",
