@@ -14,7 +14,9 @@ public static class ApplicationModule
         services.AddScoped<ICreateGreenhouseUsecase, CreateGreenhouseUsecase>();
         services.AddScoped<IDeleteGreenhouseUsecase, DeleteGreenhouseUsecase>();
         services.AddScoped<IUpdateGreenhouseUsecase, UpdateGreenhouseUsecase>();
+
         services.AddScoped<IUpdateSensorUsecase, UpdateSensorUsecase>();
+        services.AddScoped<IDeleteSensorUsecase, DeleteSensorUsecase>();
 
         return services;
     }

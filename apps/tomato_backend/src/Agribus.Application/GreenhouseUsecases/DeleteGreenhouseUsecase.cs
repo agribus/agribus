@@ -15,7 +15,7 @@ public class DeleteGreenhouseUsecase(
     )
     {
         var greenhouse = await greenhouseRepository.Exists(greenhouseId, userId, cancellationToken);
-        if (greenhouse == null)
+        if (greenhouse is null)
             return false;
 
         return await greenhouseRepository.DeleteAsync(greenhouse, cancellationToken);

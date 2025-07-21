@@ -34,9 +34,7 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
     public async Task<bool> DeleteAsync(Greenhouse greenhouse, CancellationToken cancellationToken)
     {
         context.Greenhouse.Remove(greenhouse);
-        await context.SaveChangesAsync(cancellationToken);
-
-        return true;
+        return await context.SaveChangesAsync(cancellationToken) > 0;
     }
 
     public async Task<bool> UpdateAsync(

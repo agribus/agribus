@@ -29,4 +29,10 @@ internal class SensorRepository(AgribusDbContext context) : ISensorRepository
         sensor.Update(dto);
         return await context.SaveChangesAsync(cancellationToken) > 0;
     }
+
+    public async Task<bool> DeleteAsync(Sensor sensor, CancellationToken cancellationToken)
+    {
+        context.Sensor.Remove(sensor);
+        return await context.SaveChangesAsync(cancellationToken) > 0;
+    }
 }
