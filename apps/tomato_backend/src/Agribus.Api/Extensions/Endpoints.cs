@@ -13,6 +13,7 @@ public static class Endpoints
     {
         private const string BasePath = $"{Endpoints.ApiBasePath}/sensors";
         public const string PushSensorData = $"{BasePath}/data";
+        public const string UpdateSensor = $"{BasePath}/{{id:guid}}";
     }
 
     public static class Greenhouses
