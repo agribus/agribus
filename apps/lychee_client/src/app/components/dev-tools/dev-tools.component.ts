@@ -1,14 +1,16 @@
 import { Component, inject, Injectable, signal } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TuiActionBar } from "@taiga-ui/kit";
-import { TuiButton } from "@taiga-ui/core";
+import { TuiButton, TuiDialogService } from "@taiga-ui/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { TranslateService } from "@ngx-translate/core";
 import { PlatformService } from "@services/platform/platform.service";
+import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
+import { RouteSelectorDialogComponent } from "@components/dev/route-selector-dialog/route-selector-dialog.component";
 
 @Component({
   selector: "app-dev-tools",
-  imports: [FormsModule, TuiActionBar, TuiButton],
+  imports: [FormsModule, TuiActionBar, TuiButton, ReactiveFormsModule],
   templateUrl: "./dev-tools.component.html",
   styleUrl: "./dev-tools.component.scss",
 })
@@ -17,6 +19,7 @@ export class DevToolsComponent {
   private devToolsService = inject(DevToolsService);
   private readonly translateService = inject(TranslateService);
   private readonly platformService = inject(PlatformService);
+  private readonly dialogService = inject(TuiDialogService);
 
   logs = signal<string[]>([]);
   isMobile = this.platformService.isMobile();
@@ -33,6 +36,19 @@ export class DevToolsComponent {
 
   closeDevTools(value: boolean) {
     this.devToolsService.open.set(value);
+  }
+
+  public openRouteDialog() {
+    this.dialogService
+      .open<void>(new PolymorpheusComponent(RouteSelectorDialogComponent), {
+        size: "m",
+        closeable: true,
+        dismissible: true,
+        required: false,
+        label: "Select a route",
+      })
+      .subscribe();
+    this.closeDevTools(false);
   }
 
   useLanguage(language: string): void {
