@@ -7,4 +7,5 @@ public interface ISensorRepository
 {
     Task<Sensor?> Exists(Guid originalSensorId, Guid userId, CancellationToken cancellationToken);
     Task<bool> UpdateAsync(Sensor sensor, UpdateSensorDto dto, CancellationToken cancellationToken);
+    Task<bool> DeleteAsync(Sensor sensor, CancellationToken cancellationToken);
 }

@@ -11,7 +11,8 @@ namespace Agribus.Api.Controllers;
 public class SensorsController(
     ILogger<SensorsController> logger,
     SensorDataProcessor dataProcessor,
-    IUpdateSensorUsecase updateSensorUsecase
+    IUpdateSensorUsecase updateSensorUsecase,
+    IDeleteSensorUsecase deleteSensorUsecase
 ) : ControllerBase
 {
     private readonly ILogger<SensorsController> _logger = logger;
@@ -41,5 +42,19 @@ public class SensorsController(
         var updated = await updateSensorUsecase.Handle(id, fakeUserId, dto, cancellationToken);
 
         return updated != null ? NoContent() : NotFound();
+    }
+
+    [HttpDelete(Endpoints.Sensors.DeleteSensor)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteSensor(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var fakeUserId = Guid.NewGuid();
+        var deleted = await deleteSensorUsecase.Handle(id, fakeUserId, cancellationToken);
+
+        return deleted ? NoContent() : NotFound();
     }
 }
