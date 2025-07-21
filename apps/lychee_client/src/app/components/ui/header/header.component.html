@@ -31,6 +31,7 @@
         type="button"
         (click)="gotoPage('settings')"></button>
     </tui-app-bar>
+  } @else if (["/forgot-password", "/login", "/register"].includes(url)) {
   } @else {
     <tui-app-bar>
       <button title="Back" tuiAppBarBack tuiSlot="left" type="button" (click)="back()"></button>

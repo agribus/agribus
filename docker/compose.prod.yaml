@@ -58,6 +58,10 @@ services:
       - "traefik.http.routers.lychee.entrypoints=websecure"
       - "traefik.http.routers.lychee.tls=true"
       - "traefik.http.routers.lychee.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.routers.lychee-http.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee-http.entrypoints=web"
+      - "traefik.http.routers.lychee-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.services.lychee.loadbalancer.server.port=80"
 
   tomato:

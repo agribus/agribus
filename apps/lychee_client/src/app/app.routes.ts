@@ -4,8 +4,10 @@ import { UnsupportedPlatformComponent } from "@pages/unsupported-platform/unsupp
 import { HomeComponent } from "@components/home/home.component";
 import { DashboardComponent } from "@components/dashboard/dashboard.component";
 import { SettingsAccountComponent } from "@components/settings-account/settings-account.component";
-import { GreenhouseFormOldComponent } from "@components/greenhouse-form-old/greenhouse-form-old.component";
 import { SettingsComponent } from "@pages/settings/settings.component";
+import { LoginComponent } from "@pages/login/login.component";
+import { RegisterComponent } from "@pages/register/register.component";
+import { ForgotPasswordComponent } from "@pages/forgot-password/forgot-password.component";
 import { GreenhouseSettingsComponent } from "@pages/greenhouse-settings/greenhouse-settings.component";
 
 export const routes: Routes = [
@@ -35,5 +37,20 @@ export const routes: Routes = [
   {
     path: "unsupported-platform",
     component: UnsupportedPlatformComponent,
+  },
+  {
+    path: "login",
+    component: LoginComponent,
+    canActivate: [mobileOnlyGuard],
+  },
+  {
+    path: "register",
+    component: RegisterComponent,
+    canActivate: [mobileOnlyGuard],
+  },
+  {
+    path: "forgot-password",
+    component: ForgotPasswordComponent,
+    canActivate: [mobileOnlyGuard],
   },
 ];
