@@ -1,0 +1,5 @@
+@if (!isMobile) {
+  <zxing-scanner
+    [formats]="allowedFormats"
+    (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+}
