@@ -121,13 +121,10 @@ export class GreenhouseFormComponent {
           (this.greenhouseForm.get("step0.name")?.valid &&
             this.greenhouseForm.get("step0.location")?.valid)
         );
-
       case 1:
         return this.crops.length >= 0;
-
       case 2:
         return this.sensors.length > 0;
-
       default:
         return false;
     }
@@ -193,11 +190,13 @@ export class GreenhouseFormComponent {
   }
 
   public onCropSelected(crop: Crop): void {
-    this.crops.push(crop);
+    this.upsertCrop(crop, false);
   }
 
-  public onCropSaved(crop: Crop) {
-    this.upsertCrop(crop);
+  public onCropSaved(crop: Crop): void {
+    const isEdit = !!this.editingCrop;
+    this.upsertCrop(crop, isEdit);
+    this.editingCrop = null;
   }
 
   public removeCrop(index: number): void {
@@ -218,21 +217,24 @@ export class GreenhouseFormComponent {
     this.crops.splice(index, 1);
   }
 
-  /**
-   * Ajoute ou met à jour un crop.
-   * @param crop Le crop à ajouter ou modifier.
-   */
-  public upsertCrop(crop: Crop): void {
+  public upsertCrop(crop: Crop, isEdit: boolean): void {
     if (!crop || !crop.scientificName || !crop.commonName) return;
 
     const index = this.crops.findIndex(
       c => c.scientificName === crop.scientificName && c.commonName === crop.commonName
     );
 
+    console.log(crop, index);
+
     if (index === -1) {
-      this.crops.push(crop);
+      // Crop inexistant, on l'ajoute
+      this.crops.push({ ...crop });
     } else {
-      this.crops[index].quantity = (this.crops[index].quantity || 0) + (crop.quantity || 1);
+      if (isEdit) {
+        this.crops[index] = { ...this.crops[index], ...crop };
+      } else {
+        this.crops[index].quantity = (this.crops[index].quantity || 0) + (crop.quantity || 1);
+      }
     }
   }
 
@@ -246,10 +248,7 @@ export class GreenhouseFormComponent {
     this.cdr.detectChanges();
     this.sensorForm?.open();
   }
-  /**
-   * Ajoute ou met à jour un capteur.
-   * @param sensor Le capteur à ajouter ou modifier.
-   */
+
   public upsertSensor(sensor: Sensor): void {
     if (!sensor.sourceAddress?.trim()) return;
 
@@ -266,7 +265,6 @@ export class GreenhouseFormComponent {
 
     const index = this.sensors.findIndex(s => s.id === sensor.id);
 
-    // Capteur à modifier
     if (index !== -1) {
       this.sensors[index] = { ...this.sensors[index], ...sensor };
 
@@ -276,9 +274,7 @@ export class GreenhouseFormComponent {
           label: this.translateService.instant("components.ui.alert.success"),
         })
         .subscribe();
-    }
-    // Nouveau capteur
-    else {
+    } else {
       const newSensor: Sensor = {
         id: this.generateSensorId(),
         name: sensor.name || this.getDefaultSensorName(),
@@ -317,23 +313,14 @@ export class GreenhouseFormComponent {
     this.upsertSensor(sensor);
   }
 
-  /**
-   * Vérifie s’il existe un doublon de sourceAddress (sauf pour le capteur en cours de modification).
-   */
   private hasDuplicateSourceAddress(sensor: Sensor): boolean {
     return this.sensors.some(s => s.sourceAddress === sensor.sourceAddress && s.id !== sensor.id);
   }
 
-  /**
-   * Génère un nouvel ID pour un capteur.
-   */
   private generateSensorId(): number {
     return this.sensors.length ? Math.max(...this.sensors.map(s => s.id)) + 1 : 1;
   }
 
-  /**
-   * Retourne un nom par défaut localisé pour un capteur.
-   */
   private getDefaultSensorName(): string {
     const label = this.translateService.instant("components.greenhouse-form.sensor");
     return `${label} ${this.sensors.length + 1}`;

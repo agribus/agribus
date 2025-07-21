@@ -1,5 +1,12 @@
 {
   "components": {
+    "crop-selector": {
+      "loading": "Chargement en cours...",
+      "no": "Aucun crop disponible.",
+      "identify-title": "Identifier un crop",
+      "enter-quantity": "Entrez la quantité",
+      "select-crop": "Sélectionner le crop"
+    },
     "hello-world": {
       "browser": "Bonjour du navigateur",
       "mobile": "Bonjour depuis un téléphone portable"

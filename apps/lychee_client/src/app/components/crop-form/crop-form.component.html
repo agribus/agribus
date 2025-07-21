@@ -1,5 +1,5 @@
 <ng-template [(tuiSheetDialog)]="openSheet" [tuiSheetDialogOptions]="optionsSheet">
-  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="crop-form">
     <tui-textfield>
       <label tuiLabel>Nom commun</label>
       <input tuiTextfield formControlName="commonName" required />

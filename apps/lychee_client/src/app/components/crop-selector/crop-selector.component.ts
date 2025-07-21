@@ -13,6 +13,7 @@ import {
   TuiDataListWrapperComponent,
   TuiInputNumberDirective,
   TuiInputNumberStep,
+  TuiProgress,
   TuiProgressBar,
   TuiSelectDirective,
 } from "@taiga-ui/kit";
@@ -39,6 +40,7 @@ import { CropsService } from "@services/crops.service";
     TuiTextfieldComponent,
     TranslatePipe,
     TuiTextfield,
+    TuiProgress,
   ],
   templateUrl: "./crop-selector.component.html",
   styleUrl: "./crop-selector.component.scss",
@@ -53,7 +55,6 @@ export class CropSelectorComponent {
 
   @Output() cropSelected = new EventEmitter<Crop>();
 
-  // optionsSheet recalculé dynamiquement à chaque accès pour refléter l'état actuel
   public get optionsSheet(): Partial<TuiSheetDialogOptions> {
     return {
       label: this.translateService.instant("components.crop-selector.label"),
