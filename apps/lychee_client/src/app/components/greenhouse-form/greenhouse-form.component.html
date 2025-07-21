@@ -23,8 +23,8 @@
 
         <!-- <app-location-selector formControlName="location" />-->
 
-        <footer style="display: flex; justify-content: flex-end">
-          <button tuiButton appearance="primary" (click)="next()">
+        <footer CLASS="form-footer">
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
             {{ "components.ui.button.next" | translate }}
           </button>
         </footer>
@@ -33,7 +33,7 @@
   }
   @case (1) {
     <ng-container>
-      <form [formGroup]="greenhouseForm">
+      <form [formGroup]="step1">
         <div class="button-group">
           <button
             tuiButton
@@ -92,14 +92,6 @@
           </ul>
         }
 
-        <footer class="button-group">
-          <button tuiButton appearance="primary" (click)="previous()">
-            {{ "components.ui.button.return" | translate }}
-          </button>
-          <button tuiButton appearance="primary" (click)="next()">
-            {{ "components.ui.button.next" | translate }}
-          </button>
-        </footer>
         <app-crop-form
           #cropForm
           [label]="'Editer un crop'"
@@ -108,12 +100,21 @@
         <app-crop-selector
           #cropSelector
           (cropSelected)="onCropSelected($event)"></app-crop-selector>
+
+        <footer class="form-footer">
+          <button tuiButton appearance="primary" (click)="previous()">
+            {{ "components.ui.button.return" | translate }}
+          </button>
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
+            {{ "components.ui.button.next" | translate }}
+          </button>
+        </footer>
       </form>
     </ng-container>
   }
   @case (2) {
     <ng-container>
-      <form [formGroup]="greenhouseForm">
+      <form [formGroup]="step2">
         <div class="button-group">
           <button
             tuiButton
@@ -181,7 +182,15 @@
           #sensorForm
           [sensor]="editingSensor"
           (sensorSubmitted)="onSensorSaved($event)"></app-sensor-form>
-        <div class="btn-submit"><button size="m" tuiButton type="button">Submit</button></div>
+
+        <footer class="form-footer">
+          <button tuiButton appearance="primary" (click)="previous()">
+            {{ "components.ui.button.return" | translate }}
+          </button>
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="submitForm()">
+            {{ "components.ui.button.submit" | translate }}
+          </button>
+        </footer>
       </form>
     </ng-container>
   }

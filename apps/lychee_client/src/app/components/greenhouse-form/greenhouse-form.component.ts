@@ -75,16 +75,6 @@ export class GreenhouseFormComponent {
 
   public isScanning = false;
 
-  get step0(): FormGroup {
-    return this.greenhouseForm.get("step0") as FormGroup;
-  }
-  get step1(): FormGroup {
-    return this.greenhouseForm.get("step1") as FormGroup;
-  }
-  get step2(): FormGroup {
-    return this.greenhouseForm.get("step2") as FormGroup;
-  }
-
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
   @ViewChild("cropForm") cropForm?: { open: () => void };
   @ViewChild("cropSelector") cropSelector?: { open: () => void };
@@ -93,7 +83,7 @@ export class GreenhouseFormComponent {
     this.greenhouseForm = this.fb.group({
       step0: this.fb.group({
         name: ["", Validators.required],
-        location: [null, Validators.required],
+        location: ["Paris", Validators.required],
       }),
       step1: this.fb.group({
         crops: [[]],
@@ -104,13 +94,91 @@ export class GreenhouseFormComponent {
     });
   }
 
-  // Navigation
+  /* ############################ Navigation ############################ */
   protected next(): void {
     this.step.update(i => i + 1);
   }
 
   protected previous(): void {
     this.step.update(i => i - 1);
+  }
+
+  /* ############################ Form ############################ */
+  get step0(): FormGroup {
+    return this.greenhouseForm.get("step0") as FormGroup;
+  }
+  get step1(): FormGroup {
+    return this.greenhouseForm.get("step1") as FormGroup;
+  }
+  get step2(): FormGroup {
+    return this.greenhouseForm.get("step2") as FormGroup;
+  }
+
+  protected isStepValid(): boolean {
+    switch (this.step()) {
+      case 0:
+        return <boolean>(
+          (this.greenhouseForm.get("step0.name")?.valid &&
+            this.greenhouseForm.get("step0.location")?.valid)
+        );
+
+      case 1:
+        return this.crops.length >= 0;
+
+      case 2:
+        return this.sensors.length > 0;
+
+      default:
+        return false;
+    }
+  }
+
+  public submitForm(): void {
+    this.step1.get("crops")?.setValue(this.crops);
+    this.step2.get("sensor")?.setValue(this.sensors);
+
+    if (this.greenhouseForm.valid) {
+      console.log("✅ Formulaire valide", this.greenhouseForm.value);
+      return;
+    }
+
+    this.handleInvalidForm();
+  }
+
+  private handleInvalidForm(): void {
+    const invalidFields = this.getInvalidFields(this.greenhouseForm);
+    const translatedLabels = this.translateInvalidFields(invalidFields);
+
+    const message = `${this.translateService.instant("components.ui.alert.form-invalid")}: ${translatedLabels.join(", ")}`;
+
+    this.alerts
+      .open(message, {
+        label: this.translateService.instant("components.ui.alert.error"),
+        appearance: "error",
+      })
+      .subscribe();
+
+    this.greenhouseForm.markAllAsTouched();
+  }
+
+  private getInvalidFields(formGroup: FormGroup): string[] {
+    return Object.entries(formGroup.controls).flatMap(([key, control]) => {
+      if (control instanceof FormGroup) {
+        return this.getInvalidFields(control);
+      }
+      return control.invalid ? [key] : [];
+    });
+  }
+
+  private translateInvalidFields(fields: string[]): string[] {
+    const labels: Record<string, string> = {
+      name: this.translateService.instant("components.greenhouse-form.label.name"),
+      location: this.translateService.instant("components.greenhouse-form.label.location"),
+      crops: this.translateService.instant("components.greenhouse-form.label.crops"),
+      sensor: this.translateService.instant("components.greenhouse-form.label.sensors"),
+    };
+
+    return fields.map(field => labels[field] || field);
   }
 
   /* ############################## CROPS ############################## */

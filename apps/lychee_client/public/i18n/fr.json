@@ -8,6 +8,9 @@
       "dialog": {
         "title": "Ajouter un capteur"
       },
+      "label": {
+        "name": "Nom de la serre"
+      },
       "step": {
         "details": "Identification de la serre",
         "crops": "Cultures présentes",
