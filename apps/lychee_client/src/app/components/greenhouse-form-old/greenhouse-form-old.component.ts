@@ -26,12 +26,12 @@ import {
   TuiSwipeActions,
   TuiSwipeActionsAutoClose,
 } from "@taiga-ui/addon-mobile";
-import { SensorFormDialogComponent } from "@components/edit-sensor-dialog/sensor-form-dialog.component";
+import { SensorFormDialogComponent } from "@components/sensors/edit-sensor-dialog/sensor-form-dialog.component";
 import { CropsService } from "@services/crops.service";
 import { Crop } from "@interfaces/crop.interface";
-import { CropSelectorComponent } from "@components/crop-selector/crop-selector.component";
-import { CropFormComponent } from "@components/crop-form/crop-form.component";
-import { SensorFormComponent } from "@components/sensor-form/sensor-form.component";
+import { CropSelectorComponent } from "@components/crops/crop-selector/crop-selector.component";
+import { CropFormComponent } from "@components/crops/crop-form/crop-form.component";
+import { SensorFormComponent } from "@components/sensors/sensor-form/sensor-form.component";
 
 @Component({
   selector: "app-greenhouse-form",

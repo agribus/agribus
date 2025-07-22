@@ -16,14 +16,14 @@ import {
   TuiTextfield,
   TuiTitle,
 } from "@taiga-ui/core";
-import { SensorFormComponent } from "@components/sensor-form/sensor-form.component";
+import { SensorFormComponent } from "@components/sensors/sensor-form/sensor-form.component";
 import { TuiCard, TuiCardLarge, TuiCell } from "@taiga-ui/layout";
 import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobile";
 import { Sensor } from "@interfaces/sensor.interface";
 import { Crop } from "@interfaces/crop.interface";
 import { ScanQrCodeComponent } from "@components/ui/mobile/scan-qr-code/scan-qr-code.component";
-import { CropFormComponent } from "@components/crop-form/crop-form.component";
-import { CropSelectorComponent } from "@components/crop-selector/crop-selector.component";
+import { CropFormComponent } from "@components/crops/crop-form/crop-form.component";
+import { CropSelectorComponent } from "@components/crops/crop-selector/crop-selector.component";
 import { PlatformService } from "@services/platform/platform.service";
 
 @Component({
