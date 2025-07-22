@@ -17,7 +17,6 @@ import {
   TuiTitle,
 } from "@taiga-ui/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { take } from "rxjs";
 import { Sensor } from "@interfaces/sensor.interface";
@@ -42,7 +41,6 @@ import { SensorFormComponent } from "@components/sensor-form/sensor-form.compone
     TuiTextfield,
     TuiButton,
     TranslatePipe,
-    ScanQrCodeComponent,
     TuiAvatar,
     TuiAppearance,
     TuiSwipeActions,
