@@ -24,6 +24,7 @@ import { Crop } from "@interfaces/crop.interface";
 import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
 import { CropFormComponent } from "@components/crop-form/crop-form.component";
 import { CropSelectorComponent } from "@components/crop-selector/crop-selector.component";
+import { PlatformService } from "@services/platform/platform.service";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -62,6 +63,7 @@ export class GreenhouseFormComponent {
   private translateService = inject(TranslateService);
   private readonly alerts = inject(TuiAlertService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly platformService = inject(PlatformService);
 
   protected readonly step = signal(0);
 
@@ -74,12 +76,15 @@ export class GreenhouseFormComponent {
   public editingCrop: Crop | null = null;
 
   public isScanning = false;
+  public isMobile = false;
 
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
   @ViewChild("cropForm") cropForm?: { open: () => void };
   @ViewChild("cropSelector") cropSelector?: { open: () => void };
 
   constructor() {
+    this.isMobile = this.platformService.isMobile();
+
     this.greenhouseForm = this.fb.group({
       step0: this.fb.group({
         name: ["", Validators.required],

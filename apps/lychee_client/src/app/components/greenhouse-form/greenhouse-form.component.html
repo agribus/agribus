@@ -116,14 +116,16 @@
     <ng-container>
       <form [formGroup]="step2">
         <div class="button-group">
-          <button
-            tuiButton
-            type="button"
-            appearance="primary"
-            class="compact-button"
-            (click)="openScanQrCode()">
-            <tui-icon icon="@tui.camera" [style.height.rem]="1" />
-          </button>
+          @if (isMobile) {
+            <button
+              tuiButton
+              type="button"
+              appearance="primary"
+              class="compact-button"
+              (click)="openScanQrCode()">
+              <tui-icon icon="@tui.camera" [style.height.rem]="1" />
+            </button>
+          }
 
           <button
             tuiButton
@@ -174,7 +176,7 @@
             </li>
           }
         </ul>
-        @if (isScanning) {
+        @if (isScanning && isMobile) {
           <app-scan-qr-code />
         }
 
