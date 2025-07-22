@@ -2,24 +2,25 @@
   <div>
     @if (loading) {
       <tui-loader size="m"></tui-loader>
-      <p>{{ "components.crop-selector.loading" | translate }}</p>
+      <p>{{ "components.ui.loader.loadingMessage" | translate }}</p>
     }
     @if (!loading && !crops.length) {
-      <p>{{ "components.crop-selector.no" | translate }}</p>
+      <p>{{ "components.crops.crop-selector.noItemsAvailable" | translate }}</p>
     }
     @if (!loading && crops.length) {
-      <h3>{{ "components.crop-selector.identify-title" | translate }}</h3>
       @for (crop of crops; track $index) {
         <div class="crop-selector">
+          <p class="scientific-name">{{ crop.scientificName }}</p>
+
           <div class="common-name">
             <tui-textfield tuiChevron>
-              <label for="commonName{{ $index }}" class="label">Nom commun</label>
+              <label for="commonName{{ $index }}" class="label">
+                {{ "components.ui.fields.commonName" | translate }}
+              </label>
               <input tuiSelect [(ngModel)]="crop.commonName" />
               <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="crop.commonNames" />
             </tui-textfield>
           </div>
-
-          <p class="scientific-name">{{ crop.scientificName }}</p>
 
           <label tuiProgressLabel class="label-wrapper">
             {{ crop.score * 100 | number: "1.0-0" }}%
@@ -27,14 +28,15 @@
           </label>
 
           <tui-textfield>
-            <label tuiLabel>{{ "components.crop-selector.enter-quantity" | translate }}</label>
+            <label tuiLabel>{{ "components.ui.fields.enterQuantity" | translate }}</label>
             <input tuiInputNumber [(ngModel)]="crop.quantity" [min]="0" [step]="1" />
           </tui-textfield>
 
           <button tuiButton appearance="primary" size="m" (click)="selectCrop(crop)">
-            {{ "components.crop-selector.select-crop" | translate }}
+            {{ "components.crops.crop-selector.selectCrop" | translate }}
           </button>
         </div>
+        <hr style="margin: 1rem 0; color: lightgray; opacity: 0.8" />
       }
     }
   </div>

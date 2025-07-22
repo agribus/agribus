@@ -10,6 +10,7 @@ import {
 import { TuiButton, TuiTextfield } from "@taiga-ui/core";
 import { TuiInputDate, TuiInputNumber } from "@taiga-ui/kit";
 import { Crop } from "@interfaces/crop.interface";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
   selector: "app-crop-form",
@@ -21,6 +22,7 @@ import { Crop } from "@interfaces/crop.interface";
     TuiInputDate,
     TuiSheetDialog,
     ReactiveFormsModule,
+    TranslatePipe,
   ],
   templateUrl: "./crop-form.component.html",
   styleUrl: "./crop-form.component.scss",

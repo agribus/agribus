@@ -1,11 +1,12 @@
 {
   "components": {
-    "crop-selector": {
-      "loading": "Chargement en cours...",
-      "no": "Aucun crop disponible.",
-      "identify-title": "Identifier un crop",
-      "enter-quantity": "Entrez la quantité",
-      "select-crop": "Sélectionner le crop"
+    "crops": {
+      "crop-selector": {
+        "noItemsAvailable": "Aucun crop disponible.",
+        "identifyTitle": "Identifier un crop",
+        "dialogLabel": "Identifier un crop",
+        "selectCrop": "Sélectionner le crop"
+      }
     },
     "hello-world": {
       "browser": "Bonjour du navigateur",
@@ -56,6 +57,7 @@
         "error": "Erreur"
       },
       "button": {
+        "add": "Ajouter",
         "save": "Enregistrer",
         "next": "Suivant",
         "return": "Retour"
@@ -64,6 +66,16 @@
         "settings": "Paramètres",
         "settings-account": "Paramètres du compte",
         "greenhouse-form": "Paramètres de la serre"
+      },
+      "fields": {
+        "commonName": "Nom commun",
+        "scientificName": "Nom scientifique",
+        "plantingDate": "Date de plantation",
+        "quantity": "Quantité",
+        "enterQuantity": "Entrez la quantité"
+      },
+      "loader": {
+        "loadingMessage": "Chargement en cours..."
       }
     }
   },
