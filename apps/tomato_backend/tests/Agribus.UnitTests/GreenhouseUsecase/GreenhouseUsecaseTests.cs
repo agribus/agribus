@@ -1,7 +1,6 @@
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
-using Agribus.Core.Ports.Api.SensorUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using NSubstitute;
@@ -25,25 +24,26 @@ public class GreenhouseUsecaseTests
             Name = "Serre 01",
             City = "Lyon",
             Country = "France",
-            Crops = new List<Crop>
-            {
-                new()
+            Crops =
+            [
+                new Crop
                 {
                     CommonName = "Y",
                     ScientificName = "Y",
                     Quantity = 3,
+                    PlantingDate = DateTime.Now,
                 },
-                new()
+                new Crop
                 {
                     CommonName = "X",
                     ScientificName = "X",
                     Quantity = 2,
+                    PlantingDate = DateTime.Now,
                 },
-            },
-            Sensors = new List<CreateSensorDto>(),
+            ],
+            Sensors = [],
         };
 
-        var expectedGreenhouse = dto.MapToGreenhouse();
         greenhouseRepository
             .AddAsync(Arg.Any<Greenhouse>(), fakeUserId, Arg.Any<CancellationToken>())
             .Returns(callInfo => callInfo.Arg<Greenhouse>());
@@ -100,14 +100,14 @@ public class GreenhouseUsecaseTests
             Name = "Old Name",
             City = "Old City",
             Country = "Old Country",
-            Crops = new List<Crop>(),
+            Crops = [],
         };
         var dto = new UpdateGreenhouseDto
         {
             Name = "New Name",
             City = "New City",
             Country = "New Country",
-            Crops = new List<Crop> { },
+            Crops = [],
         };
 
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
@@ -137,5 +137,6 @@ public class GreenhouseUsecaseTests
         await greenhouseRepository
             .Received(1)
             .UpdateAsync(originalGreenhouse, dto, CancellationToken.None);
+        Assert.True(result);
     }
 }
