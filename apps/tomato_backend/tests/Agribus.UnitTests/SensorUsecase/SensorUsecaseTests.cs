@@ -49,4 +49,30 @@ public class SensorUsecaseTests
         // Then
         await sensorRepository.Received(1).UpdateAsync(originalSensor, dto, CancellationToken.None);
     }
+
+    [Fact]
+    public async Task ShouldDeleteSensor_GivenValidInput()
+    {
+        var fakeUserId = Guid.NewGuid();
+        var sensorRepository = Substitute.For<ISensorRepository>();
+        var usecase = new DeleteSensorUsecase(sensorRepository);
+        var originalSensor = new Sensor
+        {
+            Name = "Capteur Porte",
+            Model = SensorModel.RuuviTag,
+            SourceAddress = "34499765",
+            IsActive = true,
+        };
+
+        sensorRepository
+            .Exists(originalSensor.Id, fakeUserId, CancellationToken.None)
+            .Returns(originalSensor);
+        sensorRepository.DeleteAsync(originalSensor, CancellationToken.None).Returns(true);
+
+        // When
+        var result = await usecase.Handle(originalSensor.Id, fakeUserId, CancellationToken.None);
+
+        // Then
+        await sensorRepository.Received(1).DeleteAsync(originalSensor, CancellationToken.None);
+    }
 }
