@@ -57,6 +57,7 @@ namespace Agribus.Api.Middlewares
                 Endpoints.User.Signup,
                 Endpoints.Ping.Index,
                 "/swagger",
+                "/scalar",
             };
 
             return publicEndpoints.Any(path.StartsWith);
