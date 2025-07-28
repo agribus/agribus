@@ -10,6 +10,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Agribus.Clerk\Agribus.Clerk.csproj" />
     <ProjectReference Include="..\Agribus.Core\Agribus.Core.csproj" />
     <ProjectReference Include="..\Agribus.InfluxDB\Agribus.InfluxDB.csproj" />
     <ProjectReference Include="..\Agribus.Application\Agribus.Application.csproj" />

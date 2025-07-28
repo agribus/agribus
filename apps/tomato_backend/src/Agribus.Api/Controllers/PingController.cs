@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
@@ -18,5 +19,13 @@ public class PingController : ControllerBase
     {
         _logger.LogInformation("Ping received");
         return Ok("pong");
+    }
+
+    [HttpGet(Endpoints.Ping.Private)]
+    public IActionResult PrivatePing()
+    {
+        var userId = HttpContext.Items["UserId"]?.ToString();
+        _logger.LogInformation("Private Ping received from {UserId}", userId);
+        return Ok($"Private Ping received from {userId}");
     }
 }
