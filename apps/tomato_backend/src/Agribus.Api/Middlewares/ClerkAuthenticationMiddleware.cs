@@ -53,9 +53,9 @@ namespace Agribus.Api.Middlewares
 
             var publicEndpoints = new[]
             {
-                Endpoints.User.Login,
-                Endpoints.User.Signup,
-                Endpoints.Ping.Index,
+                $"/{Endpoints.User.Login}",
+                $"/{Endpoints.User.Signup}",
+                $"/{Endpoints.Ping.Index}",
                 "/swagger",
                 "/scalar",
             };
