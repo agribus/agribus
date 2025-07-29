@@ -24,7 +24,7 @@ public class PingController : ControllerBase
     [HttpGet(Endpoints.Ping.Private)]
     public IActionResult PrivatePing()
     {
-        var userId = HttpContext.Items["UserId"]?.ToString();
+        var userId = HttpContext.Items["UserId"]!.ToString();
         _logger.LogInformation("Private Ping received from {UserId}", userId);
         return Ok($"Private Ping received from {userId}");
     }
