@@ -3,6 +3,7 @@ using System;
 using Agribus.Postgres.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Agribus.Postgres.Migrations
 {
     [DbContext(typeof(AgribusDbContext))]
-    partial class AgribusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250720114627_FixGreenhouseIdFK")]
+    partial class FixGreenhouseIdFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,15 +104,15 @@ namespace Agribus.Postgres.Migrations
                         .HasColumnName("last_modified")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("model");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
+
+                    b.Property<string>("SensorModel")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("sensor_model");
 
                     b.Property<string>("SourceAddress")
                         .IsRequired()

@@ -24,14 +24,14 @@ public class SensorEntityTypeConfiguration : IEntityTypeConfiguration<Sensor>
             .IsRequired()
             .HasColumnType("varchar(50)");
         sensorConfiguration
-            .Property(sensor => sensor.SensorModel)
+            .Property(sensor => sensor.Model)
             .IsRequired()
             .HasColumnType("varchar(50)");
         sensorConfiguration.Property(sensor => sensor.IsActive).IsRequired().HasDefaultValue(true);
         sensorConfiguration
             .HasOne(sensor => sensor.Greenhouse)
             .WithMany(g => g.Sensors)
-            .HasForeignKey(sensor => sensor.GeenhouseId)
+            .HasForeignKey(sensor => sensor.GreenhouseId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
