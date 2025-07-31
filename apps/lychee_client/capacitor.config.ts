@@ -2,7 +2,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "com.lychee.app",
-  appName: "lychee",
+  appName: "Agribus",
   webDir: "dist/lychee_client/browser",
   plugins: {
     StatusBar: {
