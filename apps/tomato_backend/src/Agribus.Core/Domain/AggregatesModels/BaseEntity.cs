@@ -13,7 +13,7 @@ public class BaseEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTimeOffset LastModified { get; private set; } = DateTimeOffset.UtcNow;
 
-    public void UpdateLastModified()
+    protected void UpdateLastModified()
     {
         LastModified = DateTimeOffset.UtcNow;
     }

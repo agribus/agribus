@@ -1,23 +1,17 @@
 using Microsoft.AspNetCore.Authorization;
+using Agribus.Api.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
 
 [ApiController]
-public class PingController : ControllerBase
+public class PingController(ILogger<PingController> logger) : ControllerBase
 {
-    private readonly ILogger<PingController> _logger;
-
-    public PingController(ILogger<PingController> logger)
-    {
-        _logger = logger;
-    }
-
     [HttpGet(Endpoints.Ping.Index)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult Ping()
     {
-        _logger.LogInformation("Ping received");
+        logger.LogInformation("Ping received");
         return Ok("pong");
     }
 
@@ -25,7 +19,7 @@ public class PingController : ControllerBase
     public IActionResult PrivatePing()
     {
         var userId = HttpContext.Items["UserId"]!.ToString();
-        _logger.LogInformation("Private Ping received from {UserId}", userId);
+        logger.LogInformation("Private Ping received from {UserId}", userId);
         return Ok($"Private Ping received from {userId}");
     }
 }
