@@ -9,7 +9,8 @@
     "test": "ng test",
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .angular",
     "lint": "eslint . --max-warnings 0",
-    "format": "prettier --write \"**/*.{ts,html,scss,md,json}\""
+    "format": "prettier --write \"**/*.{ts,html,scss,md,json}\"",
+    "generate-assets": "capacitor-assets generate"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +43,7 @@
     "@angular/cli": "^20.0.3",
     "@angular/compiler-cli": "^20.0.0",
     "@capacitor/android": "^7.4.0",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/ios": "^7.4.0",
     "@eslint/js": "^9.29.0",
     "@types/jasmine": "~5.1.0",
