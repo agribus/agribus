@@ -1,4 +1,4 @@
-namespace Agribus.Core.Ports.Api.DTOs;
+namespace Agribus.Core.Ports.Api.ParseSensorData.DTOs;
 
 public record RawSensorPayload
 {
