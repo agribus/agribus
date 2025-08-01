@@ -10,7 +10,7 @@ public class DeleteGreenhouseUsecase(
 {
     public async Task<bool> Handle(
         Guid greenhouseId,
-        Guid userId,
+        string userId,
         CancellationToken cancellationToken
     )
     {

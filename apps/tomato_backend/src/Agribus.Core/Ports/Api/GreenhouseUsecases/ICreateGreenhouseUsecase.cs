@@ -7,7 +7,7 @@ public interface ICreateGreenhouseUsecase
 {
     Task<Greenhouse> Handle(
         CreateGreenhouseDto dto,
-        Guid userId,
+        string userId,
         CancellationToken cancellationToken
     );
 }

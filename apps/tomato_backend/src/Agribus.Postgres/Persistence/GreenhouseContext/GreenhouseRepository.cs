@@ -8,7 +8,7 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
 {
     public async Task<Greenhouse> AddAsync(
         Greenhouse greenhouse,
-        Guid userId,
+        string userId,
         CancellationToken cancellationToken
     )
     {
@@ -20,7 +20,7 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
 
     public async Task<Greenhouse?> Exists(
         Guid greenhouseId,
-        Guid userId,
+        string userId,
         CancellationToken cancellationToken
     )
     {

@@ -13,7 +13,7 @@ public class CreateGreenhouseUsecase(
 {
     public async Task<Greenhouse> Handle(
         CreateGreenhouseDto dto,
-        Guid userId,
+        string userId,
         CancellationToken cancellationToken
     )
     {

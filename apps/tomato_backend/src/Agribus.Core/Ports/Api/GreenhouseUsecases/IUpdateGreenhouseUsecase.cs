@@ -7,7 +7,7 @@ public interface IUpdateGreenhouseUsecase
 {
     Task<bool?> Handle(
         Guid greenhouseId,
-        Guid userId,
+        string userId,
         UpdateGreenhouseDto dto,
         CancellationToken cancellationToken
     );
