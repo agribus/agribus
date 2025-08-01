@@ -1,6 +1,7 @@
 using Agribus.Api.Extensions;
 using Agribus.Api.Middlewares;
 using Agribus.Application.Extensions;
+using Agribus.Clerk.Extensions;
 using Agribus.Core.Extensions;
 using Agribus.InfluxDB.Extensions;
 using Agribus.Postgres.Extensions;
@@ -13,6 +14,7 @@ builder
     .Services.AddPresentation()
     .AddCore()
     .ConfigureInfluxDB(config)
+    .AddClerk(config)
     .AddApplication()
     .ConfigurePostgres(config);
 
@@ -31,6 +33,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseMiddleware<ClerkAuthenticationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
 app.UseMiddleware<MappingMiddleware>();

@@ -7,11 +7,11 @@ public interface IGreenhouseRepository
 {
     Task<Greenhouse> AddAsync(
         Greenhouse greenhouse,
-        Guid userId,
+        string userId,
         CancellationToken cancellationToken
     );
 
-    Task<Greenhouse?> Exists(Guid greenhouseId, Guid userId, CancellationToken cancellationToken);
+    Task<Greenhouse?> Exists(Guid greenhouseId, string userId, CancellationToken cancellationToken);
     Task<bool> DeleteAsync(Greenhouse greenhouse, CancellationToken cancellationToken);
     Task<bool> UpdateAsync(
         Greenhouse greenhouse,

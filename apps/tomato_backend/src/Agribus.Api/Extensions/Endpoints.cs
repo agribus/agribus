@@ -7,6 +7,7 @@ public static class Endpoints
     public static class Ping
     {
         public const string Index = $"{ApiBasePath}/ping";
+        public const string Private = $"{ApiBasePath}/private/ping";
     }
 
     public static class Sensors
@@ -24,5 +25,13 @@ public static class Endpoints
         public const string CreateGreenhouse = $"{BasePath}";
         public const string DeleteGreenhouse = $"{BasePath}/{{id:guid}}";
         public const string EditGreenhouse = $"{BasePath}/{{id:guid}}";
+    }
+
+    public static class User
+    {
+        private const string BasePath = $"{ApiBasePath}/users";
+        public const string Login = $"{BasePath}/login";
+        public const string Signup = $"{BasePath}/signup";
+        public const string Logout = $"{BasePath}/logout";
     }
 }

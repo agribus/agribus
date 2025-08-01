@@ -65,6 +65,7 @@ services:
       - ASPNETCORE_URLS=http://+:5001
       - DOTNET_RUNNING_IN_CONTAINER=true
       - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - Clerk__SecretKey=${Clerk__SecretKey}
     restart: unless-stopped
     volumes:
       - ./apps/tomato_backend:/app
