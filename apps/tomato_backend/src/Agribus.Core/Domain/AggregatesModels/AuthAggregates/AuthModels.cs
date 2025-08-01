@@ -1,4 +1,4 @@
-namespace Agribus.Clerk.Models
+namespace Agribus.Core.Domain.AggregatesModels.AuthAggregates
 {
     public class LoginRequest
     {

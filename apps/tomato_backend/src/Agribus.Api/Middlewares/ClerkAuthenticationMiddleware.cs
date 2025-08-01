@@ -1,4 +1,5 @@
-using Agribus.Clerk.Services;
+using Agribus.Api.Extensions;
+using Agribus.Core.Ports.Spi.AuthContext;
 
 namespace Agribus.Api.Middlewares
 {
@@ -11,7 +12,7 @@ namespace Agribus.Api.Middlewares
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext context, IClerkAuthService clerkAuthService)
+        public async Task InvokeAsync(HttpContext context, IAuthService authService)
         {
             var path = context.Request.Path.Value?.ToLower();
 
@@ -29,7 +30,7 @@ namespace Agribus.Api.Middlewares
                 return;
             }
 
-            var isValid = await clerkAuthService.ValidateTokenAsync(token);
+            var isValid = await authService.ValidateTokenAsync(token);
             if (!isValid)
             {
                 context.Response.StatusCode = 401;
@@ -37,7 +38,7 @@ namespace Agribus.Api.Middlewares
                 return;
             }
 
-            var userId = await clerkAuthService.GetUserIdFromTokenAsync(token);
+            var userId = await authService.GetUserIdFromTokenAsync(token);
             if (!string.IsNullOrWhiteSpace(userId))
             {
                 context.Items["UserId"] = userId;

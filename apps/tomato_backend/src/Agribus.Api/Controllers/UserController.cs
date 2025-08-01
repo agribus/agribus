@@ -1,5 +1,6 @@
-using Agribus.Clerk.Models;
-using Agribus.Clerk.Services;
+using Agribus.Api.Extensions;
+using Agribus.Core.Domain.AggregatesModels.AuthAggregates;
+using Agribus.Core.Ports.Spi.AuthContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers
@@ -7,12 +8,12 @@ namespace Agribus.Api.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IClerkAuthService _clerkAuthService;
+        private readonly IAuthService _authService;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IClerkAuthService clerkAuthService, ILogger<UsersController> logger)
+        public UsersController(IAuthService authService, ILogger<UsersController> logger)
         {
-            _clerkAuthService = clerkAuthService;
+            _authService = authService;
             _logger = logger;
         }
 
@@ -26,7 +27,7 @@ namespace Agribus.Api.Controllers
                     request.Email
                 );
 
-                var response = await _clerkAuthService.LoginAsync(request);
+                var response = await _authService.LoginAsync(request);
 
                 if (response.Success)
                 {
@@ -61,7 +62,7 @@ namespace Agribus.Api.Controllers
                     request.Email
                 );
 
-                var response = await _clerkAuthService.SignupAsync(request);
+                var response = await _authService.SignupAsync(request);
 
                 if (response.Success)
                 {

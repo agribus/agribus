@@ -1,5 +1,8 @@
 using Agribus.Clerk.Services;
+using Agribus.Clerk.Validators;
+using Agribus.Core.Ports.Spi.AuthContext;
 using Clerk.BackendAPI;
+using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,9 +22,17 @@ namespace Agribus.Clerk.Extensions
                 throw new InvalidOperationException("Clerk SecretKey is not configured");
             }
 
+            services.AddHttpContextAccessor();
+
             services.AddSingleton(provider => new ClerkBackendApi(bearerAuth: secretKey));
 
-            services.AddScoped<IClerkAuthService, ClerkAuthService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddValidatorsFromAssemblyContaining<LoginRequestValidator>(
+                ServiceLifetime.Singleton
+            );
+            services.AddValidatorsFromAssemblyContaining<SignupRequestValidator>(
+                ServiceLifetime.Singleton
+            );
 
             return services;
         }
