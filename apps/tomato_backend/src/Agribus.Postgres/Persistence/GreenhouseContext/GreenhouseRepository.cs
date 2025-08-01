@@ -23,9 +23,9 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
         CancellationToken cancellationToken
     )
     {
-        var greenhouse = await context.Greenhouse
-        // .Where(g => g.UserId == userId)
-        .FirstOrDefaultAsync(g => g.Id == greenhouseId, cancellationToken);
+        var greenhouse = await context
+            .Greenhouse.Where(g => g.UserId == userId)
+            .FirstOrDefaultAsync(g => g.Id == greenhouseId, cancellationToken);
 
         return greenhouse;
     }
@@ -43,6 +43,7 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
     )
     {
         greenhouse.Update(dto);
+        context.Greenhouse.Update(greenhouse);
         return await context.SaveChangesAsync(cancellationToken) > 0;
     }
 }
