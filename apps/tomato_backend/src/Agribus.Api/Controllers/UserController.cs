@@ -20,74 +20,41 @@ namespace Agribus.Api.Controllers
         [HttpPost(Endpoints.User.Login)]
         public async Task<ActionResult<AuthResponse>> Login([FromBody] LoginRequest request)
         {
-            try
+            _logger.LogInformation("Tentative de connexion pour l'email: {Email}", request.Email);
+
+            var response = await _authService.LoginAsync(request);
+
+            if (response.Success)
             {
-                _logger.LogInformation(
-                    "Tentative de connexion pour l'email: {Email}",
-                    request.Email
-                );
-
-                var response = await _authService.LoginAsync(request);
-
-                if (response.Success)
-                {
-                    _logger.LogInformation(
-                        "Connexion réussie pour l'email: {Email}",
-                        request.Email
-                    );
-                    return Ok(response);
-                }
-
-                _logger.LogWarning("Échec de connexion pour l'email: {Email}", request.Email);
-                return BadRequest(response);
+                _logger.LogInformation("Connexion réussie pour l'email: {Email}", request.Email);
+                return Ok(response);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(
-                    ex,
-                    "Erreur lors de la connexion pour l'email: {Email}",
-                    request.Email
-                );
-                return StatusCode(500, AuthResponse.CreateError("Internal server error"));
-            }
+
+            _logger.LogWarning("Échec de connexion pour l'email: {Email}", request.Email);
+            return BadRequest(response);
         }
 
         [HttpPost(Endpoints.User.Signup)]
         public async Task<ActionResult<AuthResponse>> Signup([FromBody] SignupRequest request)
         {
-            try
+            _logger.LogInformation(
+                "Tentative de création de compte pour l'email: {Email}",
+                request.Email
+            );
+
+            var response = await _authService.SignupAsync(request);
+
+            if (response.Success)
             {
                 _logger.LogInformation(
-                    "Tentative de création de compte pour l'email: {Email}",
+                    "Compte créé avec succès pour l'email: {Email}",
                     request.Email
                 );
-
-                var response = await _authService.SignupAsync(request);
-
-                if (response.Success)
-                {
-                    _logger.LogInformation(
-                        "Compte créé avec succès pour l'email: {Email}",
-                        request.Email
-                    );
-                    return CreatedAtAction(nameof(Signup), response);
-                }
-
-                _logger.LogWarning(
-                    "Échec de création de compte pour l'email: {Email}",
-                    request.Email
-                );
-                return BadRequest(response);
+                return CreatedAtAction(nameof(Signup), response);
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(
-                    ex,
-                    "Erreur lors de la création de compte pour l'email: {Email}",
-                    request.Email
-                );
-                return StatusCode(500, AuthResponse.CreateError("Internal server error"));
-            }
+
+            _logger.LogWarning("Échec de création de compte pour l'email: {Email}", request.Email);
+            return BadRequest(response);
         }
 
         [HttpPost(Endpoints.User.Logout)]
