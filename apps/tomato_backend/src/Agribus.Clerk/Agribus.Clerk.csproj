@@ -12,4 +12,7 @@
       Version="9.0.6"
     />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Agribus.Core\Agribus.Core.csproj" />
+  </ItemGroup>
 </Project>

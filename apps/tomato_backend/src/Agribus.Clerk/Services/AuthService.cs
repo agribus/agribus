@@ -1,40 +1,44 @@
-using Agribus.Clerk.Models;
+using Agribus.Clerk.Validators;
+using Agribus.Core.Domain.AggregatesModels.AuthAggregates;
+using Agribus.Core.Ports.Spi.AuthContext;
 using Clerk.BackendAPI;
 using Clerk.BackendAPI.Models.Errors;
 using Clerk.BackendAPI.Models.Operations;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Status = Clerk.BackendAPI.Models.Components.Status;
 
 namespace Agribus.Clerk.Services
 {
-    public class ClerkAuthService : IClerkAuthService
+    public class AuthService : IAuthService
     {
         private readonly ClerkBackendApi _clerkClient;
-        private readonly ILogger<ClerkAuthService> _logger;
+        private readonly ILogger<AuthService> _logger;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly LoginRequestValidator _loginValidator;
+        private readonly SignupRequestValidator _signupValidator;
 
-        public ClerkAuthService(ClerkBackendApi clerkClient, ILogger<ClerkAuthService> logger)
+        public AuthService(
+            ClerkBackendApi clerkClient,
+            ILogger<AuthService> logger,
+            IHttpContextAccessor httpContextAccessor,
+            LoginRequestValidator loginValidator,
+            SignupRequestValidator signupValidator
+        )
         {
             _clerkClient = clerkClient;
             _logger = logger;
+            _httpContextAccessor = httpContextAccessor;
+            _loginValidator = loginValidator;
+            _signupValidator = signupValidator;
         }
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)
         {
             try
             {
-                if (
-                    string.IsNullOrWhiteSpace(request.Email)
-                    || string.IsNullOrWhiteSpace(request.Password)
-                )
-                {
-                    return AuthResponse.CreateError(
-                        "Mail and password required",
-                        new Dictionary<string, string[]>
-                        {
-                            ["validation"] = ["Mail and password required"],
-                        }
-                    );
-                }
+                await _loginValidator.ValidateAndThrowAsync(request);
 
                 var usersList = await _clerkClient.Users.ListAsync(
                     new() { EmailAddress = [request.Email] }
@@ -83,14 +87,7 @@ namespace Agribus.Clerk.Services
         {
             try
             {
-                var validationErrors = ValidateSignupRequest(request);
-                if (validationErrors.Count != 0)
-                {
-                    return AuthResponse.CreateError(
-                        "Invalid signup request. Please check the following fields:",
-                        validationErrors
-                    );
-                }
+                await _signupValidator.ValidateAndThrowAsync(request);
 
                 var userEmailCheckList = await _clerkClient.Users.ListAsync(
                     new() { EmailAddress = [request.Email] }
@@ -168,56 +165,9 @@ namespace Agribus.Clerk.Services
             }
         }
 
-        private Dictionary<string, string[]> ValidateSignupRequest(SignupRequest request)
+        public string GetCurrentUserId()
         {
-            var errors = new Dictionary<string, string[]>();
-
-            if (string.IsNullOrWhiteSpace(request.Username))
-            {
-                errors["username"] = ["Username is required"];
-            }
-            else if (request.Username.Length < 4)
-            {
-                errors["username"] = ["The username must be at least 4 characters long"];
-            }
-
-            if (string.IsNullOrWhiteSpace(request.Email))
-            {
-                errors["email"] = ["Email is required"];
-            }
-            else if (!IsValidEmail(request.Email))
-            {
-                errors["email"] = ["Invalid email address"];
-            }
-
-            if (string.IsNullOrWhiteSpace(request.Password))
-            {
-                errors["password"] = ["Password is required"];
-            }
-            else if (request.Password.Length < 8)
-            {
-                errors["password"] = ["The password must be at least 8 characters long"];
-            }
-
-            if (request.Password != request.ConfirmPassword)
-            {
-                errors["confirmPassword"] = ["Passwords do not match"];
-            }
-
-            return errors;
-        }
-
-        private static bool IsValidEmail(string email)
-        {
-            try
-            {
-                var addr = new System.Net.Mail.MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
+            return _httpContextAccessor.HttpContext.Items["UserId"]!.ToString()!;
         }
     }
 }
