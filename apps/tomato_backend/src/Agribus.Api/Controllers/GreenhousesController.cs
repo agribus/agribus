@@ -1,6 +1,7 @@
 using Agribus.Api.Extensions;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
+using Agribus.Core.Ports.Spi.AuthContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
@@ -9,7 +10,8 @@ public class GreenhousesController(
     ILogger<GreenhousesController> logger,
     ICreateGreenhouseUsecase createGreenhouseUsecase,
     IDeleteGreenhouseUsecase deleteGreenhouseUsecase,
-    IUpdateGreenhouseUsecase updateGreenhouseUsecase
+    IUpdateGreenhouseUsecase updateGreenhouseUsecase,
+    IAuthService authService
 ) : ControllerBase
 {
     [HttpPost(Endpoints.Greenhouses.CreateGreenhouse)]
@@ -20,12 +22,11 @@ public class GreenhousesController(
         CancellationToken cancellationToken = default
     )
     {
-        // TODO: Authorization when Clerk done
-        var fakeUserId = Guid.NewGuid();
+        var userId = authService.GetCurrentUserId();
 
         try
         {
-            var created = await createGreenhouseUsecase.Handle(dto, fakeUserId, cancellationToken);
+            var created = await createGreenhouseUsecase.Handle(dto, userId, cancellationToken);
             return Created(Endpoints.Greenhouses.CreateGreenhouse, created);
         }
         catch (Exception e)
@@ -43,9 +44,8 @@ public class GreenhousesController(
         CancellationToken cancellationToken = default
     )
     {
-        // TODO: Authorization when Clerk done
-        var fakeUserId = Guid.NewGuid();
-        var deleted = await deleteGreenhouseUsecase.Handle(id, fakeUserId, cancellationToken);
+        var userId = authService.GetCurrentUserId();
+        var deleted = await deleteGreenhouseUsecase.Handle(id, userId, cancellationToken);
 
         return deleted ? NoContent() : NotFound();
     }
@@ -59,9 +59,8 @@ public class GreenhousesController(
         CancellationToken cancellationToken = default
     )
     {
-        // TODO: Authorization when Clerk done
-        var fakeUserId = Guid.NewGuid();
-        var updated = await updateGreenhouseUsecase.Handle(id, fakeUserId, dto, cancellationToken);
+        var userId = authService.GetCurrentUserId();
+        var updated = await updateGreenhouseUsecase.Handle(id, userId, dto, cancellationToken);
 
         return updated != null ? NoContent() : NotFound();
     }

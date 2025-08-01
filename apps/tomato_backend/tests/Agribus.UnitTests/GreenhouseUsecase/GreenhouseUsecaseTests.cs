@@ -13,8 +13,8 @@ public class GreenhouseUsecaseTests
     public async Task ShouldCreateGreenhouse_GivenValidInput()
     {
         // Given
-        var fakeUserId = Guid.NewGuid();
-        var authContext = Substitute.For<IAuthContextService>();
+        var fakeUserId = "user_12345";
+        var authContext = Substitute.For<IAuthService>();
         authContext.GetCurrentUserId().Returns(fakeUserId);
 
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
@@ -67,7 +67,7 @@ public class GreenhouseUsecaseTests
     public async Task ShouldDeleteGreenhouse_GivenValidInput()
     {
         // Given
-        var fakeUserId = Guid.NewGuid();
+        var fakeUserId = "user_67890";
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
         var greenhouse = new Greenhouse
         {
@@ -94,7 +94,7 @@ public class GreenhouseUsecaseTests
     public async Task ShouldUpdateGreenhouse_GivenValidInput()
     {
         // Given
-        var userId = Guid.NewGuid();
+        var userId = "user_11111";
         var originalGreenhouse = new Greenhouse
         {
             Name = "Old Name",
