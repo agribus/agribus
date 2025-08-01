@@ -23,17 +23,8 @@ public class GreenhousesController(
     )
     {
         var userId = authService.GetCurrentUserId();
-
-        try
-        {
-            var created = await createGreenhouseUsecase.Handle(dto, userId, cancellationToken);
-            return Created(Endpoints.Greenhouses.CreateGreenhouse, created);
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "Error creating greenhouse");
-            throw;
-        }
+        var created = await createGreenhouseUsecase.Handle(dto, userId, cancellationToken);
+        return Created(Endpoints.Greenhouses.CreateGreenhouse, created);
     }
 
     [HttpDelete(Endpoints.Greenhouses.DeleteGreenhouse)]

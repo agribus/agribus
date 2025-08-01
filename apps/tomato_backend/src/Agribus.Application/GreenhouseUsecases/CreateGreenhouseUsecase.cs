@@ -6,10 +6,8 @@ using Agribus.Core.Ports.Spi.GreenhouseContext;
 
 namespace Agribus.Application.GreenhouseUsecases;
 
-public class CreateGreenhouseUsecase(
-    // IAuthContextService authContext,
-    IGreenhouseRepository greenhouseRepository
-) : ICreateGreenhouseUsecase
+public class CreateGreenhouseUsecase(IGreenhouseRepository greenhouseRepository)
+    : ICreateGreenhouseUsecase
 {
     public async Task<Greenhouse> Handle(
         CreateGreenhouseDto dto,
@@ -17,8 +15,8 @@ public class CreateGreenhouseUsecase(
         CancellationToken cancellationToken
     )
     {
-        var entityToAdd = dto.MapToGreenhouse();
-        var result = await greenhouseRepository.AddAsync(entityToAdd, userId, cancellationToken);
+        var entityToAdd = dto.MapToGreenhouse(userId);
+        var result = await greenhouseRepository.AddAsync(entityToAdd, cancellationToken);
         return result;
     }
 }

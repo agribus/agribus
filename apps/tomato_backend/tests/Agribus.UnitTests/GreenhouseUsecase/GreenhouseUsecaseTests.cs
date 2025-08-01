@@ -45,10 +45,9 @@ public class GreenhouseUsecaseTests
         };
 
         greenhouseRepository
-            .AddAsync(Arg.Any<Greenhouse>(), fakeUserId, Arg.Any<CancellationToken>())
+            .AddAsync(Arg.Any<Greenhouse>(), Arg.Any<CancellationToken>())
             .Returns(callInfo => callInfo.Arg<Greenhouse>());
 
-        // var usecase = new CreateGreenhouseUsecase(authContext, greenhouseRepository);
         var usecase = new CreateGreenhouseUsecase(greenhouseRepository);
 
         // When
@@ -75,6 +74,7 @@ public class GreenhouseUsecaseTests
             City = "Paris",
             Country = "France",
             Crops = new List<Crop>(),
+            UserId = fakeUserId,
         };
         greenhouseRepository
             .Exists(greenhouse.Id, fakeUserId, CancellationToken.None)
@@ -101,6 +101,7 @@ public class GreenhouseUsecaseTests
             City = "Old City",
             Country = "Old Country",
             Crops = [],
+            UserId = userId,
         };
         var dto = new UpdateGreenhouseDto
         {
