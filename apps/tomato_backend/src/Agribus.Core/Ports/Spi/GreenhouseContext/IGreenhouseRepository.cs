@@ -5,11 +5,7 @@ namespace Agribus.Core.Ports.Spi.GreenhouseContext;
 
 public interface IGreenhouseRepository
 {
-    Task<Greenhouse> AddAsync(
-        Greenhouse greenhouse,
-        string userId,
-        CancellationToken cancellationToken
-    );
+    Task<Greenhouse> AddAsync(Greenhouse greenhouse, CancellationToken cancellationToken);
 
     Task<Greenhouse?> Exists(Guid greenhouseId, string userId, CancellationToken cancellationToken);
     Task<bool> DeleteAsync(Greenhouse greenhouse, CancellationToken cancellationToken);
