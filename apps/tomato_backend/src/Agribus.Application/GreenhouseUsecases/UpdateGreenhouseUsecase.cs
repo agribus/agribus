@@ -12,7 +12,7 @@ public class UpdateGreenhouseUsecase(
 {
     public async Task<bool?> Handle(
         Guid greenhouseId,
-        Guid userId,
+        string userId,
         UpdateGreenhouseDto dto,
         CancellationToken cancellationToken
     )
