@@ -30,7 +30,8 @@ public class Greenhouse : BaseEntity
         Name = dto.Name ?? Name;
         Country = dto.Country ?? Country;
         City = dto.City ?? City;
-        Crops = dto.Crops ?? Crops;
+        if (dto.Crops is not null)
+            Crops = dto.Crops.Select(c => c.MapToCrop()).ToList();
 
         UpdateLastModified();
     }
