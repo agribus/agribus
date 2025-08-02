@@ -174,10 +174,10 @@ export class GreenhouseFormComponent {
 
   private translateInvalidFields(fields: string[]): string[] {
     const labels: Record<string, string> = {
-      name: this.translateService.instant("components.greenhouse-form.label.name"),
-      location: this.translateService.instant("components.greenhouse-form.label.location"),
-      crops: this.translateService.instant("components.greenhouse-form.label.crops"),
-      sensor: this.translateService.instant("components.greenhouse-form.label.sensors"),
+      name: this.translateService.instant("components.greenhouses-form.label.name"),
+      location: this.translateService.instant("components.greenhouses-form.label.location"),
+      crops: this.translateService.instant("components.greenhouses-form.label.crops"),
+      sensor: this.translateService.instant("components.greenhouses-form.label.sensors"),
     };
 
     return fields.map(field => labels[field] || field);
@@ -210,7 +210,7 @@ export class GreenhouseFormComponent {
 
     this.alerts
       .open(
-        this.translateService.instant("components.greenhouse-form.alert.remove-sensor") +
+        this.translateService.instant("components.greenhouses-form.alert.remove-sensor") +
           crop.commonName,
         {
           appearance: "info",
@@ -260,7 +260,7 @@ export class GreenhouseFormComponent {
     const duplicate = this.hasDuplicateSourceAddress(sensor);
     if (duplicate) {
       this.alerts
-        .open(this.translateService.instant("components.greenhouse-form.alert.duplicate-sensor"), {
+        .open(this.translateService.instant("components.greenhouses-form.alert.duplicate-sensor"), {
           appearance: "warning",
           label: this.translateService.instant("components.ui.alert.warning"),
         })
@@ -274,7 +274,7 @@ export class GreenhouseFormComponent {
       this.sensors[index] = { ...this.sensors[index], ...sensor };
 
       this.alerts
-        .open(this.translateService.instant("components.greenhouse-form.alert.sensor-updated"), {
+        .open(this.translateService.instant("components.greenhouses-form.alert.sensor-updated"), {
           appearance: "success",
           label: this.translateService.instant("components.ui.alert.success"),
         })
@@ -289,7 +289,7 @@ export class GreenhouseFormComponent {
       this.sensors.push(newSensor);
 
       this.alerts
-        .open(this.translateService.instant("components.greenhouse-form.alert.sensor-added"), {
+        .open(this.translateService.instant("components.greenhouses-form.alert.sensor-added"), {
           appearance: "success",
           label: this.translateService.instant("components.ui.alert.success"),
         })
@@ -303,7 +303,7 @@ export class GreenhouseFormComponent {
 
     this.alerts
       .open(
-        this.translateService.instant("components.greenhouse-form.alert.remove-sensor") +
+        this.translateService.instant("components.greenhouses-form.alert.remove-sensor") +
           sensor.name,
         {
           appearance: "info",
@@ -327,7 +327,7 @@ export class GreenhouseFormComponent {
   }
 
   private getDefaultSensorName(): string {
-    const label = this.translateService.instant("components.greenhouse-form.sensor");
+    const label = this.translateService.instant("components.greenhouses-form.sensor");
     return `${label} ${this.sensors.length + 1}`;
   }
 }

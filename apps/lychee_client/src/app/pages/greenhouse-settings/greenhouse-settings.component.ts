@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { GreenhouseFormComponent } from "@components/greenhouse-form/greenhouse-form.component";
+import { GreenhouseFormComponent } from "@components/greenhouses/greenhouse-form/greenhouse-form.component";
 
 @Component({
   selector: "app-greenhouse-settings",
