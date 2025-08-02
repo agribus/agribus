@@ -10,7 +10,14 @@
     @if (!loading && crops.length) {
       @for (crop of crops; track $index) {
         <div class="crop-selector">
-          <p class="scientific-name">{{ crop.scientificName }}</p>
+          <div class="scientific-name">
+            <tui-textfield tuiChevron>
+              <label for="scientificName{{ $index }}" class="label">
+                {{ "components.ui.fields.scientificName" | translate }}
+              </label>
+              <input tuiSelect [(ngModel)]="crop.scientificName" disabled />
+            </tui-textfield>
+          </div>
 
           <div class="common-name">
             <tui-textfield tuiChevron>
@@ -36,7 +43,6 @@
             {{ "components.crops.crop-selector.selectCrop" | translate }}
           </button>
         </div>
-        <hr style="margin: 1rem 0; color: lightgray; opacity: 0.8" />
       }
     }
   </div>

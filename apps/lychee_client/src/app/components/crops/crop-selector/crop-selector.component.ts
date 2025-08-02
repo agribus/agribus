@@ -58,7 +58,7 @@ export class CropSelectorComponent {
   public get optionsSheet(): Partial<TuiSheetDialogOptions> {
     return {
       label: this.translateService.instant("components.crops.crop-selector.dialogLabel"),
-      closeable: !this.loading && this.crops.length === 0,
+      closeable: true,
     };
   }
 
