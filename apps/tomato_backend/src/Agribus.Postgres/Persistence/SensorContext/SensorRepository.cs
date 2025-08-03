@@ -7,16 +7,15 @@ namespace Agribus.Postgres.Persistence.SensorContext;
 internal class SensorRepository(AgribusDbContext context) : ISensorRepository
 {
     public async Task<Sensor?> Exists(
-        Guid originalSensorId,
-        Guid userId,
+        Guid sensorId,
+        string userId,
         CancellationToken cancellationToken
     )
     {
         var sensor = await context.Sensor.FirstOrDefaultAsync(
-            s => s.Id == originalSensorId,
+            s => s.Id == sensorId && s.Greenhouse.UserId == userId,
             cancellationToken
         );
-        // TODO check if sensor belongs to a greenhouse of the user
         return sensor;
     }
 
@@ -34,5 +33,13 @@ internal class SensorRepository(AgribusDbContext context) : ISensorRepository
     {
         context.Sensor.Remove(sensor);
         return await context.SaveChangesAsync(cancellationToken) > 0;
+    }
+
+    public async Task<bool> IsRegistered(string sourceAddress, CancellationToken cancellationToken)
+    {
+        return await context.Sensor.FirstOrDefaultAsync(
+            s => s.SourceAddress == sourceAddress,
+            cancellationToken
+        );
     }
 }
