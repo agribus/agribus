@@ -15,5 +15,8 @@ export class ThreeSceneComponent implements OnInit {
 
   ngOnInit(): void {
     this.threeSceneService.createScene(this.greenhouseCanva);
+    setTimeout(() => {
+      this.threeSceneService.plantVegetable("carrot", 5);
+    }, 1000);
   }
 }

@@ -2,6 +2,7 @@ import { ElementRef, Injectable } from "@angular/core";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { VEGETABLES } from "@utils/vegetables-config/vegetables.config";
 
 @Injectable({ providedIn: "root" })
 export class ThreeSceneService {
@@ -15,7 +16,6 @@ export class ThreeSceneService {
   private modelPath = "./models/greenhouse.glb";
   private smoothReset = false;
 
-  private greenhouseModel: THREE.Object3D;
   private spawnPoints: THREE.Object3D[] = [];
 
   createScene(container: ElementRef): void {
@@ -40,15 +40,15 @@ export class ThreeSceneService {
 
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
+    this.controls.enableZoom = false;
+    this.controls.enablePan = false;
     this.controls.update();
 
     this.controls.addEventListener("start", this.onStart);
     this.controls.addEventListener("end", this.onEnd);
 
     this.loader.load(this.modelPath, gltf => {
-      this.greenhouseModel = gltf.scene;
-
-      const model = this.greenhouseModel;
+      const model = gltf.scene;
 
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
@@ -68,19 +68,6 @@ export class ThreeSceneService {
         point.add(helper);
       });
 
-      if (this.spawnPoints.length > 0) {
-        this.spawnPoints.forEach(point => {
-          const carrotGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-          const carrotMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-          const carrotMesh = new THREE.Mesh(carrotGeometry, carrotMaterial);
-
-          carrotMesh.position.copy(point.getWorldPosition(new THREE.Vector3()));
-
-          carrotMesh.rotation.y = Math.random() * Math.PI * 2;
-          this.scene.add(carrotMesh);
-        });
-      }
-
       const maxDim = Math.max(size.x, size.y, size.z);
       const fov = this.camera.fov * (Math.PI / 180);
       let cameraZ = maxDim / 2 / Math.tan(fov / 2);
@@ -96,6 +83,29 @@ export class ThreeSceneService {
     this.animate();
     this.onResize();
     window.addEventListener("resize", this.onResize);
+  }
+
+  plantVegetable(vegetableKey: string, quantity: number): void {
+    const config = VEGETABLES[vegetableKey];
+    if (!config) {
+      console.error(`Vegetable "${vegetableKey}" not found in VEGETABLES.`);
+      return;
+    }
+    this.loader.load(config.modelPath, gltf => {
+      const baseModel = gltf.scene;
+      const count = Math.min(quantity, this.spawnPoints.length);
+
+      for (let i = 0; i < count; i++) {
+        const point = this.spawnPoints[i];
+        const vegClone = baseModel.clone(true);
+
+        vegClone.position.copy(point.getWorldPosition(new THREE.Vector3()));
+        vegClone.rotation.y = Math.random() * Math.PI * 2;
+        vegClone.position.y += 0.1;
+
+        this.scene.add(vegClone);
+      }
+    });
   }
 
   private onStart = () => {
