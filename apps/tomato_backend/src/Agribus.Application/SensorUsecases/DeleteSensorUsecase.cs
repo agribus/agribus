@@ -5,7 +5,11 @@ namespace Agribus.Application.SensorUsecases;
 
 public class DeleteSensorUsecase(ISensorRepository sensorRepository) : IDeleteSensorUsecase
 {
-    public async Task<bool> Handle(Guid sensorId, Guid userId, CancellationToken cancellationToken)
+    public async Task<bool> Handle(
+        Guid sensorId,
+        string userId,
+        CancellationToken cancellationToken
+    )
     {
         var sensor = await sensorRepository.Exists(sensorId, userId, cancellationToken);
         if (sensor is null)

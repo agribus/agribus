@@ -40,6 +40,7 @@ internal class SensorRepository(AgribusDbContext context) : ISensorRepository
         return await context.Sensor.FirstOrDefaultAsync(
             s => s.SourceAddress == sourceAddress,
             cancellationToken
-        );
+        )
+            is not null;
     }
 }
