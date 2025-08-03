@@ -8,7 +8,7 @@ public class UpdateSensorUsecase(ISensorRepository sensorRepository) : IUpdateSe
 {
     public async Task<bool?> Handle(
         Guid originalSensorId,
-        Guid userId,
+        string userId,
         UpdateSensorDto dto,
         CancellationToken cancellationToken
     )
