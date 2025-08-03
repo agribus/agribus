@@ -13,6 +13,7 @@ export class ThreeSceneService {
   private container: HTMLElement;
 
   private modelPath = "./models/greenhouse.glb";
+  private smoothReset = false;
 
   createScene(container: ElementRef): void {
     this.container = container.nativeElement;
@@ -37,6 +38,9 @@ export class ThreeSceneService {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.enableDamping = true;
     this.controls.update();
+
+    this.controls.addEventListener("start", this.onStart);
+    this.controls.addEventListener("end", this.onEnd);
 
     this.loader.load(
       this.modelPath,
@@ -72,8 +76,39 @@ export class ThreeSceneService {
     window.addEventListener("resize", this.onResize);
   }
 
+  private onStart = () => {
+    this.controls.minAzimuthAngle = -Infinity;
+    this.controls.maxAzimuthAngle = Infinity;
+    this.controls.minPolarAngle = 0;
+    this.controls.maxPolarAngle = Math.PI;
+    this.smoothReset = false;
+  };
+
+  private onEnd = () => {
+    this.smoothReset = true;
+  };
+
+  private doSmoothReset = () => {
+    const alpha = this.controls.getAzimuthalAngle();
+    const beta = this.controls.getPolarAngle() - Math.PI / 2;
+
+    const snappedAlpha = Math.abs(alpha) < 0.001 ? 0 : 0.95 * alpha;
+    const snappedBeta = Math.abs(beta) < 0.001 ? 0 : 0.95 * beta;
+
+    this.controls.minAzimuthAngle = snappedAlpha;
+    this.controls.maxAzimuthAngle = snappedAlpha;
+
+    this.controls.minPolarAngle = Math.PI / 2 + snappedBeta;
+    this.controls.maxPolarAngle = this.controls.minPolarAngle;
+
+    if (snappedAlpha === 0 && snappedBeta === 0) {
+      this.onStart();
+    }
+  };
+
   private animate = () => {
     requestAnimationFrame(this.animate);
+    if (this.smoothReset) this.doSmoothReset();
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   };
