@@ -15,6 +15,9 @@ export class ThreeSceneService {
   private modelPath = "./models/greenhouse.glb";
   private smoothReset = false;
 
+  private greenhouseModel: THREE.Object3D;
+  private spawnPoints: THREE.Object3D[] = [];
+
   createScene(container: ElementRef): void {
     this.container = container.nativeElement;
 
@@ -42,34 +45,53 @@ export class ThreeSceneService {
     this.controls.addEventListener("start", this.onStart);
     this.controls.addEventListener("end", this.onEnd);
 
-    this.loader.load(
-      this.modelPath,
-      gltf => {
-        const model = gltf.scene;
-        this.scene.add(model);
+    this.loader.load(this.modelPath, gltf => {
+      this.greenhouseModel = gltf.scene;
 
-        const box = new THREE.Box3().setFromObject(model);
-        const size = box.getSize(new THREE.Vector3());
-        const center = box.getCenter(new THREE.Vector3());
+      const model = this.greenhouseModel;
 
-        model.position.sub(center);
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
 
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = this.camera.fov * (Math.PI / 180);
-        let cameraZ = maxDim / 2 / Math.tan(fov / 2);
-        cameraZ *= 3;
+      model.position.sub(center);
+      this.scene.add(model);
 
-        this.camera.position.set(0, 0, cameraZ);
-        this.camera.lookAt(0, 0, 0);
+      model.traverse(child => {
+        if (child.name.startsWith("spawn_")) {
+          this.spawnPoints.push(child);
+        }
+      });
 
-        this.controls.target.set(0, 0, 0);
-        this.controls.update();
-      },
-      undefined,
-      error => {
-        console.error("Error while loading GLTF :", error);
+      this.spawnPoints.forEach(point => {
+        const helper = new THREE.AxesHelper(0.2);
+        point.add(helper);
+      });
+
+      if (this.spawnPoints.length > 0) {
+        this.spawnPoints.forEach(point => {
+          const carrotGeometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
+          const carrotMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+          const carrotMesh = new THREE.Mesh(carrotGeometry, carrotMaterial);
+
+          carrotMesh.position.copy(point.getWorldPosition(new THREE.Vector3()));
+
+          carrotMesh.rotation.y = Math.random() * Math.PI * 2;
+          this.scene.add(carrotMesh);
+        });
       }
-    );
+
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const fov = this.camera.fov * (Math.PI / 180);
+      let cameraZ = maxDim / 2 / Math.tan(fov / 2);
+      cameraZ *= 3;
+
+      this.camera.position.set(0, 0, cameraZ);
+      this.camera.lookAt(0, 0, 0);
+
+      this.controls.target.set(0, 0, 0);
+      this.controls.update();
+    });
 
     this.animate();
     this.onResize();
