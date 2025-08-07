@@ -1,17 +1,17 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from "@angular/core";
-import { ThreeSceneService } from "@services/three-scene/three-scene.service";
+import { GreenhouseSceneService } from "@services/greenhouse-scene/greenhouse-scene.service";
 
 @Component({
-  selector: "app-three-scene",
+  selector: "app-greenhouse-scene",
   imports: [],
-  templateUrl: "./three-scene.component.html",
-  styleUrl: "./three-scene.component.scss",
+  templateUrl: "./greenhouse-scene.component.html",
+  styleUrl: "./greenhouse-scene.component.scss",
 })
-export class ThreeSceneComponent implements OnInit {
+export class GreenhouseSceneComponent implements OnInit {
   @ViewChild("greenhouseCanva", { static: true })
   public greenhouseCanva: ElementRef<HTMLElement>;
 
-  private readonly threeSceneService = inject(ThreeSceneService);
+  private readonly threeSceneService = inject(GreenhouseSceneService);
 
   ngOnInit(): void {
     this.threeSceneService.createScene(this.greenhouseCanva);

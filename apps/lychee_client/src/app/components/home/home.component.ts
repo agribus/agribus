@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
-import { ThreeSceneComponent } from "@components/three-scene/three-scene.component";
+import { GreenhouseSceneComponent } from "@components/greenhouse-scene/greenhouse-scene.component";
 
 @Component({
   selector: "app-home",
-  imports: [ThreeSceneComponent],
+  imports: [GreenhouseSceneComponent],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
 })

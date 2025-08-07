@@ -5,7 +5,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { VEGETABLES } from "@utils/vegetables-config/vegetables.config";
 
 @Injectable({ providedIn: "root" })
-export class ThreeSceneService {
+export class GreenhouseSceneService {
   private scene: THREE.Scene;
   private camera: THREE.PerspectiveCamera;
   private renderer: THREE.WebGLRenderer;
