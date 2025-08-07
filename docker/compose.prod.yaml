@@ -76,6 +76,7 @@ services:
       - INFLUXDB__URL=http://hot-potato:8181
       - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - DOTNET_RUNNING_IN_CONTAINER=true
+      - Clerk__SecretKey=${Clerk__SecretKey}
     restart: unless-stopped
     depends_on:
       cold-potato:
