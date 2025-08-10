@@ -13,7 +13,7 @@ public class CreateGreenhouseDto
 
     public required List<CreateSensorDto> Sensors { get; set; }
 
-    public Greenhouse MapToGreenhouse()
+    public Greenhouse MapToGreenhouse(string userId)
     {
         var greenhouse = new Greenhouse()
         {
@@ -21,6 +21,7 @@ public class CreateGreenhouseDto
             City = City,
             Country = Country,
             Crops = Crops,
+            UserId = userId,
         };
 
         var sensorEntities = Sensors.Select(s => s.MapToSensor());

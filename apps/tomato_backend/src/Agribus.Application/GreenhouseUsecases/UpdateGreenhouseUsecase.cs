@@ -5,10 +5,8 @@ using Agribus.Core.Ports.Spi.GreenhouseContext;
 
 namespace Agribus.Application.GreenhouseUsecases;
 
-public class UpdateGreenhouseUsecase(
-    // IAuthContextService authContext,
-    IGreenhouseRepository greenhouseRepository
-) : IUpdateGreenhouseUsecase
+public class UpdateGreenhouseUsecase(IGreenhouseRepository greenhouseRepository)
+    : IUpdateGreenhouseUsecase
 {
     public async Task<bool?> Handle(
         Guid greenhouseId,
@@ -18,7 +16,7 @@ public class UpdateGreenhouseUsecase(
     )
     {
         var greenhouse = await greenhouseRepository.Exists(greenhouseId, userId, cancellationToken);
-        if (greenhouse == null)
+        if (greenhouse is null)
             return false;
 
         return await greenhouseRepository.UpdateAsync(greenhouse, dto, cancellationToken);
