@@ -6,12 +6,12 @@ import { VEGETABLES } from "@utils/vegetables-config/vegetables.config";
 
 @Injectable({ providedIn: "root" })
 export class GreenhouseSceneService {
-  private scene: THREE.Scene;
-  private camera: THREE.PerspectiveCamera;
-  private renderer: THREE.WebGLRenderer;
-  private controls: OrbitControls;
+  private scene!: THREE.Scene;
+  private camera!: THREE.PerspectiveCamera;
+  private renderer!: THREE.WebGLRenderer;
+  private controls!: OrbitControls;
   private loader = new GLTFLoader();
-  private container: HTMLElement;
+  private container!: HTMLElement;
 
   private modelPath = "./models/greenhouse.glb";
   private smoothReset = false;

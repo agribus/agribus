@@ -9,7 +9,7 @@ import { GreenhouseSceneService } from "@services/greenhouse-scene/greenhouse-sc
 })
 export class GreenhouseSceneComponent implements OnInit {
   @ViewChild("greenhouseCanva", { static: true })
-  public greenhouseCanva: ElementRef<HTMLElement>;
+  public greenhouseCanva!: ElementRef<HTMLElement>;
 
   private readonly threeSceneService = inject(GreenhouseSceneService);
 

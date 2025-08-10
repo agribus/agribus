@@ -49,6 +49,7 @@
     "@capacitor/ios": "^7.4.0",
     "@eslint/js": "^9.29.0",
     "@types/jasmine": "~5.1.0",
+    "@types/three": "^0.179.0",
     "angular-eslint": "20.1.1",
     "eslint": "^9.29.0",
     "globals": "^16.2.0",
