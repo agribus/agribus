@@ -8,6 +8,7 @@ public class Greenhouse : BaseEntity
     public required string Name { get; set; }
     public required string Country { get; set; }
     public required string City { get; set; }
+    public required string UserId { get; set; }
     public List<Crop> Crops { get; set; } = new();
 
     public IReadOnlyCollection<Sensor> Sensors => _sensors.AsReadOnly();
@@ -29,7 +30,8 @@ public class Greenhouse : BaseEntity
         Name = dto.Name ?? Name;
         Country = dto.Country ?? Country;
         City = dto.City ?? City;
-        Crops = dto.Crops ?? Crops;
+        if (dto.Crops is not null)
+            Crops = dto.Crops.Select(c => c.MapToCrop()).ToList();
 
         UpdateLastModified();
     }

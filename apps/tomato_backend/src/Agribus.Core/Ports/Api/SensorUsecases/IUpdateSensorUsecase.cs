@@ -6,7 +6,7 @@ public interface IUpdateSensorUsecase
 {
     Task<bool?> Handle(
         Guid originalSensorId,
-        Guid userId,
+        string userId,
         UpdateSensorDto dto,
         CancellationToken cancellationToken
     );

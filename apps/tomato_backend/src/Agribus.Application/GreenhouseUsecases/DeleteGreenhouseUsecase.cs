@@ -3,10 +3,8 @@ using Agribus.Core.Ports.Spi.GreenhouseContext;
 
 namespace Agribus.Application.GreenhouseUsecases;
 
-public class DeleteGreenhouseUsecase(
-    // IAuthContextService authContext,
-    IGreenhouseRepository greenhouseRepository
-) : IDeleteGreenhouseUsecase
+public class DeleteGreenhouseUsecase(IGreenhouseRepository greenhouseRepository)
+    : IDeleteGreenhouseUsecase
 {
     public async Task<bool> Handle(
         Guid greenhouseId,
