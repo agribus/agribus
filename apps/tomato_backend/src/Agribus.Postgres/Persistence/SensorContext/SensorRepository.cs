@@ -4,7 +4,7 @@ using Agribus.Core.Ports.Spi.SensorContext;
 
 namespace Agribus.Postgres.Persistence.SensorContext;
 
-internal class SensorRepository(AgribusDbContext context) : ISensorRepository
+public class SensorRepository(AgribusDbContext context) : ISensorRepository
 {
     public async Task<Sensor?> Exists(
         Guid sensorId,
@@ -13,7 +13,7 @@ internal class SensorRepository(AgribusDbContext context) : ISensorRepository
     )
     {
         var sensor = await context.Sensor.FirstOrDefaultAsync(
-            s => s.Id == sensorId && s.Greenhouse.UserId == userId,
+            s => s.Id == sensorId && s.Greenhouse != null && s.Greenhouse.UserId == userId,
             cancellationToken
         );
         return sensor;
