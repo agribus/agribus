@@ -14,7 +14,7 @@ public class SensorUsecaseTests
     public async Task ShouldUpdateSensor_GivenValidInput()
     {
         // Given
-        var fakeUserId = Guid.NewGuid();
+        var fakeUserId = "user_12345";
         var sensorRepository = Substitute.For<ISensorRepository>();
 
         var originalSensor = new Sensor
@@ -53,7 +53,7 @@ public class SensorUsecaseTests
     [Fact]
     public async Task ShouldDeleteSensor_GivenValidInput()
     {
-        var fakeUserId = Guid.NewGuid();
+        var fakeUserId = "user_12345";
         var sensorRepository = Substitute.For<ISensorRepository>();
         var usecase = new DeleteSensorUsecase(sensorRepository);
         var originalSensor = new Sensor
