@@ -23,6 +23,7 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
 
         greenhouseConfiguration
             .Property(g => g.UserId)
+            .HasColumnType("varchar(32)")
             .IsRequired()
             .HasComment("user table is currently stored in an external database (Clerk)");
 
