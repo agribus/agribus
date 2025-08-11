@@ -22,12 +22,13 @@ export class DevToolsComponent {
   private readonly dialogService = inject(TuiDialogService);
 
   logs = signal<string[]>([]);
-  isMobile = this.platformService.isMobile();
+  isNativePlatform = this.platformService.isNativePlatform();
 
   constructor() {
-    if (this.isMobile) {
+    if (this.isNativePlatform) {
       this.interceptConsole();
     }
+    console.log(this.platformService.getDeviceInfo());
   }
 
   get openDevTools() {

@@ -18,6 +18,7 @@
     "paths": {
       "@components/*": ["app/components/*"],
       "@directives/*": ["app/directives/*"],
+      "@enums/*": ["app/enums/*"],
       "@guards/*": ["app/guards/*"],
       "@interfaces/*": ["app/interfaces/*"],
       "@pages/*": ["app/pages/*"],
