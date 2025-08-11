@@ -61,6 +61,7 @@ namespace Agribus.Api.Controllers
         public ActionResult Logout()
         {
             _logger.LogInformation("Demande de déconnexion reçue");
+            _authService.LogoutAsync();
 
             return Ok(new { message = "Logout successful" });
         }

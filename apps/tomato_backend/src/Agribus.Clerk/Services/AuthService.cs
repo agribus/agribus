@@ -67,11 +67,10 @@ namespace Agribus.Clerk.Services
                 }
 
                 var session = await _clerkClient.Sessions.CreateAsync(new() { UserId = user.Id });
-                return AuthResponse.CreateSuccess(
-                    token: session.Session!.Id,
-                    userId: user.Id,
-                    message: "Successfully logged in"
-                );
+
+                SetAuthCookie(session.Session!.Id);
+
+                return AuthResponse.CreateSuccess(message: "Successfully logged in");
             }
             catch (Exception ex)
             {
@@ -121,7 +120,6 @@ namespace Agribus.Clerk.Services
                 );
 
                 return AuthResponse.CreateSuccess(
-                    userId: newUser.User!.Id,
                     message: "Account successfully created. Please check your email to verify your account."
                 );
             }
@@ -168,6 +166,29 @@ namespace Agribus.Clerk.Services
         public string GetCurrentUserId()
         {
             return _httpContextAccessor.HttpContext.Items["UserId"]!.ToString()!;
+        }
+
+        public void LogoutAsync()
+        {
+            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("auth_token");
+        }
+
+        private void SetAuthCookie(string token)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(7),
+                Path = "/",
+            };
+
+            _httpContextAccessor.HttpContext?.Response.Cookies.Append(
+                "auth_token",
+                token,
+                cookieOptions
+            );
         }
     }
 }

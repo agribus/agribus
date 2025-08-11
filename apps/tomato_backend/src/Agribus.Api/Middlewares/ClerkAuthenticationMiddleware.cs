@@ -67,15 +67,7 @@ namespace Agribus.Api.Middlewares
 
         private static string? ExtractTokenFromRequest(HttpContext context)
         {
-            var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
-            if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer "))
-            {
-                return authHeader["Bearer ".Length..].Trim();
-            }
-
-            return context.Request.Cookies.TryGetValue("clerk-session", out var sessionToken)
-                ? sessionToken
-                : null;
+            return context.Request.Cookies.TryGetValue("auth_token", out var token) ? token : null;
         }
     }
 }
