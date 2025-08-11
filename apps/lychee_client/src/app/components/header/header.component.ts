@@ -40,7 +40,7 @@ export class HeaderComponent implements OnInit {
   private readonly greenhouseService = inject(GreenhouseService);
   private readonly headerStateService = inject(HeaderStateService);
 
-  public readonly isMobile = this.platformService.isBrowser();
+  public readonly isMobile = this.platformService.isMobile();
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
   public value: Greenhouse | null = this.greenhouses[0];
   public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
