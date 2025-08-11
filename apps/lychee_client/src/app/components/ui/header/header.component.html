@@ -13,6 +13,16 @@
         <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
       </tui-textfield>
 
+      @if (showDevTools) {
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
+      }
+
       <button
         iconStart="@tui.bell"
         title="Notifications"
@@ -27,13 +37,22 @@
 
       <h3 tuiSlot="center">
         @if (url === "/settings-account") {
-          {{ "components.header.settings-account" | translate }}
+          {{ "components.ui.header.settings-account" | translate }}
         } @else if (url === "/greenhouse-form") {
-          {{ "components.header.greenhouse-form" | translate }}
+          {{ "components.ui.header.greenhouse-form" | translate }}
         } @else {
-          {{ "components.header.settings" | translate }}
+          {{ "components.ui.header.settings" | translate }}
         }
       </h3>
+      @if (showDevTools) {
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
+      }
     </tui-app-bar>
   }
 }

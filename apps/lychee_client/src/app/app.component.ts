@@ -2,14 +2,22 @@ import { TuiRoot } from "@taiga-ui/core";
 import { Component, effect, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
-import { NavBarComponent } from "@components/nav-bar/nav-bar.component";
-import { HeaderComponent } from "@components/header/header.component";
+import { NavbarComponent } from "@components/ui/navbar/navbar.component";
+import { HeaderComponent } from "@components/ui/header/header.component";
 import { HeaderType } from "@enums/header-type";
 import { HeaderStateService } from "@services/header-state.service";
+import { DevToolsComponent } from "@components/dev/dev-tools/dev-tools.component";
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, TuiRoot, TranslateModule, NavBarComponent, HeaderComponent],
+  imports: [
+    RouterOutlet,
+    TuiRoot,
+    TranslateModule,
+    NavbarComponent,
+    HeaderComponent,
+    DevToolsComponent,
+  ],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })

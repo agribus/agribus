@@ -9,6 +9,8 @@ import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { TranslatePipe } from "@ngx-translate/core";
+import { DevToolsService } from "@services/dev-tools/dev-tools.service";
+import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
 import { HeaderStateService } from "@services/header-state.service";
 
@@ -38,13 +40,16 @@ export class HeaderComponent implements OnInit {
   private readonly activatedRoute = inject(ActivatedRoute);
   private readonly platformService = inject(PlatformService);
   private readonly greenhouseService = inject(GreenhouseService);
+  private readonly devToolsService = inject(DevToolsService);
   private readonly headerStateService = inject(HeaderStateService);
 
   public readonly isMobile = this.platformService.isMobile();
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
+
   public value: Greenhouse | null = this.greenhouses[0];
   public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
   public url: string = "/";
+  public showDevTools = environment.devTools;
 
   public headerType: HeaderType = HeaderType.Default;
   public HeaderType = HeaderType;
@@ -72,5 +77,9 @@ export class HeaderComponent implements OnInit {
 
   public back() {
     window.history.back();
+  }
+
+  public openDevTools() {
+    this.devToolsService.toggle();
   }
 }
