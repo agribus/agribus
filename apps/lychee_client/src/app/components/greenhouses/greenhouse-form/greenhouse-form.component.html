@@ -21,9 +21,7 @@
           <input formControlName="name" tuiTextfield placeholder="Serre 1" />
         </tui-textfield>
 
-        <!-- <app-location-selector formControlName="location" />-->
-
-        <footer CLASS="form-footer">
+        <footer class="form-footer">
           <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
             {{ "components.ui.button.next" | translate }}
           </button>

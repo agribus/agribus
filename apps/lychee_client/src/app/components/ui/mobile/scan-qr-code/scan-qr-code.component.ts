@@ -17,7 +17,7 @@ export class ScanQrCodeComponent implements OnInit {
         const { barcodes } = await BarcodeScanner.scan();
 
         if (barcodes.length > 0 && barcodes[0].rawValue) {
-          console.log(barcodes[0].rawValue);
+          // TODO: récupérer le barcode dans le greenhouse form
         }
       } catch (err) {
         console.error(err);

@@ -64,7 +64,6 @@ export class CropFormComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    console.log(this.crop);
     this.initForm();
     if (this.crop) {
       this.patchForm();
