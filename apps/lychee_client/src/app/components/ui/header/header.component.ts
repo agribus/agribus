@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from "@taiga-ui/core";
 import { TuiAppBar } from "@taiga-ui/layout";
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
-import { filter } from "rxjs";
+import { filter, map, switchMap, of } from "rxjs";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
@@ -42,6 +43,7 @@ export class HeaderComponent implements OnInit {
   private readonly greenhouseService = inject(GreenhouseService);
   private readonly devToolsService = inject(DevToolsService);
   private readonly headerStateService = inject(HeaderStateService);
+  private readonly destroyRef = inject(DestroyRef);
 
   public readonly isMobile = this.platformService.isMobile();
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
@@ -55,13 +57,19 @@ export class HeaderComponent implements OnInit {
   public HeaderType = HeaderType;
 
   ngOnInit() {
-    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
-      const child = this.getDeepestChild(this.activatedRoute);
-      this.headerType = child.snapshot.data["headerType"] || HeaderType.Default;
-      this.url = this.router.url;
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        map(() => this.getDeepestChild(this.activatedRoute)),
+        switchMap(route => of(route.snapshot.data)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(data => {
+        this.headerType = data["headerType"] || HeaderType.Default;
+        this.url = this.router.url;
 
-      this.headerStateService.headerType.set(this.headerType);
-    });
+        this.headerStateService.headerType.set(this.headerType);
+      });
   }
 
   private getDeepestChild(route: ActivatedRoute): ActivatedRoute {
