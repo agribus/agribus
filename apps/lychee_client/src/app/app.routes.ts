@@ -9,31 +9,67 @@ import { SettingsComponent } from "@pages/settings/settings.component";
 import { LoginComponent } from "@pages/login/login.component";
 import { RegisterComponent } from "@pages/register/register.component";
 import { ForgotPasswordComponent } from "@pages/forgot-password/forgot-password.component";
+import { HeaderType } from "@enums/header-type";
+
 export const routes: Routes = [
-  { path: "", component: HomeComponent, canActivate: [mobileOnlyGuard] },
-  { path: "home", component: HomeComponent, canActivate: [mobileOnlyGuard] },
-  { path: "dashboard", component: DashboardComponent, canActivate: [mobileOnlyGuard] },
-  { path: "greenhouse-form", component: GreenhouseFormComponent, canActivate: [mobileOnlyGuard] },
-  { path: "settings", component: SettingsComponent, canActivate: [mobileOnlyGuard] },
-  { path: "settings-account", component: SettingsAccountComponent, canActivate: [mobileOnlyGuard] },
+  {
+    path: "",
+    component: HomeComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Default },
+  },
+  {
+    path: "home",
+    component: HomeComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Default },
+  },
+  {
+    path: "dashboard",
+    component: DashboardComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Default },
+  },
+  {
+    path: "greenhouse-form",
+    component: GreenhouseFormComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Settings },
+  },
+  {
+    path: "settings",
+    component: SettingsComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Settings },
+  },
+  {
+    path: "settings-account",
+    component: SettingsAccountComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Settings },
+  },
 
   {
     path: "unsupported-platform",
     component: UnsupportedPlatformComponent,
+    data: { headerType: HeaderType.None },
   },
   {
     path: "login",
     component: LoginComponent,
     canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.None },
   },
   {
     path: "register",
     component: RegisterComponent,
     canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.None },
   },
   {
     path: "forgot-password",
     component: ForgotPasswordComponent,
     canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.None },
   },
 ];

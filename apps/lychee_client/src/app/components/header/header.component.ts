@@ -1,5 +1,5 @@
-import { Component, inject, Input, OnInit, signal } from "@angular/core";
-import { NavigationEnd, Router } from "@angular/router";
+import { Component, inject, OnInit, signal } from "@angular/core";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from "@taiga-ui/core";
 import { TuiAppBar } from "@taiga-ui/layout";
@@ -9,6 +9,8 @@ import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { TranslatePipe } from "@ngx-translate/core";
+import { HeaderType } from "@enums/header-type";
+import { HeaderStateService } from "@services/header-state.service";
 
 @Component({
   selector: "app-header",
@@ -33,27 +35,42 @@ import { TranslatePipe } from "@ngx-translate/core";
 })
 export class HeaderComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly activatedRoute = inject(ActivatedRoute);
   private readonly platformService = inject(PlatformService);
   private readonly greenhouseService = inject(GreenhouseService);
+  private readonly headerStateService = inject(HeaderStateService);
+
   public readonly isMobile = this.platformService.isBrowser();
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
   public value: Greenhouse | null = this.greenhouses[0];
   public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
   public url: string = "/";
-  @Input() isSettingsHeader!: boolean;
+
+  public headerType: HeaderType = HeaderType.Default;
+  public HeaderType = HeaderType;
 
   ngOnInit() {
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => {
-        this.url = event.urlAfterRedirects;
-      });
+    this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+      const child = this.getDeepestChild(this.activatedRoute);
+      this.headerType = child.snapshot.data["headerType"] || HeaderType.Default;
+      this.url = this.router.url;
+
+      this.headerStateService.headerType.set(this.headerType);
+    });
   }
 
-  gotoPage(pageName: string) {
+  private getDeepestChild(route: ActivatedRoute): ActivatedRoute {
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    return route;
+  }
+
+  public gotoPage(pageName: string) {
     this.router.navigate([`/${pageName}`]);
   }
-  back() {
+
+  public back() {
     window.history.back();
   }
 }
