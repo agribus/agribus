@@ -229,10 +229,7 @@ export class GreenhouseFormComponent {
       c => c.scientificName === crop.scientificName && c.commonName === crop.commonName
     );
 
-    console.log(crop, index);
-
     if (index === -1) {
-      // Crop inexistant, on l'ajoute
       this.crops.push({ ...crop });
     } else {
       if (isEdit) {

@@ -1,14 +1,14 @@
-<ng-template [tuiSheetDialogOptions]="optionsSheet" [(tuiSheetDialog)]="openSheet">
+<ng-template [tuiSheetDialogOptions]="optionsSheet()" [(tuiSheetDialog)]="openSheet">
   <div>
-    @if (loading) {
+    @if (loading()) {
       <tui-loader size="m"></tui-loader>
       <p>{{ "components.ui.loader.loadingMessage" | translate }}</p>
     }
-    @if (!loading && !crops.length) {
+    @if (!loading() && !crops().length) {
       <p>{{ "components.crops.crop-selector.noItemsAvailable" | translate }}</p>
     }
-    @if (!loading && crops.length) {
-      @for (crop of crops; track $index) {
+    @if (!loading() && crops().length) {
+      @for (crop of crops(); track $index) {
         <div class="crop-selector">
           <div class="scientific-name">
             <tui-textfield tuiChevron>

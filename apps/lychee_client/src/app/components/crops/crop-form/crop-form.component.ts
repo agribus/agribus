@@ -41,7 +41,7 @@ export class CropFormComponent implements OnInit {
     this._openSheet = value;
   }
 
-  @Input() label: string = "Ajouter une culture";
+  @Input() label: string = "";
 
   @Input()
   set crop(value: Crop | null) {

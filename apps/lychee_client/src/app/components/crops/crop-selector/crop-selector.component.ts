@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from "@angular/core";
+import { Component, EventEmitter, inject, Output, signal, computed } from "@angular/core";
 import { DecimalPipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
@@ -20,7 +20,7 @@ import {
 import { TuiSheetDialog, TuiSheetDialogOptions } from "@taiga-ui/addon-mobile";
 import { Crop } from "@interfaces/crop.interface";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { CropsService } from "@services/crops.service";
+import { CropsService } from "@services/crops/crops.service";
 
 @Component({
   selector: "app-crop-selector",
@@ -49,55 +49,42 @@ export class CropSelectorComponent {
   private readonly translateService = inject(TranslateService);
   private readonly cropsService = inject(CropsService);
 
-  public crops: Crop[] = [];
-  private _openSheet = false;
-  public loading = false;
+  public crops = signal<Crop[]>([]);
+  public openSheet = signal<boolean>(false);
+  public loading = signal<boolean>(false);
 
   @Output() cropSelected = new EventEmitter<Crop>();
 
-  public get optionsSheet(): Partial<TuiSheetDialogOptions> {
-    return {
-      label: this.translateService.instant("components.crops.crop-selector.dialogLabel"),
-      closeable: true,
-    };
-  }
-
-  public get openSheet(): boolean {
-    return this._openSheet;
-  }
-
-  public set openSheet(value: boolean) {
-    if (!value && this._openSheet) {
-      this.reset();
-    }
-    this._openSheet = value;
-  }
+  public optionsSheet = computed<Partial<TuiSheetDialogOptions>>(() => ({
+    label: this.translateService.instant("components.crops.crop-selector.dialogLabel"),
+    closeable: true,
+  }));
 
   public open(): void {
-    this.loading = true;
-    this.crops = [];
+    this.loading.set(true);
+    this.crops.set([]);
 
     this.cropsService.identifyPlantFromCamera().subscribe({
       next: (crops: Crop[]) => {
-        this.crops = crops;
-        this.loading = false;
+        this.crops.set(crops);
+        this.loading.set(false);
       },
       error: () => {
-        this.crops = [];
-        this.loading = false;
+        this.crops.set([]);
+        this.loading.set(false);
       },
     });
 
-    this.openSheet = true;
+    this.openSheet.set(true);
   }
 
   private reset(): void {
-    this.crops = [];
-    this.loading = false;
+    this.crops.set([]);
+    this.loading.set(false);
   }
 
   public selectCrop(crop: Crop): void {
     this.cropSelected.emit(crop);
-    this.openSheet = false;
+    this.openSheet.set(false);
   }
 }
