@@ -5,12 +5,12 @@ import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs";
 
 @Component({
-  selector: "app-nav-bar",
+  selector: "app-navbar",
   imports: [TuiIcon, TuiSegmented],
-  templateUrl: "./nav-bar.component.html",
-  styleUrl: "./nav-bar.component.scss",
+  templateUrl: "./navbar.component.html",
+  styleUrl: "./navbar.component.scss",
 })
-export class NavBarComponent implements OnInit {
+export class NavbarComponent implements OnInit {
   private readonly router = inject(Router);
   protected activeIndex = 0;
 
@@ -34,7 +34,7 @@ export class NavBarComponent implements OnInit {
           case url.includes("dashboard"):
             this.activeIndex = 1;
             break;
-          case url.includes("greenhouse-form"):
+          case url.includes("greenhouse-settings"):
             this.activeIndex = 2;
             break;
           case url.includes("settings-account"):

@@ -1,0 +1,16 @@
+.container {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.select-route {
+  flex: 1 1 auto;
+  min-width: 200px;
+}
+
+.btn-navigate {
+  white-space: nowrap;
+  height: 2.75rem;
+  width: 2.75rem;
+}
