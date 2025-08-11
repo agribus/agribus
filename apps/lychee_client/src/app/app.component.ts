@@ -3,13 +3,21 @@ import { Component, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { TranslateService } from "@ngx-translate/core";
-import { NavBarComponent } from "@components/nav-bar/nav-bar.component";
+import { NavbarComponent } from "@components/ui/navbar/navbar.component";
 import { Router } from "@angular/router";
-import { HeaderComponent } from "@components/header/header.component";
+import { HeaderComponent } from "@components/ui/header/header.component";
+import { DevToolsComponent } from "@components/dev/dev-tools/dev-tools.component";
 
 @Component({
   selector: "app-root",
-  imports: [RouterOutlet, TuiRoot, TranslateModule, NavBarComponent, HeaderComponent],
+  imports: [
+    RouterOutlet,
+    TuiRoot,
+    TranslateModule,
+    NavbarComponent,
+    HeaderComponent,
+    DevToolsComponent,
+  ],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })
@@ -19,7 +27,7 @@ export class AppComponent {
   // List of routes without navbar
   private hiddenNavbarRoutes = [
     "/unsupported-platform",
-    "/greenhouse-form",
+    "/greenhouse-settings",
     "/settings-account",
     "/settings",
     "/login",

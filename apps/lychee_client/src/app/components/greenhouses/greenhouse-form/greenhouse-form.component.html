@@ -1,0 +1,197 @@
+<tui-stepper [activeItemIndex]="step()">
+  <button tuiStep type="button" [disabled]="true">
+    {{ "components.greenhouse-form.step.details" | translate }}
+  </button>
+  <button tuiStep type="button" [disabled]="true">
+    {{ "components.greenhouse-form.step.crops" | translate }}
+  </button>
+  <button tuiStep type="button" [disabled]="true">
+    {{ "components.greenhouse-form.step.sensors" | translate }}
+  </button>
+</tui-stepper>
+
+@switch (step()) {
+  @case (0) {
+    <ng-container>
+      <form [formGroup]="step0">
+        <tui-textfield>
+          <label tuiLabel for="name">
+            {{ "components.greenhouse-form.label.name" | translate }}
+          </label>
+          <input formControlName="name" tuiTextfield placeholder="Serre 1" />
+        </tui-textfield>
+
+        <footer class="form-footer">
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
+            {{ "components.ui.button.next" | translate }}
+          </button>
+        </footer>
+      </form>
+    </ng-container>
+  }
+  @case (1) {
+    <ng-container>
+      <form [formGroup]="step1">
+        <div class="button-group">
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="compact-button"
+            (click)="openCropSelector()">
+            <tui-icon icon="@tui.camera" [style.height.rem]="1" />
+          </button>
+
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="compact-button"
+            (click)="openCropForm(null)">
+            <tui-icon icon="@tui.keyboard" [style.height.rem]="1" />
+          </button>
+        </div>
+
+        @if (crops.length) {
+          <ul>
+            @for (crop of crops; track $index) {
+              <li>
+                <tui-swipe-actions [autoClose]="true">
+                  <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                    <tui-avatar appearance="primary" [src]="crop.imageUrl" />
+                    <div tuiTitle>
+                      <strong>{{ crop.commonName }}</strong>
+                      <div tuiSubtitle>{{ crop.scientificName }}</div>
+                    </div>
+                    <p style="margin: auto 0">{{ crop.quantity }}x</p>
+                  </div>
+
+                  <button
+                    iconStart="@tui.pencil-line"
+                    size="m"
+                    tuiIconButton
+                    tuiSwipeAction
+                    (click)="openCropForm(crop)">
+                    Edit Crop
+                  </button>
+                  <button
+                    appearance="secondary-destructive"
+                    iconStart="@tui.trash"
+                    size="m"
+                    tuiIconButton
+                    tuiSwipeAction
+                    type="button"
+                    (click)="removeCrop($index)">
+                    Delete Crop
+                  </button>
+                </tui-swipe-actions>
+              </li>
+            }
+          </ul>
+        }
+
+        <app-crop-form
+          #cropForm
+          [label]="'Editer un crop'"
+          [crop]="editingCrop"
+          (cropSubmitted)="onCropSaved($event)"></app-crop-form>
+        <app-crop-selector
+          #cropSelector
+          (cropSelected)="onCropSelected($event)"></app-crop-selector>
+
+        <footer class="form-footer">
+          <button tuiButton appearance="primary" (click)="previous()">
+            {{ "components.ui.button.return" | translate }}
+          </button>
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
+            {{ "components.ui.button.next" | translate }}
+          </button>
+        </footer>
+      </form>
+    </ng-container>
+  }
+  @case (2) {
+    <ng-container>
+      <form [formGroup]="step2">
+        <div class="button-group">
+          @if (isMobile) {
+            <button
+              tuiButton
+              type="button"
+              appearance="primary"
+              class="compact-button"
+              (click)="openScanQrCode()">
+              <tui-icon icon="@tui.camera" [style.height.rem]="1" />
+            </button>
+          }
+
+          <button
+            tuiButton
+            type="button"
+            appearance="primary"
+            class="compact-button"
+            (click)="openSensorForm(null)">
+            <tui-icon icon="@tui.keyboard" [style.height.rem]="1" />
+          </button>
+        </div>
+
+        <div class="sensor-section-header">
+          <div tuiSubtitle class="sensor-subtitle">
+            Vous pouvez scanner le QR Code sur votre capteur ou saisir l'identifiant manuellement.
+          </div>
+        </div>
+        <ul>
+          @for (sensor of sensors; track $index) {
+            <li>
+              <tui-swipe-actions [autoClose]="true">
+                <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                  <tui-avatar appearance="primary" [src]="'@tui.cpu'" />
+                  <div tuiTitle>
+                    <strong>{{ sensor.sourceAddress }}</strong>
+                    <div tuiSubtitle>{{ sensor.name }}</div>
+                  </div>
+                </div>
+
+                <button
+                  iconStart="@tui.pencil-line"
+                  size="m"
+                  tuiIconButton
+                  tuiSwipeAction
+                  (click)="openSensorForm(sensor)">
+                  Edit
+                </button>
+                <button
+                  appearance="secondary-destructive"
+                  iconStart="@tui.trash"
+                  size="m"
+                  tuiIconButton
+                  tuiSwipeAction
+                  type="button"
+                  (click)="removeSensor($index)">
+                  Delete
+                </button>
+              </tui-swipe-actions>
+            </li>
+          }
+        </ul>
+        @if (isScanning && isMobile) {
+          <app-scan-qr-code />
+        }
+
+        <app-sensor-form
+          #sensorForm
+          [sensor]="editingSensor"
+          (sensorSubmitted)="onSensorSaved($event)"></app-sensor-form>
+
+        <footer class="form-footer">
+          <button tuiButton appearance="primary" (click)="previous()">
+            {{ "components.ui.button.return" | translate }}
+          </button>
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="submitForm()">
+            {{ "components.ui.button.submit" | translate }}
+          </button>
+        </footer>
+      </form>
+    </ng-container>
+  }
+}

@@ -9,6 +9,8 @@ import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { TranslatePipe } from "@ngx-translate/core";
+import { DevToolsService } from "@services/dev-tools/dev-tools.service";
+import { environment } from "@environment/environment";
 
 @Component({
   selector: "app-header",
@@ -35,11 +37,16 @@ export class HeaderComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly platformService = inject(PlatformService);
   private readonly greenhouseService = inject(GreenhouseService);
+  private readonly devToolsService = inject(DevToolsService);
+
   public readonly isMobile = this.platformService.isBrowser();
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
+
   public value: Greenhouse | null = this.greenhouses[0];
   public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
   public url: string = "/";
+  public showDevTools = environment.devTools;
+
   @Input() isSettingsHeader!: boolean;
 
   ngOnInit() {
@@ -53,7 +60,12 @@ export class HeaderComponent implements OnInit {
   gotoPage(pageName: string) {
     this.router.navigate([`/${pageName}`]);
   }
+
   back() {
     window.history.back();
+  }
+
+  openDevTools() {
+    this.devToolsService.toggle();
   }
 }

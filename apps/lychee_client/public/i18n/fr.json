@@ -1,13 +1,16 @@
 {
   "components": {
+    "crops": {
+      "crop-selector": {
+        "noItemsAvailable": "Aucun crop disponible.",
+        "identifyTitle": "Identifier un crop",
+        "dialogLabel": "Identifier un crop",
+        "selectCrop": "Sélectionner le crop"
+      }
+    },
     "hello-world": {
       "browser": "Bonjour du navigateur",
       "mobile": "Bonjour depuis un téléphone portable"
-    },
-    "header": {
-      "settings": "Paramètres",
-      "settings-account": "Paramètres du compte",
-      "greenhouse-form": "Paramètres de la serre"
     },
     "login-form": {
       "email": "Email",
@@ -30,6 +33,50 @@
       "email": "Email",
       "email-placeholder": "Entrer votre email",
       "send": "Envoyer"
+    },
+    "greenhouse-form": {
+      "dialog": {
+        "title": "Ajouter un capteur"
+      },
+      "label": {
+        "name": "Nom de la serre"
+      },
+      "step": {
+        "details": "Identification de la serre",
+        "crops": "Cultures présentes",
+        "sensors": "Capteurs connectés"
+      },
+      "alert": {
+        "remove-sensor": "Suppression de "
+      },
+      "sensor": "Capteur"
+    },
+    "ui": {
+      "alert": {
+        "info": "Information",
+        "error": "Erreur"
+      },
+      "button": {
+        "add": "Ajouter",
+        "save": "Enregistrer",
+        "next": "Suivant",
+        "return": "Retour"
+      },
+      "header": {
+        "settings": "Paramètres",
+        "settings-account": "Paramètres du compte",
+        "greenhouse-form": "Paramètres de la serre"
+      },
+      "fields": {
+        "commonName": "Nom commun",
+        "scientificName": "Nom scientifique",
+        "plantingDate": "Date de plantation",
+        "quantity": "Quantité",
+        "enterQuantity": "Entrez la quantité"
+      },
+      "loader": {
+        "loadingMessage": "Chargement en cours..."
+      }
     }
   },
   "pages": {
