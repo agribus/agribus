@@ -1,0 +1,79 @@
+name: Build Mobile
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - preprod
+
+jobs:
+  build_mobile:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm i -g pnpm
+
+      - name: Install dependencies
+        run: pnpm i
+
+      - name: Build frontend (production)
+        run: pnpm run build --filter lychee
+
+      - name: Install Capacitor CLI
+        run: pnpm add @capacitor/cli -D -w
+
+      - name: Sync Capacitor platforms
+        run: npx cap sync
+
+      # --- Build Android ---
+      - name: Set up JDK for Android
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Build Android APK
+        run: |
+          cd android
+          ./gradlew assembleRelease
+        # APK: android/app/build/outputs/apk/release/app-release.apk
+
+      # --- Build iOS ---
+      - name: Build iOS IPA
+        run: |
+          cd ios
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -sdk iphoneos \
+            -configuration Release \
+            archive -archivePath build/App.xcarchive
+
+          xcodebuild \
+            -exportArchive \
+            -archivePath build/App.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build
+        # IPA: ios/build/App.ipa
+
+      # --- Upload artifacts ---
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+
+      - name: Upload iOS IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: ios/build/App.ipa
