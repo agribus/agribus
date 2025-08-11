@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
-import { HelloWorldComponent } from "@components/hello-world/hello-world.component";
+import { GreenhouseSceneComponent } from "@components/greenhouse-scene/greenhouse-scene.component";
 
 @Component({
   selector: "app-home",
-  imports: [HelloWorldComponent],
+  imports: [GreenhouseSceneComponent],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
 })
