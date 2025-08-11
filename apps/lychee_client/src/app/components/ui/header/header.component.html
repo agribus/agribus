@@ -54,5 +54,19 @@
           (click)="openDevTools()"></button>
       }
     </tui-app-bar>
+  } @else if (headerType === HeaderType.None) {
+    @if (showDevTools) {
+      <tui-app-bar>
+        @if (showDevTools) {
+          <button
+            iconStart="@tui.square-code"
+            title="Notifications"
+            tuiIconButton
+            tuiSlot="right"
+            type="button"
+            (click)="openDevTools()"></button>
+        }
+      </tui-app-bar>
+    }
   }
 }
