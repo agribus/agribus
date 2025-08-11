@@ -1,14 +1,14 @@
 import { CanActivateFn, Router } from "@angular/router";
 import { inject } from "@angular/core";
-import { Platform } from "@angular/cdk/platform";
+import { PlatformService } from "@services/platform/platform.service";
 
 export const mobileOnlyGuard: CanActivateFn = () => {
   const router = inject(Router);
-  const platform = inject(Platform);
+  const platformService = inject(PlatformService);
 
-  const isMobile = platform.ANDROID || platform.IOS;
+  const isDesktop = platformService.isDesktop();
 
-  if (!isMobile) {
+  if (isDesktop) {
     router.navigate(["/unsupported-platform"]);
     return false;
   }

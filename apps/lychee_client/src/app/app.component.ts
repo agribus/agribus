@@ -1,11 +1,11 @@
 import { TuiRoot } from "@taiga-ui/core";
-import { Component, inject } from "@angular/core";
+import { Component, effect, inject } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { TranslateModule } from "@ngx-translate/core";
-import { TranslateService } from "@ngx-translate/core";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { NavbarComponent } from "@components/ui/navbar/navbar.component";
-import { Router } from "@angular/router";
 import { HeaderComponent } from "@components/ui/header/header.component";
+import { HeaderType } from "@enums/header-type";
+import { HeaderStateService } from "@services/header-state.service";
 import { DevToolsComponent } from "@components/dev/dev-tools/dev-tools.component";
 
 @Component({
@@ -23,18 +23,11 @@ import { DevToolsComponent } from "@components/dev/dev-tools/dev-tools.component
 })
 export class AppComponent {
   private readonly translateService = inject(TranslateService);
-  public router = inject(Router);
-  // List of routes without navbar
-  private hiddenNavbarRoutes = [
-    "/unsupported-platform",
-    "/greenhouse-settings",
-    "/settings-account",
-    "/settings",
-    "/login",
-    "/register",
-    "/forgot-password",
-  ];
+  private readonly headerStateService = inject(HeaderStateService);
+
   private readonly lang = localStorage.getItem("lang");
+  public showNavbar = true;
+
   constructor() {
     this.translateService.addLangs(["fr", "en", "de"]);
     if (!this.lang) {
@@ -42,8 +35,10 @@ export class AppComponent {
     }
     this.translateService.setDefaultLang(this.lang);
     this.translateService.use(this.lang);
-  }
-  get showNavbar(): boolean {
-    return !this.hiddenNavbarRoutes.some(route => this.router.url.startsWith(route));
+
+    effect(() => {
+      const headerType = this.headerStateService.headerType();
+      this.showNavbar = headerType !== (HeaderType.Settings || HeaderType.None);
+    });
   }
 }

@@ -1,5 +1,5 @@
 <tui-action-bar *tuiActionBar="openDevTools" size="s">
-  @if (isMobile) {
+  @if (isNativePlatform) {
     <button iconStart="@tui.brush-cleaning" tuiIconButton type="button" (click)="clear()"></button>
 
     @if (logs().length) {
