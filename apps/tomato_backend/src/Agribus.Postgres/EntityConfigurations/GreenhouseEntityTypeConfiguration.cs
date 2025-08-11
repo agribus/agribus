@@ -17,15 +17,20 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
 
         greenhouseConfiguration.Property(g => g.Name).IsRequired().HasColumnType("varchar(100)");
 
-        // greenhouseConfiguration.Property(g => g.Country).IsRequired().HasColumnType("varchar(100)");
+        greenhouseConfiguration.Property(g => g.Country).IsRequired().HasColumnType("varchar(100)");
 
-        // greenhouseConfiguration.Property(g => g.City).IsRequired().HasColumnType("varchar(100)");
+        greenhouseConfiguration.Property(g => g.City).IsRequired().HasColumnType("varchar(100)");
 
-        // Configure the one-to-many relationship with Sensors
+        greenhouseConfiguration
+            .Property(g => g.UserId)
+            .HasColumnType("varchar(32)")
+            .IsRequired()
+            .HasComment("user table is currently stored in an external database (Clerk)");
+
         greenhouseConfiguration
             .HasMany(g => g.Sensors)
             .WithOne()
-            .HasForeignKey(s => s.Id) // Assuming Sensor has GreenhouseId property
+            .HasForeignKey(s => s.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
         greenhouseConfiguration
@@ -42,13 +47,5 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
                     c => c.ToList()
                 )
             );
-
-        // Uncomment to configure the User relationship
-        /*
-        greenhouseConfiguration.HasOne(g => g.User)
-            .WithMany()
-            .HasForeignKey(g => g.UserId)
-            .IsRequired(false);
-        */
     }
 }

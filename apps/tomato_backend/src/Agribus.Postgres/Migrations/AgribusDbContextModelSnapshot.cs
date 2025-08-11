@@ -32,12 +32,12 @@ namespace Agribus.Postgres.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("city");
 
                     b.Property<string>("Country")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("country");
 
                     b.Property<DateTimeOffset>("CreatedAt")
@@ -62,6 +62,12 @@ namespace Agribus.Postgres.Migrations
                         .HasColumnType("varchar(100)")
                         .HasColumnName("name");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(32)")
+                        .HasColumnName("user_id")
+                        .HasComment("user table is currently stored in an external database (Clerk)");
+
                     b.HasKey("Id")
                         .HasName("pk_greenhouse");
 
@@ -85,9 +91,9 @@ namespace Agribus.Postgres.Migrations
                         .HasColumnName("created_at")
                         .HasDefaultValueSql("NOW()");
 
-                    b.Property<Guid>("GeenhouseId")
+                    b.Property<Guid>("GreenhouseId")
                         .HasColumnType("uuid")
-                        .HasColumnName("geenhouse_id");
+                        .HasColumnName("greenhouse_id");
 
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
@@ -101,15 +107,15 @@ namespace Agribus.Postgres.Migrations
                         .HasColumnName("last_modified")
                         .HasDefaultValueSql("NOW()");
 
+                    b.Property<string>("Model")
+                        .IsRequired()
+                        .HasColumnType("varchar(50)")
+                        .HasColumnName("model");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("name");
-
-                    b.Property<string>("SensorModel")
-                        .IsRequired()
-                        .HasColumnType("varchar(50)")
-                        .HasColumnName("sensor_model");
 
                     b.Property<string>("SourceAddress")
                         .IsRequired()
@@ -119,8 +125,8 @@ namespace Agribus.Postgres.Migrations
                     b.HasKey("Id")
                         .HasName("pk_sensor");
 
-                    b.HasIndex("GeenhouseId")
-                        .HasDatabaseName("ix_sensor_geenhouse_id");
+                    b.HasIndex("GreenhouseId")
+                        .HasDatabaseName("ix_sensor_greenhouse_id");
 
                     b.ToTable("sensor", null, t =>
                         {
@@ -134,10 +140,10 @@ namespace Agribus.Postgres.Migrations
                 {
                     b.HasOne("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", "Greenhouse")
                         .WithMany("Sensors")
-                        .HasForeignKey("GeenhouseId")
+                        .HasForeignKey("GreenhouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_sensor_greenhouse_geenhouse_id");
+                        .HasConstraintName("fk_sensor_greenhouse_greenhouse_id");
 
                     b.Navigation("Greenhouse");
                 });

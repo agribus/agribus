@@ -1,4 +1,7 @@
 using Agribus.Api.Controllers;
+using Agribus.Clerk.Services;
+using Agribus.Clerk.Validators;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -33,7 +36,14 @@ public class PingTests
     public PingTests()
     {
         _logger = new TestLogger<PingController>();
-        _controller = new PingController(_logger);
+        AuthService authService = new(
+            new(),
+            new TestLogger<AuthService>(),
+            new HttpContextAccessor(),
+            new LoginRequestValidator(),
+            new SignupRequestValidator()
+        );
+        _controller = new PingController(_logger, authService);
     }
 
     [Fact]

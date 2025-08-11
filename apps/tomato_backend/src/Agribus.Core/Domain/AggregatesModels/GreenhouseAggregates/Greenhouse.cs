@@ -1,16 +1,38 @@
 using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
+using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 
 namespace Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 
 public class Greenhouse : BaseEntity
 {
-    public string Name { get; set; }
-    public string Country { get; set; }
-    public string City { get; set; }
+    public required string Name { get; set; }
+    public required string Country { get; set; }
+    public required string City { get; set; }
+    public required string UserId { get; set; }
     public List<Crop> Crops { get; set; } = new();
 
     public IReadOnlyCollection<Sensor> Sensors => _sensors.AsReadOnly();
     private readonly List<Sensor> _sensors = [];
 
-    protected Greenhouse() { }
+    public void AddSensors(IEnumerable<Sensor> sensors)
+    {
+        _sensors.AddRange(
+            sensors.Select(s =>
+            {
+                s.Greenhouse = this;
+                return s;
+            })
+        );
+    }
+
+    public void Update(UpdateGreenhouseDto dto)
+    {
+        Name = dto.Name ?? Name;
+        Country = dto.Country ?? Country;
+        City = dto.City ?? City;
+        if (dto.Crops is not null)
+            Crops = dto.Crops.Select(c => c.MapToCrop()).ToList();
+
+        UpdateLastModified();
+    }
 }
