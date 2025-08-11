@@ -21,8 +21,8 @@ jobs:
 
       - name: Set version
         run: |
-          VERSION=$(git describe --tags --always)
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          VERSION=$(jq -r .version package.json)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -32,7 +32,7 @@ jobs:
           docker build \
             --build-arg CONFIG=production \
             -t agribus/lychee:prod \
-            -t agribus/lychee:${{ env.VERSION }} \
+            -t agribus/lychee:v${{ env.VERSION }} \
             -f ./docker/Dockerfile.lychee .
 
       - name: Build Docker image Tomato
@@ -40,18 +40,18 @@ jobs:
           docker build \
             --build-arg CONFIG=production \
             -t agribus/tomato:prod \
-            -t agribus/tomato:${{ env.VERSION }} \
+            -t agribus/tomato:v${{ env.VERSION }} \
             -f ./docker/Dockerfile.tomato .
 
       - name: Push Docker images
         run: |
           docker push agribus/lychee:prod
-          docker push agribus/lychee:${{ env.VERSION }}        
+          docker push agribus/lychee:v${{ env.VERSION }}        
           docker push agribus/tomato:prod
-          docker push agribus/tomato:${{ env.VERSION }}
+          docker push agribus/tomato:v${{ env.VERSION }}
 
   deploy:
-    name: Deploy Compose Prod
+    name: Deploy compose.prod.yml
     runs-on: ubuntu-latest
     environment: prod
     needs: build-and-push
@@ -66,8 +66,12 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             cd /srv/docker/agribus
+            
+            echo "==> Pull Prod stack"
+            docker pull agribus/lychee:prod
+            docker pull agribus/tomato:prod
 
             echo "==> Pull & Restarting Prod stack"
             docker compose -p agribus-prod -f ./docker/compose.prod.yaml --env-file .env.prod up -d --pull always --remove-orphans
 
-            echo "✅ Prod updated with image: ${{ env.VERSION }}"
+            echo "✅ Prod updated with image: v${{ env.VERSION }}"

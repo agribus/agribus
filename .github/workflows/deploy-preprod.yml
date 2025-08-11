@@ -49,7 +49,7 @@ jobs:
           docker push agribus/tomato:preprod-${{ steps.vars.outputs.short_sha }}
 
   deploy:
-    name: Deploy docker-compose.preprod.yaml
+    name: Deploy compose.preprod.yml
     runs-on: ubuntu-latest
     environment: preprod
     needs: build-and-push
