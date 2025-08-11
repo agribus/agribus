@@ -38,7 +38,7 @@ export class AppComponent {
 
     effect(() => {
       const headerType = this.headerStateService.headerType();
-      this.showNavbar = headerType !== (HeaderType.Settings || HeaderType.None);
+      this.showNavbar = headerType !== HeaderType.Settings && headerType !== HeaderType.None;
     });
   }
 }
