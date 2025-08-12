@@ -32,6 +32,14 @@ jobs:
       - name: Install Capacitor CLI
         run: pnpm add @capacitor/cli -D -w
 
+      - name: Add Android
+        working-directory: apps/lychee_client
+        run: npx cap add android
+
+      - name: Add iOS
+        working-directory: apps/lychee_client
+        run: npx cap add ios
+
       - name: Sync Capacitor platforms
         working-directory: apps/lychee_client
         run: npx cap sync
