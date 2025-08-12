@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - preprod
+      - feature/mise-en-production-v1
 
 jobs:
   build_mobile:
@@ -25,8 +26,8 @@ jobs:
       - name: Install dependencies
         run: pnpm i
 
-      - name: Build frontend (production)
-        run: pnpm run build --filter lychee
+      - name: Build frontend
+        run: pnpm --filter lychee build --configuration=production
 
       - name: Install Capacitor CLI
         run: pnpm add @capacitor/cli -D -w

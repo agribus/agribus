@@ -24,7 +24,7 @@ jobs:
         id: get_version
         run: |
           VERSION=$(jq -r .version package.json)
-          echo "version=$VERSION" >> $GITHUB_ENV
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create tag
         run: |
