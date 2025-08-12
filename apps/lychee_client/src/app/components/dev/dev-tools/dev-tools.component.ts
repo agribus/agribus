@@ -7,6 +7,7 @@ import { TranslateService } from "@ngx-translate/core";
 import { PlatformService } from "@services/platform/platform.service";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { RouteSelectorDialogComponent } from "@components/dev/route-selector-dialog/route-selector-dialog.component";
+import { environment } from "@environment/environment";
 
 @Component({
   selector: "app-dev-tools",
@@ -28,6 +29,14 @@ export class DevToolsComponent {
     if (this.isNativePlatform) {
       this.interceptConsole();
     }
+    console.log(
+      "Production:",
+      environment.production,
+      "\nDevTools:",
+      environment.devTools,
+      "\nApiUrl:",
+      environment.apiUrl
+    );
     console.log(this.platformService.getDeviceInfo());
   }
 

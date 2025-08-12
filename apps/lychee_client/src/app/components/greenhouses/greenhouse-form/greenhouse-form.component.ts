@@ -25,6 +25,7 @@ import { ScanQrCodeComponent } from "@components/ui/mobile/scan-qr-code/scan-qr-
 import { CropFormComponent } from "@components/crops/crop-form/crop-form.component";
 import { CropSelectorComponent } from "@components/crops/crop-selector/crop-selector.component";
 import { PlatformService } from "@services/platform/platform.service";
+import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -64,6 +65,7 @@ export class GreenhouseFormComponent {
   private readonly alerts = inject(TuiAlertService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformService = inject(PlatformService);
+  private readonly greenhouseService = inject(GreenhouseService);
 
   protected readonly step = signal(0);
 
@@ -140,7 +142,25 @@ export class GreenhouseFormComponent {
     this.step2.get("sensor")?.setValue(this.sensors);
 
     if (this.greenhouseForm.valid) {
+      const step0 = this.greenhouseForm.get("step0")?.value;
+      const step1 = this.greenhouseForm.get("step1")?.value;
+      const step2 = this.greenhouseForm.get("step2")?.value;
+
+      const name = step0.name;
+      const city = "Mulhouse";
+      const country = "France";
+      const crops = step1.crops;
+      const sensors = step2.sensor;
+
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
+      this.greenhouseService.createGreenhouse(name, city, country, crops, sensors).subscribe({
+        next: response => {
+          console.log("Greenhouse created successfully", response);
+        },
+        error: err => {
+          console.error("Error creating greenhouse", err);
+        },
+      });
       return;
     }
 
