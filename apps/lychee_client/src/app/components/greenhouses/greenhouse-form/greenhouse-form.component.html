@@ -8,6 +8,9 @@
   <button tuiStep type="button" [disabled]="true">
     {{ "components.greenhouse-form.step.sensors" | translate }}
   </button>
+  <button tuiStep type="button" [disabled]="true">
+    {{ "components.greenhouse-form.step.details" | translate }}
+  </button>
 </tui-stepper>
 
 @switch (step()) {
@@ -187,11 +190,77 @@
           <button tuiButton appearance="primary" (click)="previous()">
             {{ "components.ui.button.return" | translate }}
           </button>
-          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="submitForm()">
-            {{ "components.ui.button.submit" | translate }}
+          <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
+            {{ "components.ui.button.next" | translate }}
           </button>
         </footer>
       </form>
+    </ng-container>
+  }
+  @case (3) {
+    <ng-container>
+      <h3>Name</h3>
+      <tui-textfield>
+        <input
+          tuiTextfield
+          class="details-input"
+          [disabled]="true"
+          [value]="step0.get('name')?.value" />
+      </tui-textfield>
+      <!-- Location -->
+      <h3>Location</h3>
+      <tui-textfield>
+        <input
+          tuiTextfield
+          class="details-input"
+          [disabled]="true"
+          [value]="step0.get('city')?.value + ', ' + step0.get('country')?.value" />
+      </tui-textfield>
+
+      <h3 class="section-title">Crops</h3>
+      @if (crops.length) {
+        <ul class="item-list">
+          @for (crop of crops; track $index) {
+            <li>
+              <tui-swipe-actions [autoClose]="true">
+                <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                  <tui-avatar appearance="primary" [src]="crop.imageUrl" />
+                  <div tuiTitle>
+                    <strong>{{ crop.commonName }}</strong>
+                    <div tuiSubtitle>{{ crop.scientificName }}</div>
+                  </div>
+                  <p style="margin: auto 0">{{ crop.quantity }}x</p>
+                </div>
+              </tui-swipe-actions>
+            </li>
+          }
+        </ul>
+      } @else {
+        <p>No crops found</p>
+      }
+
+      <h3>Sensors</h3>
+      <ul>
+        @for (sensor of sensors; track $index) {
+          <li>
+            <tui-swipe-actions [autoClose]="true">
+              <div tuiAppearance="floating" tuiCardLarge tuiCell>
+                <tui-avatar appearance="primary" [src]="'@tui.cpu'" />
+                <div tuiTitle>
+                  <strong>{{ sensor.sourceAddress }}</strong>
+                  <div tuiSubtitle>{{ sensor.name }}</div>
+                </div>
+              </div>
+            </tui-swipe-actions>
+          </li>
+        }
+      </ul>
+      <footer class="form-footer">
+        <button tuiButton appearance="secondary" (click)="previous()">Retour</button>
+        <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="submitForm()">
+          {{ "components.ui.button.submit" | translate }}
+        </button>
+      </footer>
     </ng-container>
   }
 }
