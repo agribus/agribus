@@ -33,6 +33,7 @@ jobs:
         run: pnpm add @capacitor/cli -D -w
 
       - name: Sync Capacitor platforms
+        working-directory: apps/lychee_client
         run: npx cap sync
 
       # --- Build Android ---
