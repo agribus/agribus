@@ -10,4 +10,5 @@ public interface IAuthService
     Task<string?> GetUserIdFromTokenAsync(string token);
     void LogoutAsync();
     string GetCurrentUserId();
+    string GetToken();
 }

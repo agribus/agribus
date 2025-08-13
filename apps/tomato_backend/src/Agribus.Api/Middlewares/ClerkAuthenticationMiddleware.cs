@@ -58,6 +58,7 @@ namespace Agribus.Api.Middlewares
                 $"/{Endpoints.User.Signup}",
                 $"/{Endpoints.Ping.Index}",
                 $"/{Endpoints.Sensors.PushSensorData}",
+                $"/{Endpoints.User.Me}",
                 "/swagger",
                 "/scalar",
             };

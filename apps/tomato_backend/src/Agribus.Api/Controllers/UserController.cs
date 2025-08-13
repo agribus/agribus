@@ -1,4 +1,5 @@
 using Agribus.Api.Extensions;
+using Agribus.Api.Middlewares;
 using Agribus.Core.Domain.AggregatesModels.AuthAggregates;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +65,17 @@ namespace Agribus.Api.Controllers
             _authService.LogoutAsync();
 
             return Ok(new { message = "Logout successful" });
+        }
+
+        [HttpGet(Endpoints.User.Me)]
+        public async Task<IActionResult> Me()
+        {
+            var token = _authService.GetToken();
+            var isValid = await _authService.ValidateTokenAsync(token);
+            _logger.LogInformation($"y'a t'il un token {token}");
+
+            _logger.LogInformation($"Est il authentifie {isValid}");
+            return Ok(new { message = isValid });
         }
     }
 }

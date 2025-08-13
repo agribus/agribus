@@ -13,3 +13,11 @@ export interface AuthRegister {
 export interface ForgotPassword {
   readonly email: string;
 }
+
+export interface AuthResponse {
+  success: boolean;
+  message: string;
+  errors: {
+    [key: string]: string[] | undefined;
+  };
+}

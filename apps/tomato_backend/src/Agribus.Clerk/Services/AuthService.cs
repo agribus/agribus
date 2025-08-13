@@ -173,6 +173,16 @@ namespace Agribus.Clerk.Services
             _httpContextAccessor.HttpContext?.Response.Cookies.Delete("auth_token");
         }
 
+        public string? GetToken()
+        {
+            return _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(
+                "auth_token",
+                out var token
+            )
+                ? token
+                : null;
+        }
+
         private void SetAuthCookie(string token)
         {
             var cookieOptions = new CookieOptions

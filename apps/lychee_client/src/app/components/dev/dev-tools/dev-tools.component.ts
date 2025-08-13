@@ -7,6 +7,8 @@ import { TranslateService } from "@ngx-translate/core";
 import { PlatformService } from "@services/platform/platform.service";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { RouteSelectorDialogComponent } from "@components/dev/route-selector-dialog/route-selector-dialog.component";
+import { AuthService } from "@services/auth/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-dev-tools",
@@ -20,6 +22,8 @@ export class DevToolsComponent {
   private readonly translateService = inject(TranslateService);
   private readonly platformService = inject(PlatformService);
   private readonly dialogService = inject(TuiDialogService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   logs = signal<string[]>([]);
   isNativePlatform = this.platformService.isNativePlatform();
@@ -100,5 +104,11 @@ export class DevToolsComponent {
 
   clear() {
     this.logs.set([]);
+  }
+
+  Logout() {
+    this.authService.SendLogoutRequest().subscribe(() => {
+      this.router.navigate(["/login"]);
+    });
   }
 }
