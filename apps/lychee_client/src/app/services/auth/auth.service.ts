@@ -13,7 +13,9 @@ export class AuthService {
 
   sendLoginRequest(credentials: AuthLogin) {
     return this.http
-      .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, { withCredentials: true })
+      .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, {
+        withCredentials: true,
+      })
       .pipe(
         tap(response => {
           if (response.success) {
@@ -28,7 +30,8 @@ export class AuthService {
   }
 
   sendLogoutRequest() {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
+    return this.http
+      .post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
       .pipe(
         tap(response => {
           if (response.success) {
