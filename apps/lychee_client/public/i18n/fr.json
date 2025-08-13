@@ -80,7 +80,8 @@
         "settings": "Paramètres",
         "settings-account": "Paramètres du compte",
         "greenhouse-settings": "Paramètres de la serre",
-        "greenhouse-create": "Ajouter une serre"
+        "greenhouse-create": "Ajouter une serre",
+        "new-greenhouse": "➕ Ajouter une serre"
       },
       "fields": {
         "commonName": "Nom commun",
