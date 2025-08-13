@@ -108,7 +108,7 @@ export class DevToolsComponent {
   }
 
   Logout() {
-    this.authService.SendLogoutRequest().subscribe(() => {
+    this.authService.sendLogoutRequest().subscribe(() => {
       this.router.navigate(["/login"]);
     });
   }
