@@ -10,9 +10,8 @@ import { environment } from "@environment/environment";
 export class AuthService {
   private http = inject(HttpClient);
   public isLoggedIn = signal<boolean>(false);
-  token: string = "";
 
-  SendLoginRequest(credentials: AuthLogin) {
+  sendLoginRequest(credentials: AuthLogin) {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, { withCredentials: true })
       .pipe(
@@ -24,15 +23,22 @@ export class AuthService {
       );
   }
 
-  SendRegisterRequest(credentials: AuthRegister) {
+  sendRegisterRequest(credentials: AuthRegister) {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/users/signup`, credentials);
   }
 
-  SendLogoutRequest() {
-    return this.http.post(`${environment.apiUrl}/users/logout`, null, { withCredentials: true });
+  sendLogoutRequest() {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
+      .pipe(
+        tap(response => {
+          if (response.success) {
+            this.isLoggedIn.set(false);
+          }
+        })
+      );
   }
 
-  IsUserAuthenticated() {
+  isUserAuthenticated() {
     return this.http
       .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, { withCredentials: true })
       .pipe(
