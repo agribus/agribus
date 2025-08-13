@@ -1,21 +1,20 @@
 import { inject, Injectable, signal } from "@angular/core";
 import { AuthLogin, AuthRegister, AuthResponse } from "@interfaces/auth.interface";
 import { HttpClient } from "@angular/common/http";
-import { environment } from "../../../environments/environment";
 import { map, tap } from "rxjs";
+import { environment } from "@environment/environment";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl: string = environment.apiUrl;
   public isLoggedIn = signal<boolean>(false);
   token: string = "";
 
   SendLoginRequest(credentials: AuthLogin) {
     return this.http
-      .post<AuthResponse>(`${this.apiUrl}/users/login`, credentials, { withCredentials: true })
+      .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, { withCredentials: true })
       .pipe(
         tap(response => {
           if (response.success) {
@@ -26,16 +25,16 @@ export class AuthService {
   }
 
   SendRegisterRequest(credentials: AuthRegister) {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/users/signup`, credentials);
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/users/signup`, credentials);
   }
 
   SendLogoutRequest() {
-    return this.http.post(`${this.apiUrl}/users/logout`, null, { withCredentials: true });
+    return this.http.post(`${environment.apiUrl}/users/logout`, null, { withCredentials: true });
   }
 
   IsUserAuthenticated() {
     return this.http
-      .get<{ message: boolean }>(`${this.apiUrl}/users/me`, { withCredentials: true })
+      .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, { withCredentials: true })
       .pipe(
         tap(response => this.isLoggedIn.set(response.message)),
         map(response => response.message)
