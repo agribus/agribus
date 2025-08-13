@@ -24,8 +24,10 @@ import { TuiValidationError } from "@taiga-ui/cdk";
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     tuiValidationErrorsProvider({
-      required: "Champ requis",
-      email: "Veuillez entrez une adresse mail valide",
+      required: "Champ requis.",
+      email: "Veuillez entrez une adresse mail valide.",
+      minlength: "Le mot de passe doit faire au moins 8 caractères.",
+      maxlength: "Le mot de passe ne doit pas dépasser 32 caractères."
     }),
   ],
 })
@@ -35,8 +37,10 @@ export class RegisterFormComponent {
   protected readonly form = new FormGroup({
     username: new FormControl("", [Validators.required]),
     email: new FormControl("", [Validators.required, Validators.email]),
-    password: new FormControl("", Validators.required),
-    confirmPassword: new FormControl("", [Validators.required]),
+    password: new FormControl("", [Validators.required, Validators.minLength(8),
+      Validators.maxLength(32)]),
+    confirmPassword: new FormControl("", [Validators.required, Validators.minLength(8),
+      Validators.maxLength(32)]),
   });
 
   private readonly lang: string = localStorage.getItem("lang") || "fr";
