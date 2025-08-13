@@ -57,7 +57,7 @@ export class DevToolsComponent {
   }
 
   useLanguage(language: string): void {
-    localStorage.setItem('lang', language)
+    localStorage.setItem("lang", language);
     this.translateService.use(language);
   }
 
@@ -66,23 +66,23 @@ export class DevToolsComponent {
     const originalError = console.error;
     const originalWarn = console.warn;
 
-    console.log = (...args: any[]) => {
+    console.log = (...args: unknown[]) => {
       this.appendLog("LOG", args);
       originalLog.apply(console, args);
     };
 
-    console.error = (...args: any[]) => {
+    console.error = (...args: unknown[]) => {
       this.appendLog("ERROR", args);
       originalError.apply(console, args);
     };
 
-    console.warn = (...args: any[]) => {
+    console.warn = (...args: unknown[]) => {
       this.appendLog("WARN", args);
       originalWarn.apply(console, args);
     };
   }
 
-  private appendLog(type: string, args: any[]) {
+  private appendLog(type: string, args: unknown[]) {
     const formatted = args.map(arg => {
       if (arg instanceof Error) {
         return `${arg.name}: ${arg.message}\n${arg.stack}`;
