@@ -38,8 +38,10 @@
       <h3 tuiSlot="center">
         @if (url === "/settings-account") {
           {{ "components.ui.header.settings-account" | translate }}
-        } @else if (url === "/greenhouse-form") {
-          {{ "components.ui.header.greenhouse-form" | translate }}
+        } @else if (url === "/greenhouse/settings") {
+          {{ "components.ui.header.greenhouse-settings" | translate }}
+        } @else if (url === "/greenhouse/create") {
+          {{ "components.ui.header.greenhouse-create" | translate }}
         } @else {
           {{ "components.ui.header.settings" | translate }}
         }

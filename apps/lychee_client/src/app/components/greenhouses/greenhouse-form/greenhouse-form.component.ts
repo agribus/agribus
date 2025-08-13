@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, signal, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, Input, signal, ViewChild } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import {
@@ -27,6 +27,7 @@ import { CropSelectorComponent } from "@components/crops/crop-selector/crop-sele
 import { PlatformService } from "@services/platform/platform.service";
 import { Router } from "@angular/router";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
+import { Greenhouse } from "@interfaces/greenhouse.interface";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -81,6 +82,9 @@ export class GreenhouseFormComponent {
 
   public isScanning = false;
   public isMobile = false;
+
+  @Input() greenhouse?: Greenhouse;
+  @Input() isEditMode = false;
 
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
   @ViewChild("cropForm") cropForm?: { open: () => void };
@@ -150,13 +154,10 @@ export class GreenhouseFormComponent {
     if (this.greenhouseForm.valid) {
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
       this.alerts
-        .open(
-          this.translateService.instant("components.greenhouses-form.alert.create-greenhouse"),
-          {
-            appearance: "info",
-            label: this.translateService.instant("components.ui.alert.info"),
-          }
-        )
+        .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
+          appearance: "info",
+          label: this.translateService.instant("components.ui.alert.info"),
+        })
         .subscribe();
       this.router.navigate(["/home"]);
       return;
