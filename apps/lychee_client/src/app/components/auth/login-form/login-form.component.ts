@@ -33,7 +33,7 @@ import { AuthService } from "@services/auth/auth.service";
       required: "Champ requis",
       email: "Veuillez entrez une adresse mail valide",
       minlength: "Le mot de passe doit faire au moins 8 caractères",
-      maxlength: "Le mot de passe ne doit pas dépasser 32 caractères"
+      maxlength: "Le mot de passe ne doit pas dépasser 32 caractères",
     }),
   ],
 })
@@ -43,8 +43,11 @@ export class LoginFormComponent {
   private router = inject(Router);
   protected readonly form = new FormGroup({
     email: new FormControl("", [Validators.required, Validators.email]),
-    password: new FormControl("", [Validators.required, Validators.minLength(8),
-      Validators.maxLength(32)]),
+    password: new FormControl("", [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.maxLength(32),
+    ]),
   });
   private readonly lang = localStorage.getItem("lang") || "fr";
   private readonly alerts = inject(TuiAlertService);
@@ -64,7 +67,7 @@ export class LoginFormComponent {
         password: this.form.value.password ?? "",
       };
 
-      this.authService.SendLoginRequest(loginInformation).subscribe({
+      this.authService.sendLoginRequest(loginInformation).subscribe({
         next: (response: AuthResponse) => {
           if (response.success) {
             this.router.navigate(["/home"]);
