@@ -57,6 +57,7 @@ export class DevToolsComponent {
   }
 
   useLanguage(language: string): void {
+    localStorage.setItem('lang', language)
     this.translateService.use(language);
   }
 
