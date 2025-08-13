@@ -72,9 +72,7 @@ namespace Agribus.Api.Controllers
         {
             var token = _authService.GetToken();
             var isValid = await _authService.ValidateTokenAsync(token);
-            _logger.LogInformation($"y'a t'il un token {token}");
 
-            _logger.LogInformation($"Est il authentifie {isValid}");
             return Ok(new { message = isValid });
         }
     }
