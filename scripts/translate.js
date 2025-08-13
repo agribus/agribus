@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DEEPL_API_KEY = "7b096732-733f-41b8-9ad2-49e3561c5e21:fx";
+const DEEPL_API_KEY = "";
 const INPUT_FILE = path.join(__dirname, "../apps/lychee_client/public/i18n/fr.json");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
