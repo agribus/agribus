@@ -77,7 +77,6 @@ export class RegisterFormComponent {
         };
         this.authService.sendRegisterRequest(registerInformation).subscribe({
           next: (response: AuthResponse) => {
-            console.log("Response", response);
           },
         });
       }
