@@ -76,8 +76,7 @@ export class RegisterFormComponent {
           confirmPassword: this.form.value.confirmPassword ?? "",
         };
         this.authService.sendRegisterRequest(registerInformation).subscribe({
-          next: (response: AuthResponse) => {
-          },
+          next: (response: AuthResponse) => {},
         });
       }
     }
