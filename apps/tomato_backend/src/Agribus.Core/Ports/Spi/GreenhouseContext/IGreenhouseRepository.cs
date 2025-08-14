@@ -19,4 +19,10 @@ public interface IGreenhouseRepository
         string userId,
         CancellationToken cancellationToken
     );
+
+    Task<Greenhouse?> GetByIdAsync(
+        Guid greenhouseId,
+        string userId,
+        CancellationToken cancellationToken
+    );
 }

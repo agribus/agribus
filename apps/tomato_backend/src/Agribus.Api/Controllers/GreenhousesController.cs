@@ -1,4 +1,5 @@
 using Agribus.Api.Extensions;
+using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
@@ -12,9 +13,24 @@ public class GreenhousesController(
     IDeleteGreenhouseUsecase deleteGreenhouseUsecase,
     IUpdateGreenhouseUsecase updateGreenhouseUsecase,
     IGetUserGreenhousesUsecase getUserGreenhousesUsecase,
+    IGetGreenhouseByIdUsecase getGreenhouseByIdUsecase,
     IAuthService authService
 ) : ControllerBase
 {
+    [HttpGet(Endpoints.Greenhouses.GetUserGreenhouseById)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetUserGreenhouseById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var userId = authService.GetCurrentUserId();
+        var result = await getGreenhouseByIdUsecase.Handle(id, userId, cancellationToken);
+
+        return result is null ? NotFound() : Ok(result);
+    }
+
     [HttpGet(Endpoints.Greenhouses.GetUserGreenhouses)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserGreenhouses(CancellationToken cancellationToken)

@@ -12,6 +12,7 @@ public class GreenhouseUsecaseTests
     [Fact]
     public async Task ShouldReturnUserGreenhouses()
     {
+        // Given
         var userId = "user_123";
         var ct = CancellationToken.None;
 
@@ -34,7 +35,7 @@ public class GreenhouseUsecaseTests
         var result = (await usecase.Handle(userId, ct)).ToList();
 
         // Then
-        await repository.Received(1).GetByUserIdAsync(userId, ct);
+        await repository.Received(1).GetByUserIdAsync(userId, Arg.Any<CancellationToken>());
 
         Assert.NotNull(result);
         Assert.Equal(2, result.Count);
@@ -42,6 +43,54 @@ public class GreenhouseUsecaseTests
         // Assert tri DESC by CreatedAt
         Assert.Equal("Serre Sud", result[0].Name);
         Assert.Equal("Serre Nord", result[1].Name);
+    }
+
+    [Fact]
+    public async Task ShouldReturnGreenhouse_WhenExists()
+    {
+        // Given
+        var userId = "user_123";
+        var ct = CancellationToken.None;
+        var greenhouse = GreenhouseFactory.Build("Serre Sud", userId);
+
+        var repository = Substitute.For<IGreenhouseRepository>();
+        repository.GetByIdAsync(greenhouse.Id, userId, ct).Returns(greenhouse);
+
+        var usecase = new GetGreenhouseByIdUsecase(repository);
+
+        // When
+        var result = await usecase.Handle(greenhouse.Id, userId, ct);
+
+        // Then
+        await repository
+            .Received(1)
+            .GetByIdAsync(greenhouse.Id, userId, Arg.Any<CancellationToken>());
+
+        Assert.NotNull(result);
+        Assert.Equal(result.Id, greenhouse.Id);
+        Assert.Equal(result.Name, greenhouse.Name);
+    }
+
+    [Fact]
+    public async Task ShouldReturnNull_WhenGreenhouseNotFound()
+    {
+        var userId = "user_123";
+        Guid fakeId = Guid.NewGuid();
+        var ct = CancellationToken.None;
+
+        var repository = Substitute.For<IGreenhouseRepository>();
+        repository
+            .GetByIdAsync(fakeId, userId, Arg.Any<CancellationToken>())
+            .Returns((Greenhouse?)null);
+
+        var usecase = new GetGreenhouseByIdUsecase(repository);
+
+        // When
+        var result = await usecase.Handle(fakeId, userId, ct);
+
+        // Then
+        await repository.Received(1).GetByIdAsync(fakeId, userId, Arg.Any<CancellationToken>());
+        Assert.Null(result);
     }
 
     [Fact]
