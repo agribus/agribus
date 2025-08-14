@@ -152,14 +152,37 @@ export class GreenhouseFormComponent {
     this.step2.get("sensor")?.setValue(this.sensors);
 
     if (this.greenhouseForm.valid) {
+      const step0 = this.greenhouseForm.get("step0")?.value;
+      const step1 = this.greenhouseForm.get("step1")?.value;
+      const step2 = this.greenhouseForm.get("step2")?.value;
+
+      const name = step0.name;
+      const city = step0.city;
+      const country = step0.country;
+      const crops = step1.crops;
+      const sensors = step2.sensor;
+
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
-      this.alerts
-        .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
-          appearance: "info",
-          label: this.translateService.instant("components.ui.alert.info"),
-        })
-        .subscribe();
-      this.router.navigate(["/home"]);
+
+      this.greenhouseService.create(name, city, country, crops, sensors).subscribe({
+        next: () => {
+          this.alerts
+            .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
+              appearance: "info",
+              label: this.translateService.instant("components.ui.alert.info"),
+            })
+            .subscribe();
+          this.router.navigate(["/home"]);
+        },
+        error: error => {
+          this.alerts
+            .open(error, {
+              appearance: "info",
+              label: this.translateService.instant("components.ui.alert.info"),
+            })
+            .subscribe();
+        },
+      });
       return;
     }
 
