@@ -17,8 +17,6 @@ namespace Agribus.Core.Domain.AggregatesModels.AuthAggregates
     public sealed class AuthResponse
     {
         public bool Success { get; set; } = false;
-        public string? Token { get; set; }
-        public string? UserId { get; set; }
         public string? Message { get; set; }
         public Dictionary<string, string[]>? Errors { get; set; } = new();
 
@@ -28,13 +26,7 @@ namespace Agribus.Core.Domain.AggregatesModels.AuthAggregates
             string? message = null
         )
         {
-            return new AuthResponse
-            {
-                Success = true,
-                Token = token,
-                UserId = userId,
-                Message = message ?? "Successful operation",
-            };
+            return new AuthResponse { Success = true, Message = message ?? "Successful operation" };
         }
 
         public static AuthResponse CreateError(
