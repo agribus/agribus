@@ -1,15 +1,15 @@
 import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { TuiButton, tuiItemsHandlersProvider, TuiTextfield } from "@taiga-ui/core";
+import { TuiButton, TuiDropdown, tuiItemsHandlersProvider, TuiTextfield } from "@taiga-ui/core";
 import { TuiAppBar } from "@taiga-ui/layout";
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
-import { filter, map, switchMap, of } from "rxjs";
+import { filter, map, of, switchMap } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
-import { TranslatePipe } from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
@@ -26,6 +26,7 @@ import { HeaderStateService } from "@services/header-state.service";
     TuiSelect,
     TuiTextfield,
     TranslatePipe,
+    TuiDropdown,
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
@@ -44,6 +45,7 @@ export class HeaderComponent implements OnInit {
   private readonly devToolsService = inject(DevToolsService);
   private readonly headerStateService = inject(HeaderStateService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly translateService = inject(TranslateService);
 
   public readonly isMobile = this.platformService.isMobile();
   public readonly greenhouses = this.greenhouseService.getGreenhouses();
@@ -55,6 +57,8 @@ export class HeaderComponent implements OnInit {
 
   public headerType: HeaderType = HeaderType.Default;
   public HeaderType = HeaderType;
+
+  private lastSelectedGreenhouse: Greenhouse | null = this.value;
 
   ngOnInit() {
     this.router.events
@@ -70,6 +74,27 @@ export class HeaderComponent implements OnInit {
 
         this.headerStateService.headerType.set(this.headerType);
       });
+  }
+
+  public get greenhouseOptions() {
+    return [
+      ...this.greenhouses,
+      {
+        id: "new",
+        name: this.translateService.instant("components.ui.header.new-greenhouse"),
+        special: true,
+      },
+    ];
+  }
+
+  public onGreenhouseChange(selected: Greenhouse) {
+    console.log(selected);
+    if ((selected as any).special) {
+      this.value = this.lastSelectedGreenhouse;
+      this.router.navigate(["/greenhouse/create"]);
+    } else {
+      this.lastSelectedGreenhouse = selected;
+    }
   }
 
   private getDeepestChild(route: ActivatedRoute): ActivatedRoute {

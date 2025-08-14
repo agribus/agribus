@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, signal, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, Input, signal, ViewChild } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import {
@@ -25,6 +25,9 @@ import { ScanQrCodeComponent } from "@components/ui/mobile/scan-qr-code/scan-qr-
 import { CropFormComponent } from "@components/crops/crop-form/crop-form.component";
 import { CropSelectorComponent } from "@components/crops/crop-selector/crop-selector.component";
 import { PlatformService } from "@services/platform/platform.service";
+import { Router } from "@angular/router";
+import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
+import { Greenhouse } from "@interfaces/greenhouse.interface";
 
 @Component({
   selector: "app-greenhouse-form",
@@ -64,6 +67,8 @@ export class GreenhouseFormComponent {
   private readonly alerts = inject(TuiAlertService);
   private readonly cdr = inject(ChangeDetectorRef);
   private readonly platformService = inject(PlatformService);
+  private readonly router = inject(Router);
+  private readonly greenhouseService = inject(GreenhouseService);
 
   protected readonly step = signal(0);
 
@@ -78,6 +83,9 @@ export class GreenhouseFormComponent {
   public isScanning = false;
   public isMobile = false;
 
+  @Input() greenhouse?: Greenhouse;
+  @Input() isEditMode = false;
+
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
   @ViewChild("cropForm") cropForm?: { open: () => void };
   @ViewChild("cropSelector") cropSelector?: { open: () => void };
@@ -88,7 +96,8 @@ export class GreenhouseFormComponent {
     this.greenhouseForm = this.fb.group({
       step0: this.fb.group({
         name: ["", Validators.required],
-        location: ["Paris", Validators.required],
+        city: ["Paris", Validators.required],
+        country: ["France", Validators.required],
       }),
       step1: this.fb.group({
         crops: [[]],
@@ -124,12 +133,15 @@ export class GreenhouseFormComponent {
       case 0:
         return <boolean>(
           (this.greenhouseForm.get("step0.name")?.valid &&
-            this.greenhouseForm.get("step0.location")?.valid)
+            this.greenhouseForm.get("step0.city")?.valid &&
+            this.greenhouseForm.get("step0.country")?.valid)
         );
       case 1:
         return this.crops.length >= 0;
       case 2:
         return this.sensors.length > 0;
+      case 3:
+        return true;
       default:
         return false;
     }
@@ -141,6 +153,13 @@ export class GreenhouseFormComponent {
 
     if (this.greenhouseForm.valid) {
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
+      this.alerts
+        .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
+          appearance: "info",
+          label: this.translateService.instant("components.ui.alert.info"),
+        })
+        .subscribe();
+      this.router.navigate(["/home"]);
       return;
     }
 

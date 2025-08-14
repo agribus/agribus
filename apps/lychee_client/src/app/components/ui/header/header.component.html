@@ -6,11 +6,13 @@
       <tui-textfield
         tuiSlot="center"
         tuiChevron
+        tuiDropdownAlign="center"
+        tuiDropdownLimitWidth="auto"
         [tuiTextfieldCleaner]="false"
         [tuiTextfieldAppearance]="'none'"
         [style.width.rem]="maxLengthGreenhouse + 1.5">
-        <input tuiSelect [(ngModel)]="value" />
-        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
+        <input tuiSelect [(ngModel)]="value" (ngModelChange)="onGreenhouseChange($event)" />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouseOptions" />
       </tui-textfield>
 
       @if (showDevTools) {
@@ -38,8 +40,10 @@
       <h3 tuiSlot="center">
         @if (url === "/settings-account") {
           {{ "components.ui.header.settings-account" | translate }}
-        } @else if (url === "/greenhouse-form") {
-          {{ "components.ui.header.greenhouse-form" | translate }}
+        } @else if (url === "/greenhouse/settings") {
+          {{ "components.ui.header.greenhouse-settings" | translate }}
+        } @else if (url === "/greenhouse/create") {
+          {{ "components.ui.header.greenhouse-create" | translate }}
         } @else {
           {{ "components.ui.header.settings" | translate }}
         }

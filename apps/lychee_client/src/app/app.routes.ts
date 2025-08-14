@@ -9,7 +9,8 @@ import { LoginComponent } from "@pages/auth/login/login.component";
 import { RegisterComponent } from "@pages/auth/register/register.component";
 import { ForgotPasswordComponent } from "@pages/auth/forgot-password/forgot-password.component";
 import { HeaderType } from "@enums/header-type";
-import { GreenhouseSettingsComponent } from "@pages/greenhouse-settings/greenhouse-settings.component";
+import { GreenhouseSettingsComponent } from "@pages/greenhouses/greenhouse-settings/greenhouse-settings.component";
+import { GreenhouseCreateComponent } from "@pages/greenhouses/greenhouse-create/greenhouse-create.component";
 import { authGuard } from "@guards/auth.guard";
 import { guestGuard } from "@guards/guest.guard";
 
@@ -33,7 +34,13 @@ export const routes: Routes = [
     data: { headerType: HeaderType.Default },
   },
   {
-    path: "greenhouse-settings",
+    path: "greenhouse/create",
+    component: GreenhouseCreateComponent,
+    canActivate: [mobileOnlyGuard],
+    data: { headerType: HeaderType.Settings },
+  },
+  {
+    path: "greenhouse/settings/:id",
     component: GreenhouseSettingsComponent,
     canActivate: [mobileOnlyGuard],
     data: { headerType: HeaderType.Settings },
