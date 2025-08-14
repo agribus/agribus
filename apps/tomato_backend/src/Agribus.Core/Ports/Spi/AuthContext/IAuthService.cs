@@ -8,5 +8,7 @@ public interface IAuthService
     Task<AuthResponse> SignupAsync(SignupRequest request);
     Task<bool> ValidateTokenAsync(string token);
     Task<string?> GetUserIdFromTokenAsync(string token);
+    void LogoutAsync();
     string GetCurrentUserId();
+    string GetToken();
 }
