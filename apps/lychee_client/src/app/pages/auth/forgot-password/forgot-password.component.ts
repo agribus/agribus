@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { NgOptimizedImage } from "@angular/common";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TuiTitle } from "@taiga-ui/core";
-import { ForgotPasswordFormComponent } from "@components/forgot-password-form/forgot-password-form.component";
+import { ForgotPasswordFormComponent } from "@components/auth/forgot-password-form/forgot-password-form.component";
 
 @Component({
   selector: "app-forgot-password",

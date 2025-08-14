@@ -2,14 +2,14 @@
   <form [formGroup]="form" (ngSubmit)="save()" class="sensor-form">
     <tui-textfield>
       <label tuiLabel>
-        {{ "components.sensors.sensor-form.label.name" | translate }}
+        {{ "components.ui.fields.name" | translate }}
       </label>
       <input tuiTextfield formControlName="name" />
     </tui-textfield>
 
     <tui-textfield class="mt-4">
       <label tuiLabel>
-        {{ "components.sensors.sensor-form.label.sourceAddress" | translate }}
+        {{ "components.ui.fields.sourceAddress" | translate }}
       </label>
       <input tuiTextfield formControlName="sourceAddress" />
     </tui-textfield>
