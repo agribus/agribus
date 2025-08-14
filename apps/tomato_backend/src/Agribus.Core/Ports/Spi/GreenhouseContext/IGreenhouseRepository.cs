@@ -14,4 +14,9 @@ public interface IGreenhouseRepository
         UpdateGreenhouseDto dto,
         CancellationToken cancellationToken
     );
+
+    Task<GreenhouseListItemDto[]> GetByUserIdAsync(
+        string userId,
+        CancellationToken cancellationToken
+    );
 }
