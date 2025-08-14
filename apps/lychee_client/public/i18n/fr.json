@@ -54,7 +54,8 @@
     "ui": {
       "alert": {
         "info": "Information",
-        "error": "Erreur"
+        "error": "Erreur",
+        "errorCreds": "Les identifiants sont incorrects."
       },
       "button": {
         "add": "Ajouter",
