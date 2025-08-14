@@ -164,28 +164,31 @@ export class GreenhouseFormComponent {
 
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
 
-      this.greenhouseService.create(name, city, country, crops, sensors).subscribe({
-        next: () => {
-          this.alerts
-            .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
-              appearance: "info",
-              label: this.translateService.instant("components.ui.alert.info"),
-            })
-            .subscribe();
-          this.router.navigate(["/home"]);
-        },
-        error: error => {
-          this.alerts
-            .open(error, {
-              appearance: "info",
-              label: this.translateService.instant("components.ui.alert.info"),
-            })
-            .subscribe();
-        },
-      });
+      if (this.isEditMode) {
+        console.log("edit");
+      } else {
+        this.greenhouseService.create(name, city, country, crops, sensors).subscribe({
+          next: () => {
+            this.alerts
+              .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
+                appearance: "info",
+                label: this.translateService.instant("components.ui.alert.info"),
+              })
+              .subscribe();
+            this.router.navigate(["/home"]);
+          },
+          error: error => {
+            this.alerts
+              .open(error, {
+                appearance: "info",
+                label: this.translateService.instant("components.ui.alert.info"),
+              })
+              .subscribe();
+          },
+        });
+      }
       return;
     }
-
     this.handleInvalidForm();
   }
 

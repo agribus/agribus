@@ -22,17 +22,25 @@ export class GreenhouseService {
   }
 
   public getById(id: string) {
-    return this.http.get<Greenhouse>(environment.apiUrl + "/greenhouses/" + id);
+    return this.http.get<Greenhouse>(`${environment.apiUrl}/greenhouses/${id}`, {
+      withCredentials: true,
+    });
   }
 
   public create(name: string, city: string, country: string, crops: Crop[], sensors: Sensor[]) {
-    return this.http.post(environment.apiUrl + "/greenhouses", {
-      name: name,
-      city: city,
-      country: country,
-      crops: crops,
-      sensors: sensors,
-    });
+    return this.http.post(
+      `${environment.apiUrl}/greenhouses`,
+      {
+        name: name,
+        city: city,
+        country: country,
+        crops: crops,
+        sensors: sensors,
+      },
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   public update(
@@ -43,16 +51,24 @@ export class GreenhouseService {
     crops: Crop[],
     sensors: Sensor[]
   ) {
-    return this.http.put(environment.apiUrl + "/greenhouses/" + id, {
-      name: name,
-      city: city,
-      country: country,
-      crops: crops,
-      sensors: sensors,
-    });
+    return this.http.put(
+      `${environment.apiUrl}/greenhouses/${id}`,
+      {
+        name: name,
+        city: city,
+        country: country,
+        crops: crops,
+        sensors: sensors,
+      },
+      {
+        withCredentials: true,
+      }
+    );
   }
 
   public delete(id: string) {
-    return this.http.delete(environment.apiUrl + "/greenhouses/" + id);
+    return this.http.delete(`${environment.apiUrl}/greenhouses/${id}`, {
+      withCredentials: true,
+    });
   }
 }
