@@ -1,7 +1,13 @@
+@if (isError) {
+  <tui-notification style="margin-bottom: 1rem" size="l" appearance="negative">
+    {{ messageError }}
+  </tui-notification>
+}
 <form class="form-block" [formGroup]="form">
   <div class="form-input-container">
     <div class="input-container">
       <label for="email" tuiLabel>{{ "components.login-form.email" | translate }}</label>
+
       <tui-textfield>
         <input
           class="form-input"
