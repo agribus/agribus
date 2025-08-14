@@ -11,9 +11,19 @@ public class GreenhousesController(
     ICreateGreenhouseUsecase createGreenhouseUsecase,
     IDeleteGreenhouseUsecase deleteGreenhouseUsecase,
     IUpdateGreenhouseUsecase updateGreenhouseUsecase,
+    IGetUserGreenhousesUsecase getUserGreenhousesUsecase,
     IAuthService authService
 ) : ControllerBase
 {
+    [HttpGet(Endpoints.Greenhouses.GetUserGreenhouses)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetUserGreenhouses(CancellationToken cancellationToken)
+    {
+        var userId = authService.GetCurrentUserId();
+        var result = await getUserGreenhousesUsecase.Handle(userId, cancellationToken);
+        return Ok(result);
+    }
+
     [HttpPost(Endpoints.Greenhouses.CreateGreenhouse)]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
