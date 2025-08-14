@@ -21,17 +21,11 @@ export class GreenhouseService {
     return this.greenhouses;
   }
 
-  public getGreenhouse(id: string) {
+  public getById(id: string) {
     return this.http.get<Greenhouse>(environment.apiUrl + "/greenhouses/" + id);
   }
 
-  public createGreenhouse(
-    name: string,
-    city: string,
-    country: string,
-    crops: Crop[],
-    sensors: Sensor[]
-  ) {
+  public create(name: string, city: string, country: string, crops: Crop[], sensors: Sensor[]) {
     return this.http.post(environment.apiUrl + "/greenhouses", {
       name: name,
       city: city,
@@ -41,7 +35,7 @@ export class GreenhouseService {
     });
   }
 
-  public updateGreenhouse(
+  public update(
     id: string,
     name: string,
     city: string,
@@ -58,7 +52,7 @@ export class GreenhouseService {
     });
   }
 
-  public deleteGreenhouse(id: string) {
+  public delete(id: string) {
     return this.http.delete(environment.apiUrl + "/greenhouses/" + id);
   }
 }

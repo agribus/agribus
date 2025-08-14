@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, signal, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, inject, Input, signal, ViewChild } from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import {
@@ -157,25 +157,30 @@ export class GreenhouseFormComponent {
       const step2 = this.greenhouseForm.get("step2")?.value;
 
       const name = step0.name;
-      const city = "Mulhouse";
-      const country = "France";
+      const city = step0.city;
+      const country = step0.country;
       const crops = step1.crops;
       const sensors = step2.sensor;
 
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
-      this.alerts
-        .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
-          appearance: "info",
-          label: this.translateService.instant("components.ui.alert.info"),
-        })
-        .subscribe();
-      this.router.navigate(["/home"]);
-      this.greenhouseService.createGreenhouse(name, city, country, crops, sensors).subscribe({
-        next: response => {
-          console.log("Greenhouse created successfully", response);
+
+      this.greenhouseService.create(name, city, country, crops, sensors).subscribe({
+        next: () => {
+          this.alerts
+            .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
+              appearance: "info",
+              label: this.translateService.instant("components.ui.alert.info"),
+            })
+            .subscribe();
+          this.router.navigate(["/home"]);
         },
-        error: err => {
-          console.error("Error creating greenhouse", err);
+        error: error => {
+          this.alerts
+            .open(error, {
+              appearance: "info",
+              label: this.translateService.instant("components.ui.alert.info"),
+            })
+            .subscribe();
         },
       });
       return;
