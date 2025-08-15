@@ -1,19 +1,15 @@
 import { HttpErrorResponse, HttpInterceptorFn } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { ErrorHandlingService } from "@services/api/error-handling/error-handling.service";
-import { catchError, mergeMap, tap, throwError } from "rxjs";
+import { catchError, throwError } from "rxjs";
+import { ApiResponseService } from "@services/api/api-response.service";
 
 export const httpErrorInterceptor: HttpInterceptorFn = (req, next) => {
-  const errorService = inject(ErrorHandlingService);
+  const apiResponseService = inject(ApiResponseService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      return errorService.parseHttpError(error).pipe(
-        tap(({ message, apiError }) => {
-          errorService.showError(message, apiError);
-        }),
-        mergeMap(err => throwError(() => err))
-      );
+      apiResponseService.handleError(error);
+      return throwError(() => error);
     })
   );
 };
