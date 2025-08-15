@@ -2,6 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { TuiAlertService } from "@taiga-ui/core";
 import { TranslateService } from "@ngx-translate/core";
 import { HttpErrorResponse } from "@angular/common/http";
+import { map } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -30,40 +31,16 @@ export class ErrorHandlingService {
   }
 
   public parseHttpError(httpError: HttpErrorResponse) {
-    let message: string;
     const status = httpError.status;
     const apiError = httpError.error;
+    const translationKey = `shared.errors.http.${status}`;
 
-    switch (status) {
-      case 400:
-        message = this.translateService.instant("shared.errors.http.400");
-        break;
-      case 401:
-        message = this.translateService.instant("shared.errors.http.401");
-        break;
-      case 403:
-        message = this.translateService.instant("shared.errors.http.403");
-        break;
-      case 404:
-        message = this.translateService.instant("shared.errors.http.404");
-        break;
-      case 409:
-        message = this.translateService.instant("shared.errors.http.409");
-        break;
-      case 422:
-        message = this.translateService.instant("shared.errors.http.422");
-        break;
-      case 500:
-        message = this.translateService.instant("shared.errors.http.500");
-        break;
-      case 0:
-        message = this.translateService.instant("shared.errors.http.0");
-        break;
-      default:
-        message = this.translateService.instant("shared.errors.http.default");
-        break;
-    }
-
-    return { message, status, apiError };
+    return this.translateService.get(translationKey).pipe(
+      map(message => ({
+        message: message || this.translateService.instant("shared.errors.http.default"),
+        status,
+        apiError: apiError?.message || apiError,
+      }))
+    );
   }
 }
