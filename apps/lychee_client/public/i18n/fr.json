@@ -122,5 +122,20 @@
       "subtitle": "Entre votre email pour changer de mot de passe",
       "connection-page": "Page de connexion"
     }
+  },
+  "shared": {
+    "errors": {
+      "http": {
+        "400": "Données invalides",
+        "401": "Vous devez vous connecter pour accéder à cette ressource",
+        "403": "Vous n'avez pas les permissions nécessaires",
+        "404": "Ressource non trouvée",
+        "409": "Cette ressource existe déjà",
+        "422": "Données de validation incorrectes",
+        "500": "Erreur serveur, veuillez réessayer plus tard",
+        "0": "Impossible de contacter le serveur",
+        "default": "Une erreur est survenue"
+      }
+    }
   }
 }
