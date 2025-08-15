@@ -121,6 +121,10 @@
       "title": "Mot de passe oublié",
       "subtitle": "Entre votre email pour changer de mot de passe",
       "connection-page": "Page de connexion"
+    },
+    "not-found": {
+      "message": "Oops ! La page que vous cherchez n'existe pas.",
+      "home": "Retour à l'accueil"
     }
   },
   "shared": {

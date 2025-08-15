@@ -14,6 +14,7 @@ import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
 import { HeaderStateService } from "@services/ui/header-state/header-state.service";
+import { AuthService } from "@services/auth/auth.service";
 
 @Component({
   selector: "app-header",
@@ -46,6 +47,7 @@ export class HeaderComponent implements OnInit {
   private readonly headerStateService = inject(HeaderStateService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly translateService = inject(TranslateService);
+  private readonly authService = inject(AuthService);
 
   public readonly isMobile = this.platformService.isMobile();
   public greenhouses!: Greenhouse[];
@@ -61,12 +63,6 @@ export class HeaderComponent implements OnInit {
   private lastSelectedGreenhouse: Greenhouse | null = null;
 
   ngOnInit() {
-    this.greenhouseService.getGreenhouses().subscribe(greenhouses => {
-      this.greenhouses = greenhouses;
-      this.value = this.greenhouses[0];
-      this.lastSelectedGreenhouse = this.value;
-      this.maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
-    });
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
@@ -79,6 +75,22 @@ export class HeaderComponent implements OnInit {
         this.url = this.router.url;
 
         this.headerStateService.headerType.set(this.headerType);
+
+        if (this.headerType === HeaderType.Default && this.authService.isLoggedIn()) {
+          this.loadGreenhouses();
+        }
+      });
+  }
+
+  private loadGreenhouses() {
+    this.greenhouseService
+      .getGreenhouses()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(greenhouses => {
+        this.greenhouses = greenhouses;
+        this.value = this.greenhouses[0] || null;
+        this.lastSelectedGreenhouse = this.value;
+        this.maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
       });
   }
 

@@ -1,13 +1,12 @@
 import { TestBed } from "@angular/core/testing";
+import { ApiResponseService } from "@services/api/api-response.service";
 
-import { ErrorHandlingService } from "./error-handling.service";
-
-describe("ErrorHandlingService", () => {
-  let service: ErrorHandlingService;
+describe("ApiResponseService", () => {
+  let service: ApiResponseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ErrorHandlingService);
+    service = TestBed.inject(ApiResponseService);
   });
 
   it("should be created", () => {
