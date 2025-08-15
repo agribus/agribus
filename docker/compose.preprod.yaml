@@ -40,6 +40,15 @@ services:
       retries: 3
     networks:
       - agribus-network-preprod
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.influxdb.rule=Host(`${INFLUXDB_DOMAIN}`)"
+      - "traefik.http.routers.influxdb.entrypoints=websecure"
+      - "traefik.http.routers.influxdb.tls=true"
+      - "traefik.http.routers.influxdb.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8181"
 
   lychee-client-preprod:
     container_name: lychee-client-preprod
