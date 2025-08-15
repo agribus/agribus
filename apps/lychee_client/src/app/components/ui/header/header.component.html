@@ -2,12 +2,11 @@
   @if (headerType === HeaderType.Default) {
     <tui-app-bar>
       <img
-        class="logo"
-        [ngSrc]="darkMode() ? '/assets/logo/logo-dark.png' : '/assets/logo/logo-light.png'"
+        [ngSrc]="darkMode() ? '/assets/logo/logo-dark.png' : '/assets/logo/logo-light.svg'"
         tuiSlot="left"
         alt="Agribus"
-        height="50"
-        width="50" />
+        height="56"
+        width="56" />
 
       <tui-textfield
         tuiSlot="center"
