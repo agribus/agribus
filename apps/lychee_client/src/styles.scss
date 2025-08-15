@@ -1,5 +1,5 @@
 @media screen {
-  /* Dark mode */
+  /* Dark theme */
   [tuiTheme="dark"] {
     color-scheme: dark;
 
@@ -8,7 +8,7 @@
     --tui-background-accent-1: #44c596;
   }
 
-  /* Light mode */
+  /* Light theme */
   [tuiTheme="light"] {
     color-scheme: light;
 
@@ -20,7 +20,7 @@
     --tui-background-accent-1: #065132;
   }
 
-  /* Default value */
+  /* Default theme */
   :root,
   :host,
   [tuiTheme="light"] {
