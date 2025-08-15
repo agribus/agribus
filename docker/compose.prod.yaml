@@ -20,6 +20,8 @@ services:
   hot-potato:
     container_name: hot-potato
     image: influxdb:3-core
+    expose:
+      - "8181"
     restart: unless-stopped
     environment:
       - INFLUXDB_USER=${INFLUXDB_USER}
