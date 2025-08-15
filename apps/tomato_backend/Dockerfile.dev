@@ -1,0 +1,28 @@
+﻿FROM mcr.microsoft.com/dotnet/sdk:9.0
+
+WORKDIR /app
+
+COPY Agribus.sln ./
+COPY tests/ tests/
+COPY src/ src/
+
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+RUN dotnet restore
+
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
+ENV DOTNET_WATCH_AUTO_REBUILD=true
+ENV DOTNET_WATCH_HOT_RELOAD=true
+ENV ASPNETCORE_ENVIRONMENT=Development
+
+RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
+
+EXPOSE 5000
+EXPOSE 5001
+EXPOSE 5005
+
+COPY tomato-entrypoint.sh /tomato-entrypoint.sh
+RUN chmod +x /tomato-entrypoint.sh
+
+ENTRYPOINT ["/tomato-entrypoint.sh"]

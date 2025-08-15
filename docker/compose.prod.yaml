@@ -1,0 +1,120 @@
+services:
+  cold-potato:
+    container_name: cold-potato
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agribus-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  hot-potato:
+    container_name: hot-potato
+    image: influxdb:3-core
+    expose:
+      - "8181"
+    restart: unless-stopped
+    environment:
+      - INFLUXDB_USER=${INFLUXDB_USER}
+      - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+    command:
+      - influxdb3
+      - serve
+      - --node-id=${INFLUXDB_NODE_ID}
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3
+    volumes:
+      - influxdb_data:/var/lib/influxdb3
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f -H 'Authorization: Bearer ${INFLUXDB_TOKEN}' http://localhost:8181/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - agribus-network
+      -  proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.influxdb.rule=Host(`${INFLUXDB_DOMAIN}`)"
+      - "traefik.http.routers.influxdb.entrypoints=websecure"
+      - "traefik.http.routers.influxdb.tls=true"
+      - "traefik.http.routers.influxdb.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8181"
+
+  lychee:
+    container_name: lychee-client
+    image: agribus/lychee:prod
+    expose:
+      - "80"
+    networks:
+      - agribus-network
+      - proxy
+    environment:
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.lychee.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee.entrypoints=websecure"
+      - "traefik.http.routers.lychee.tls=true"
+      - "traefik.http.routers.lychee.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.routers.lychee-http.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee-http.entrypoints=web"
+      - "traefik.http.routers.lychee-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.services.lychee.loadbalancer.server.port=80"
+
+  tomato:
+    container_name: tomato-backend
+    image: agribus/tomato:prod
+    expose:
+      - "5001"
+    environment:
+      - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - INFLUXDB__URL=http://hot-potato:8181
+      - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - Clerk__SecretKey=${Clerk__SecretKey}
+    restart: unless-stopped
+    depends_on:
+      cold-potato:
+        condition: service_healthy
+      hot-potato:
+        condition: service_healthy
+    networks:
+      - agribus-network
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.tomato.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.tomato.entrypoints=websecure"
+      - "traefik.http.routers.tomato.tls=true"
+      - "traefik.http.routers.tomato.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.tomato.loadbalancer.server.port=5001"
+
+volumes:
+  postgres_data:
+    name: agribus-cold-potato-data
+  influxdb_data:
+    name: agribus-hot-potato-data
+
+networks:
+  proxy:
+    external: true
+  agribus-network:
+    name: agribus-network
+    driver: bridge

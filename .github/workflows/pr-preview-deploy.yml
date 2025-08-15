@@ -1,0 +1,97 @@
+name: PR Lychee Preview Deploy
+
+on:
+  pull_request:
+    branches: [preprod]
+
+jobs:
+  docker-build-and-push:
+    runs-on: ubuntu-latest
+    environment: preprod
+    outputs:
+      pr_number: ${{ steps.vars.outputs.pr_number }}
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Set PR variables
+        id: vars
+        run: echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t agribus/lychee-pr-${{ steps.vars.outputs.pr_number }} -f ./docker/Dockerfile.lychee .
+
+      - name: Push Docker image to registry
+        run: |
+          docker tag agribus/lychee-pr-${{ steps.vars.outputs.pr_number }} agribus/lychee:pr-${{ steps.vars.outputs.pr_number }}
+          docker push agribus/lychee:pr-${{ steps.vars.outputs.pr_number }}
+
+  ssh-deploy:
+    needs: docker-build-and-push
+    runs-on: ubuntu-latest
+    environment: preprod
+
+    steps:
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            PR=${{ needs.docker-build-and-push.outputs.pr_number }}
+            
+            if [ "$(docker ps -aq -f name=lychee-pr-$PR)" ]; then
+              docker rm -f lychee-pr-$PR
+            fi
+            
+            docker pull agribus/lychee:pr-$PR
+            
+            docker run -d \
+              --name lychee-pr-$PR \
+              --network proxy \
+              --label traefik.enable=true \
+              --label traefik.docker.network=proxy \
+              --label "traefik.http.routers.pr-$PR-http.rule=Host(\"pr-$PR.agribus.fr\")" \
+              --label traefik.http.routers.pr-$PR-http.entrypoints=web \
+              --label traefik.http.routers.pr-$PR-http.middlewares=redirect-to-https \
+              --label traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https \
+              --label "traefik.http.routers.pr-$PR.rule=Host(\"pr-$PR.agribus.fr\")" \
+              --label traefik.http.routers.pr-$PR.entrypoints=websecure \
+              --label traefik.http.routers.pr-$PR.tls=true \
+              --label traefik.http.routers.pr-$PR.tls.certresolver=tmhttpchallenge \
+              --label traefik.http.services.pr-$PR.loadbalancer.server.port=80 \
+              agribus/lychee:pr-$PR
+
+      - name: Post preview URL as comment on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const prNumber = ${{ needs.docker-build-and-push.outputs.pr_number }};
+            const url = `https://pr-${prNumber}.agribus.fr`;
+            const body = `🚀 Preview deployed: [${url}](${url})`;
+            
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+            });
+            
+            const existingComment = comments.data.find(comment => comment.body.includes(url));
+            
+            if (!existingComment) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: body,
+              });
+            } else {
+              console.log("Preview URL already posted, skipping comment.");
+            }

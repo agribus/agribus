@@ -1,0 +1,119 @@
+services:
+  cold-potato-preprod:
+    container_name: cold-potato-preprod
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - agribus-network-preprod
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h localhost -U $$POSTGRES_USER" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  hot-potato-preprod:
+    container_name: hot-potato-preprod
+    image: influxdb:3-core
+    expose:
+      - "8181"
+    restart: unless-stopped
+    environment:
+      - INFLUXDB_USER=${INFLUXDB_USER}
+      - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+    command:
+      - influxdb3
+      - serve
+      - --node-id=${INFLUXDB_NODE_ID}
+      - --object-store=file
+      - --data-dir=/var/lib/influxdb3
+    volumes:
+      - influxdb_data:/var/lib/influxdb3
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f -H 'Authorization: Bearer ${INFLUXDB_TOKEN}' http://localhost:8181/health || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - agribus-network-preprod
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.influxdb.rule=Host(`${INFLUXDB_DOMAIN}`)"
+      - "traefik.http.routers.influxdb.entrypoints=websecure"
+      - "traefik.http.routers.influxdb.tls=true"
+      - "traefik.http.routers.influxdb.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.influxdb.loadbalancer.server.port=8181"
+
+  lychee-client-preprod:
+    container_name: lychee-client-preprod
+    image: agribus/lychee:preprod
+    expose:
+      - "80"
+    networks:
+      - agribus-network-preprod
+      - proxy
+    environment:
+      - NODE_ENV=production
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.lychee-preprod.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee-preprod.entrypoints=websecure"
+      - "traefik.http.routers.lychee-preprod.tls=true"
+      - "traefik.http.routers.lychee-preprod.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.routers.lychee-preprod-http.rule=Host(`${PUBLIC_DOMAIN}`)"
+      - "traefik.http.routers.lychee-preprod-http.entrypoints=web"
+      - "traefik.http.routers.lychee-preprod-http.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+      - "traefik.http.services.lychee-preprod.loadbalancer.server.port=80"
+
+  tomato-backend-preprod:
+    container_name: tomato-backend-preprod
+    image: agribus/tomato:preprod
+    expose:
+      - "5001"
+    environment:
+      - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:5001
+      - INFLUXDB__URL=http://hot-potato-preprod:8181
+      - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - Clerk__SecretKey=${Clerk__SecretKey}
+    restart: unless-stopped
+    depends_on:
+      cold-potato-preprod:
+        condition: service_healthy
+      hot-potato-preprod:
+        condition: service_healthy
+    networks:
+      - agribus-network-preprod
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=proxy"
+      - "traefik.http.routers.tomato-preprod.rule=Host(`${API_DOMAIN}`)"
+      - "traefik.http.routers.tomato-preprod.entrypoints=websecure"
+      - "traefik.http.routers.tomato-preprod.tls=true"
+      - "traefik.http.routers.tomato-preprod.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.tomato-preprod.loadbalancer.server.port=5001"
+
+volumes:
+  postgres_data:
+    name: agribus-cold-potato-data-preprod
+  influxdb_data:
+    name: agribus-hot-potato-data-preprod
+
+networks:
+  proxy:
+    external: true
+  agribus-network-preprod:
+    name: agribus-network-preprod
+    driver: bridge

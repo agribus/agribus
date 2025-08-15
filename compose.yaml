@@ -47,6 +47,60 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+        
+  tomato:
+    container_name: tomato-backend
+    build:
+      context: ./apps/tomato_backend
+      dockerfile: Dockerfile.dev
+      args:
+        BUILD_CONFIGURATION: ${BUILD_CONFIGURATION:-Release}
+    ports:
+      - "5001:5001"
+      - "5005:5005"
+    environment:
+      - INFLUXDB__TOKEN=${INFLUXDB_TOKEN}
+      - DEBUG_MODE=false
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5001
+      - DOTNET_RUNNING_IN_CONTAINER=true
+      - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+      - Clerk__SecretKey=${Clerk__SecretKey}
+    restart: unless-stopped
+    volumes:
+      - ./apps/tomato_backend:/app
+    depends_on:
+      - postgres
+    networks:
+      - agribus-network
+
+  influxdb3-explorer:
+    image: quay.io/influxdb/influxdb3-explorer:latest
+    container_name: hot-potato-explorer
+    ports:
+      - "8888:80"
+      - "8889:8888"
+    command: [ "--mode=admin" ]
+    restart: unless-stopped
+    depends_on:
+      influxdb:
+        condition: service_healthy
+    networks:
+      - agribus-network
+
+  lychee:
+    container_name: lychee-client
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.lychee
+      target: development
+    volumes:
+      - ./apps/lychee_client:/app/apps/lychee_client
+      - /app/apps/lychee_client/node_modules
+    ports:
+      - "4200:4200"
+    networks:
+      - agribus-network
 
 volumes:
   postgres_data:

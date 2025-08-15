@@ -1,0 +1,47 @@
+name: Agribus Lychee CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  actions: read
+  contents: read
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/lychee_client
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build Web App
+        run: pnpm run build
+
+      - name: Sync Web Build to Capacitor
+        run: |
+          pnpm cap add android
+          pnpm cap add ios
+          pnpm cap copy android
+          pnpm cap copy ios
+
+      # cannot test karma
+      # - name: Test
+      #   run: pnpm run test

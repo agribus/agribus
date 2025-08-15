@@ -1,0 +1,76 @@
+@if (isMobile) {
+  @if (headerType === HeaderType.Default) {
+    <tui-app-bar>
+      <img src="/images/logo/agribus_transparent.png" tuiSlot="left" tuiIconButton alt="Agribus" />
+
+      <tui-textfield
+        tuiSlot="center"
+        tuiChevron
+        tuiDropdownAlign="center"
+        tuiDropdownLimitWidth="auto"
+        [tuiTextfieldCleaner]="false"
+        [tuiTextfieldAppearance]="'none'"
+        [style.width.rem]="maxLengthGreenhouse + 1.5">
+        <input tuiSelect [(ngModel)]="value" (ngModelChange)="onGreenhouseChange($event)" />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouseOptions" />
+      </tui-textfield>
+
+      @if (showDevTools) {
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
+      }
+
+      <button
+        iconStart="@tui.bell"
+        title="Notifications"
+        tuiIconButton
+        tuiSlot="right"
+        type="button"
+        (click)="gotoPage('settings')"></button>
+    </tui-app-bar>
+  } @else if (headerType === HeaderType.Settings) {
+    <tui-app-bar>
+      <button title="Back" tuiAppBarBack tuiSlot="left" type="button" (click)="back()"></button>
+
+      <h3 tuiSlot="center">
+        @if (url === "/settings-account") {
+          {{ "components.ui.header.settings-account" | translate }}
+        } @else if (url === "/greenhouse/settings") {
+          {{ "components.ui.header.greenhouse-settings" | translate }}
+        } @else if (url === "/greenhouse/create") {
+          {{ "components.ui.header.greenhouse-create" | translate }}
+        } @else {
+          {{ "components.ui.header.settings" | translate }}
+        }
+      </h3>
+      @if (showDevTools) {
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
+      }
+    </tui-app-bar>
+  } @else if (headerType === HeaderType.None) {
+    @if (showDevTools) {
+      <tui-app-bar>
+        @if (showDevTools) {
+          <button
+            iconStart="@tui.square-code"
+            title="Notifications"
+            tuiIconButton
+            tuiSlot="right"
+            type="button"
+            (click)="openDevTools()"></button>
+        }
+      </tui-app-bar>
+    }
+  }
+}

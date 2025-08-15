@@ -1,0 +1,43 @@
+# Stage 1: Base image (runtime only)
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends net-tools curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+EXPOSE 5001
+EXPOSE 5002
+
+RUN groupadd -r agribusgroup && \
+    useradd -r -g agribusgroup -u 1001 agribususer && \
+    chown -R agribususer:agribusgroup /app
+
+ENV ASPNETCORE_URLS=http://0.0.0.0:5000
+
+USER agribususer
+
+# Stage 2: Build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+
+# Install dotnet-ef tool
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
+WORKDIR /src
+COPY . .
+RUN dotnet restore "apps/tomato_backend/src/Agribus.Api/Agribus.Api.csproj"
+RUN dotnet build "apps/tomato_backend/src/Agribus.Api/Agribus.Api.csproj" -c Release --no-restore
+
+# Stage 3: Publish
+FROM build AS publish
+WORKDIR /src
+RUN dotnet publish "apps/tomato_backend/src/Agribus.Api/Agribus.Api.csproj" -c Release -o /out --no-restore
+
+# Final stage: runtime only
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /out .
+
+ENTRYPOINT ["dotnet", "Agribus.Api.dll"]

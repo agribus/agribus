@@ -1,0 +1,6 @@
+<tui-badge appearance="positive" tuiStatus>Success</tui-badge>
+<p>{{ message() | translate }}</p>
+<span>Switch languages at runtime:</span>
+<button tuiButton appearance="primary" size="s" (click)="useLanguage('en')">en</button>
+<button tuiButton appearance="accent" size="s" (click)="useLanguage('fr')">fr</button>
+<button tuiButton appearance="neutral" size="s" (click)="useLanguage('de')">de</button>

@@ -1,0 +1,29 @@
+<tui-segmented class="navbar" size="m" [(activeItemIndex)]="activeIndex">
+  <button title="Home" type="button" (click)="gotoPage('home')" [class.active]="activeIndex === 0">
+    <tui-icon icon="@tui.house" />
+  </button>
+
+  <button
+    title="Dashboard"
+    type="button"
+    (click)="gotoPage('dashboard')"
+    [class.active]="activeIndex === 1">
+    <tui-icon icon="@tui.layout-panel-left" />
+  </button>
+
+  <button
+    title="Greenhouse"
+    type="button"
+    (click)="goToGreenhouse()"
+    [class.active]="activeIndex === 2">
+    <tui-icon [icon]="greenhouseSettingsIcon" />
+  </button>
+
+  <button
+    title="Settings"
+    type="button"
+    (click)="gotoPage('settings-account')"
+    [class.active]="activeIndex === 3">
+    <tui-icon icon="@tui.settings" />
+  </button>
+</tui-segmented>

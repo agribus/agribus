@@ -1,0 +1,18 @@
+<div class="container">
+  <div class="select-route">
+    <tui-textfield tuiChevron tuiTextfieldSize="m">
+      <input id="route" tuiSelect placeholder="/home" [(ngModel)]="selectedRoute" />
+
+      <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="routes" />
+    </tui-textfield>
+  </div>
+
+  <button
+    iconStart="@tui.compass"
+    tuiIconButton
+    type="button"
+    class="btn-navigate"
+    (click)="navigate()">
+    Go
+  </button>
+</div>

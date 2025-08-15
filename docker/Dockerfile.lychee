@@ -1,0 +1,31 @@
+# ---------- BUILD ----------
+FROM node:22-alpine AS build
+
+ARG CONFIG=production
+
+WORKDIR /app
+
+RUN npm install -g pnpm@latest \
+  && npm install -g @angular/cli@20.0.3
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/lychee_client ./apps/lychee_client
+
+RUN pnpm install
+RUN pnpm --filter lychee build --configuration=${CONFIG}
+
+# ---------- DEVELOPMENT ----------
+FROM build AS development
+CMD ["pnpm", "--filter", "lychee", "dev", "--poll", "500", "--host", "0.0.0.0"]
+
+# ---------- PRODUCTION  ----------
+FROM nginx:stable-alpine AS production
+
+RUN rm -rf /usr/share/nginx/html/*
+
+COPY --from=build /app/apps/lychee_client/dist/lychee_client/browser /usr/share/nginx/html
+COPY --from=build /app/apps/lychee_client/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]

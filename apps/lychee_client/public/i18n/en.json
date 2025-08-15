@@ -1,0 +1,61 @@
+{
+  "components": {
+    "hello-world": {
+      "browser": "Hello from browser",
+      "mobile": "Hello from mobile device"
+    },
+    "header": {
+      "settings": "Settings",
+      "settings-account": "Account Settings",
+      "greenhouse-form": "Greenhouse Settings"
+    },
+    "login-form": {
+      "email": "Email",
+      "email-placeholder": "Enter your email",
+      "password": "Password",
+      "connection": "Login",
+      "forgot-password": "Forgot your password?",
+      "click-here": "Click here"
+    },
+    "register-form": {
+      "nickname": "Username",
+      "nickname-placeholder": "Enter your username",
+      "email": "Email",
+      "email-placeholder": "Enter your email",
+      "password": "Password",
+      "confirm-password": "Confirm password",
+      "register": "Sign up"
+    },
+    "forgot-password-form": {
+      "email": "Email",
+      "email-placeholder": "Enter your email",
+      "send": "Send"
+    }
+  },
+  "pages": {
+    "unsupported-platform": {
+      "title": "This App Is Currently Mobile-Only",
+      "description": "We're working hard on a desktop version. For now, the application is only available on mobile devices.",
+      "progress": "You can follow our progress",
+      "here": "here"
+    },
+    "login": {
+      "title": "Log in to your account",
+      "subtitle": "Welcome back! Please enter your credentials.",
+      "no-account": "No account?",
+      "register": "Sign up"
+    },
+    "register": {
+      "title": "Create your account",
+      "subtitle": "Welcome! Please enter your credentials.",
+      "already-account": "Already have an account?",
+      "sign-in": "Sign in"
+    },
+    "forgot-password": {
+      "title": "Forgot password",
+      "subtitle": "Enter your email to reset your password",
+
+      "connection-page": "Connection page"
+    }
+  }
+}
