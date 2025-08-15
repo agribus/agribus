@@ -1,5 +1,5 @@
 import { Routes } from "@angular/router";
-import { mobileOnlyGuard } from "@guards/mobile-only.guard";
+import { platformGuard } from "@guards/platform.guard";
 import { UnsupportedPlatformComponent } from "@pages/unsupported-platform/unsupported-platform.component";
 import { HomeComponent } from "@components/home/home.component";
 import { DashboardComponent } from "@components/dashboard/dashboard.component";
@@ -19,72 +19,73 @@ export const routes: Routes = [
   {
     path: "unsupported-platform",
     component: UnsupportedPlatformComponent,
+    canActivate: [platformGuard],
     data: { headerType: HeaderType.None },
   },
   {
     path: "login",
     component: LoginComponent,
-    canActivate: [mobileOnlyGuard, guestGuard],
+    canActivate: [platformGuard, guestGuard],
     data: { headerType: HeaderType.None },
   },
   {
     path: "register",
     component: RegisterComponent,
-    canActivate: [mobileOnlyGuard, guestGuard],
+    canActivate: [platformGuard, guestGuard],
     data: { headerType: HeaderType.None },
   },
   {
     path: "forgot-password",
     component: ForgotPasswordComponent,
-    canActivate: [mobileOnlyGuard, guestGuard],
+    canActivate: [platformGuard, guestGuard],
     data: { headerType: HeaderType.None },
   },
   {
     path: "",
     component: HomeComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Default },
   },
   {
     path: "home",
     component: HomeComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Default },
   },
   {
     path: "dashboard",
     component: DashboardComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Default },
   },
   {
     path: "greenhouse/create",
     component: GreenhouseCreateComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Settings },
   },
   {
     path: "greenhouse/settings/:id",
     component: GreenhouseSettingsComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Settings },
   },
   {
     path: "settings",
     component: SettingsComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Settings },
   },
   {
     path: "settings-account",
     component: SettingsAccountComponent,
-    canActivate: [mobileOnlyGuard, authGuard],
+    canActivate: [platformGuard, authGuard],
     data: { headerType: HeaderType.Settings },
   },
   {
     path: "**",
     component: NotFoundComponent,
-    canActivate: [mobileOnlyGuard, guestGuard],
+    canActivate: [platformGuard, guestGuard],
     data: {
       headerType: HeaderType.None,
     },
