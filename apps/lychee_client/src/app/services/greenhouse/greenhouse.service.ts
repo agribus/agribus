@@ -11,14 +11,10 @@ import { HttpClient } from "@angular/common/http";
 export class GreenhouseService {
   private readonly http = inject(HttpClient);
 
-  protected readonly greenhouses: Greenhouse[] = [
-    { id: 42, name: "Serre 1", city: "Paris", country: "France", crops: [], sensors: [] },
-    { id: 237, name: "Serre 2", city: "Paris", country: "France", crops: [], sensors: [] },
-    { id: 666, name: "Serre 3", city: "Paris", country: "France", crops: [], sensors: [] },
-  ];
-
-  getGreenhouses(): Greenhouse[] {
-    return this.greenhouses;
+  getGreenhouses() {
+    return this.http.get<Greenhouse[]>(`${environment.apiUrl}/greenhouses`, {
+      withCredentials: true,
+    });
   }
 
   public getById(id: string) {

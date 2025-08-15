@@ -13,7 +13,7 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
-import { HeaderStateService } from "@services/header-state.service";
+import { HeaderStateService } from "@services/ui/header-state/header-state.service";
 
 @Component({
   selector: "app-header",
@@ -48,19 +48,25 @@ export class HeaderComponent implements OnInit {
   private readonly translateService = inject(TranslateService);
 
   public readonly isMobile = this.platformService.isMobile();
-  public readonly greenhouses = this.greenhouseService.getGreenhouses();
+  public greenhouses!: Greenhouse[];
 
-  public value: Greenhouse | null = this.greenhouses[0];
-  public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
+  public value!: Greenhouse | null;
+  public maxLengthGreenhouse!: number;
   public url: string = "/";
   public showDevTools = environment.devTools;
 
   public headerType: HeaderType = HeaderType.Default;
   public HeaderType = HeaderType;
 
-  private lastSelectedGreenhouse: Greenhouse | null = this.value;
+  private lastSelectedGreenhouse: Greenhouse | null = null;
 
   ngOnInit() {
+    this.greenhouseService.getGreenhouses().subscribe(greenhouses => {
+      this.greenhouses = greenhouses;
+      this.value = this.greenhouses[0];
+      this.lastSelectedGreenhouse = this.value;
+      this.maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
+    });
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
@@ -88,7 +94,6 @@ export class HeaderComponent implements OnInit {
   }
 
   public onGreenhouseChange(selected: Greenhouse) {
-    console.log(selected);
     if ((selected as any).special) {
       this.value = this.lastSelectedGreenhouse;
       this.router.navigate(["/greenhouse/create"]);
