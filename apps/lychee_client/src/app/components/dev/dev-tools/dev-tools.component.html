@@ -15,6 +15,9 @@
   <button tuiButton appearance="accent" size="s" (click)="useLanguage('fr')">fr</button>
   <button tuiButton appearance="neutral" size="s" (click)="useLanguage('de')">de</button>
   <button iconStart="@tui.log-out" tuiIconButton type="button" (click)="Logout()">Logout</button>
+  <button iconStart="@tui.sun-moon" tuiIconButton type="button" (click)="darkMode.set(!darkMode())">
+    Theme
+  </button>
   <button iconStart="@tui.navigation" tuiIconButton type="button" (click)="openRouteDialog()">
     Route dialog
   </button>

@@ -1,7 +1,7 @@
 import { Component, inject, Injectable, signal } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { TuiActionBar } from "@taiga-ui/kit";
-import { TuiButton, TuiDialogService } from "@taiga-ui/core";
+import { TUI_DARK_MODE, TuiButton, TuiDialogService } from "@taiga-ui/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { TranslateService } from "@ngx-translate/core";
 import { PlatformService } from "@services/platform/platform.service";
@@ -24,6 +24,7 @@ export class DevToolsComponent {
   private readonly dialogService = inject(TuiDialogService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  protected readonly darkMode = inject(TUI_DARK_MODE);
 
   logs = signal<string[]>([]);
   isNativePlatform = this.platformService.isNativePlatform();
