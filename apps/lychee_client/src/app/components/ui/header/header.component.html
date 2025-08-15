@@ -1,7 +1,13 @@
 @if (isMobile) {
   @if (headerType === HeaderType.Default) {
     <tui-app-bar>
-      <img src="/images/logo/agribus_transparent.png" tuiSlot="left" tuiIconButton alt="Agribus" />
+      <img
+        class="logo"
+        [ngSrc]="darkMode() ? '/assets/logo/logo-dark.png' : '/assets/logo/logo-light.png'"
+        tuiSlot="left"
+        alt="Agribus"
+        height="50"
+        width="50" />
 
       <tui-textfield
         tuiSlot="center"
