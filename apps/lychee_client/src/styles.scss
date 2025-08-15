@@ -8,7 +8,9 @@
     --tui-background-accent-1: #44c596;
   }
 
-  /* Light theme */
+  /* Default theme */
+  :root,
+  :host,
   [tuiTheme="light"] {
     color-scheme: light;
 
@@ -16,18 +18,6 @@
     --tui-text-secondary: #99a09b;
     --tui-text-action: #065132;
 
-    --tui-background-accent-1: #065132;
-  }
-
-  /* Default theme */
-  :root,
-  :host,
-  [tuiTheme="light"] {
-    --tui-text-primary: #374141;
-    --tui-text-secondary: #99a09b;
-    --tui-text-action: #065132;
-
-    --tui-background-base: #fafafa;
     --tui-background-accent-1: #065132;
   }
 }
