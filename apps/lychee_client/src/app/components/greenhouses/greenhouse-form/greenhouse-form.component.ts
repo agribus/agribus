@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, inject, Input, signal, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  signal,
+  SimpleChanges,
+  ViewChild,
+} from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import {
@@ -61,7 +70,7 @@ import { Greenhouse } from "@interfaces/greenhouse.interface";
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
 })
-export class GreenhouseFormComponent {
+export class GreenhouseFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
   private translateService = inject(TranslateService);
   private readonly alerts = inject(TuiAlertService);
@@ -83,7 +92,7 @@ export class GreenhouseFormComponent {
   public isScanning = false;
   public isMobile = false;
 
-  @Input() greenhouse?: Greenhouse;
+  @Input() greenhouse?: Greenhouse | null;
   @Input() isEditMode = false;
 
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
@@ -95,7 +104,7 @@ export class GreenhouseFormComponent {
 
     this.greenhouseForm = this.fb.group({
       step0: this.fb.group({
-        name: ["", Validators.required],
+        name: [this.greenhouse?.name, Validators.required],
         city: ["Paris", Validators.required],
         country: ["France", Validators.required],
       }),
@@ -106,6 +115,24 @@ export class GreenhouseFormComponent {
         sensor: [[], Validators.required],
       }),
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes["greenhouse"] && this.greenhouse) {
+      this.greenhouseForm.patchValue({
+        step0: {
+          name: this.greenhouse.name,
+          city: this.greenhouse.city,
+          country: this.greenhouse.country,
+        },
+        step1: {
+          crops: this.greenhouse.crops || [],
+        },
+        step2: {
+          sensor: this.greenhouse.sensors || [],
+        },
+      });
+    }
   }
 
   /* ############################ Navigation ############################ */
@@ -164,15 +191,35 @@ export class GreenhouseFormComponent {
 
       console.log("✅ Formulaire valide", this.greenhouseForm.value);
 
-      if (this.isEditMode) {
-        console.log("edit");
+      if (this.isEditMode && this.greenhouse?.id) {
+        this.greenhouseService
+          .updateGreenhouse(this.greenhouse.id, name, city, country, crops, sensors)
+          .subscribe({
+            next: () => {
+              this.alerts
+                .open(this.translateService.instant("components.greenhouse-form.alert.update"), {
+                  appearance: "info",
+                  label: this.translateService.instant("components.ui.alert.info"),
+                })
+                .subscribe();
+              this.router.navigate(["/home"]);
+            },
+            error: error => {
+              this.alerts
+                .open(error, {
+                  appearance: "info",
+                  label: this.translateService.instant("components.ui.alert.info"),
+                })
+                .subscribe();
+            },
+          });
       } else {
         this.greenhouseService.createGreenhouse(name, city, country, crops, sensors).subscribe({
           next: () => {
             this.alerts
               .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
-                appearance: "info",
-                label: this.translateService.instant("components.ui.alert.info"),
+                appearance: "positive",
+                label: this.translateService.instant("components.ui.alert.positive"),
               })
               .subscribe();
             this.router.navigate(["/home"]);
@@ -180,8 +227,8 @@ export class GreenhouseFormComponent {
           error: error => {
             this.alerts
               .open(error, {
-                appearance: "info",
-                label: this.translateService.instant("components.ui.alert.info"),
+                appearance: "error",
+                label: this.translateService.instant("components.ui.alert.error"),
               })
               .subscribe();
           },

@@ -3,6 +3,7 @@ import { GreenhouseFormComponent } from "@components/greenhouses/greenhouse-form
 import { ActivatedRoute } from "@angular/router";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-greenhouse-settings",
@@ -15,20 +16,17 @@ export class GreenhouseSettingsComponent {
   private readonly greenhouseService = inject(GreenhouseService);
 
   public isEditMode = signal(false);
-  public greenhouse = signal<Greenhouse | undefined>(undefined);
+  public greenhouse = signal<Greenhouse | null>(null);
 
   constructor() {
     const id = this.route.snapshot.paramMap.get("id");
     console.log(id);
     if (id) {
       this.isEditMode.set(true);
-      this.loadGreenhouse(id);
+      this.greenhouseService
+        .loadGreenhouseById(id)
+        .pipe(takeUntilDestroyed())
+        .subscribe(g => this.greenhouse.set(g));
     }
-  }
-
-  private loadGreenhouse(id: string): void {
-    // this.greenhouseService.getById(id).subscribe(greenhouse => {
-    //   this.greenhouse.set(greenhouse);
-    // });
   }
 }
