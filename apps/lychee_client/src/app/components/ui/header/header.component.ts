@@ -69,8 +69,6 @@ export class HeaderComponent implements OnInit {
   public headerType: HeaderType = HeaderType.Default;
   public HeaderType = HeaderType;
 
-  private lastSelectedGreenhouse: Greenhouse | null = null;
-
   ngOnInit() {
     this.router.events
       .pipe(
@@ -96,7 +94,6 @@ export class HeaderComponent implements OnInit {
       next: () => {
         this.greenhouses = this.greenhouseService.greenhouses();
         this.value = this.greenhouseService.selectedSerre();
-        this.lastSelectedGreenhouse = this.greenhouseService.selectedSerre();
         this.maxLengthGreenhouse = Math.max(
           ...this.greenhouseService.greenhouses().map(g => g.name.length)
         );
@@ -124,5 +121,9 @@ export class HeaderComponent implements OnInit {
 
   public openDevTools() {
     this.devToolsService.toggle();
+  }
+
+  public onGreenhouseChange(greenhouse: Greenhouse) {
+    this.greenhouseService.selectedSerre.set(greenhouse);
   }
 }

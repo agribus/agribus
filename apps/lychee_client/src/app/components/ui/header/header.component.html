@@ -16,7 +16,7 @@
         [tuiTextfieldCleaner]="false"
         [tuiTextfieldAppearance]="'none'"
         [style.width.rem]="maxLengthGreenhouse + 1.5">
-        <input tuiSelect [(ngModel)]="value" />
+        <input tuiSelect [(ngModel)]="value" (ngModelChange)="onGreenhouseChange($event)" />
         <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
       </tui-textfield>
 
