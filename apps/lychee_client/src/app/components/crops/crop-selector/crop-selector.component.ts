@@ -1,4 +1,12 @@
-import { Component, EventEmitter, inject, Output, signal, computed } from "@angular/core";
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  signal,
+  computed,
+  OnDestroy,
+} from "@angular/core";
 import { DecimalPipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import {
@@ -21,6 +29,7 @@ import { TuiSheetDialog, TuiSheetDialogOptions } from "@taiga-ui/addon-mobile";
 import { Crop } from "@interfaces/crop.interface";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { CropsService } from "@services/crops/crops.service";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: "app-crop-selector",
@@ -45,13 +54,15 @@ import { CropsService } from "@services/crops/crops.service";
   templateUrl: "./crop-selector.component.html",
   styleUrl: "./crop-selector.component.scss",
 })
-export class CropSelectorComponent {
+export class CropSelectorComponent implements OnDestroy {
   private readonly translateService = inject(TranslateService);
   private readonly cropsService = inject(CropsService);
 
   public crops = signal<Crop[]>([]);
   public openSheet = signal<boolean>(false);
   public loading = signal<boolean>(false);
+
+  private destroy$ = new Subject<void>();
 
   @Output() cropSelected = new EventEmitter<Crop>();
 
@@ -60,22 +71,29 @@ export class CropSelectorComponent {
     closeable: true,
   }));
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   public open(): void {
     this.loading.set(true);
     this.crops.set([]);
-
-    this.cropsService.identifyPlantFromCamera().subscribe({
-      next: (crops: Crop[]) => {
-        this.crops.set(crops);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.crops.set([]);
-        this.loading.set(false);
-      },
-    });
-
-    this.openSheet.set(true);
+    this.cropsService
+      .identifyPlantFromCamera()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (crops: Crop[]) => {
+          this.crops.set(crops);
+          this.loading.set(false);
+          this.openSheet.set(true);
+        },
+        error: () => {
+          this.crops.set([]);
+          this.loading.set(false);
+          this.openSheet.set(true);
+        },
+      });
   }
 
   private reset(): void {
