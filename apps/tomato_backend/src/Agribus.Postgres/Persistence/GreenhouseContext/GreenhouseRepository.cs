@@ -46,4 +46,28 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
         context.Greenhouse.Update(greenhouse);
         return await context.SaveChangesAsync(cancellationToken) > 0;
     }
+
+    public async Task<GreenhouseListItemDto[]> GetByUserIdAsync(
+        string userId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await context
+            .Greenhouse.Where(g => g.UserId == userId)
+            .OrderByDescending(g => g.CreatedAt)
+            .Select(g => new GreenhouseListItemDto(g.Id, g.Name))
+            .ToArrayAsync(cancellationToken);
+    }
+
+    public async Task<Greenhouse?> GetByIdAsync(
+        Guid greenhouseId,
+        string userId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await context.Greenhouse.FirstOrDefaultAsync(
+            g => g.Id == greenhouseId,
+            cancellationToken
+        );
+    }
 }
