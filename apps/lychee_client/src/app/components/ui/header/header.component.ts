@@ -1,7 +1,13 @@
 import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import { TuiButton, TuiDropdown, tuiItemsHandlersProvider, TuiTextfield } from "@taiga-ui/core";
+import {
+  TUI_DARK_MODE,
+  TuiButton,
+  TuiDropdown,
+  tuiItemsHandlersProvider,
+  TuiTextfield,
+} from "@taiga-ui/core";
 import { TuiAppBar } from "@taiga-ui/layout";
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
 import { filter, map, of, switchMap } from "rxjs";
@@ -13,6 +19,7 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
+import { NgOptimizedImage } from "@angular/common";
 import { HeaderStateService } from "@services/ui/header-state/header-state.service";
 import { AuthService } from "@services/auth/auth.service";
 
@@ -28,6 +35,7 @@ import { AuthService } from "@services/auth/auth.service";
     TuiTextfield,
     TranslatePipe,
     TuiDropdown,
+    NgOptimizedImage,
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
@@ -48,6 +56,7 @@ export class HeaderComponent implements OnInit {
   private readonly destroyRef = inject(DestroyRef);
   private readonly translateService = inject(TranslateService);
   private readonly authService = inject(AuthService);
+  protected readonly darkMode = inject(TUI_DARK_MODE);
 
   public readonly isMobile = this.platformService.isMobile();
   public greenhouses!: Greenhouse[];

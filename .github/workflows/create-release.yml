@@ -1,4 +1,4 @@
-name: Create release on preprod → main merge
+name: Create release
 
 on:
   pull_request:
@@ -26,10 +26,15 @@ jobs:
           VERSION=$(jq -r .version package.json)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Create tag
+      - name: Create tag if not exists
         run: |
-          git tag -a v${{ steps.get_version.outputs.version }} -m "Release v${{ steps.get_version.outputs.version }}"
-          git push origin v${{ steps.get_version.outputs.version }}
+          VERSION="v${{ steps.get_version.outputs.version }}"
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists. Skipping."
+          else
+            git tag -a "$VERSION" -m "Release $VERSION"
+            git push origin "$VERSION"
+          fi
 
       - name: Create release branch
         run: |
@@ -40,7 +45,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.get_version.outputs.version }}
-          name: Release v${{ steps.get_version.outputs.version }}
+          name: v${{ steps.get_version.outputs.version }}
           body: |
             ## Changes in this release
             See the merged PRs from `preprod` to `main`.

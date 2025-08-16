@@ -2,6 +2,11 @@
   outline: none;
 }
 
+[tuiSlot="left"] {
+  display: flex;
+  align-items: center;
+}
+
 tui-textfield {
   max-width: 200px;
   align-self: center;
