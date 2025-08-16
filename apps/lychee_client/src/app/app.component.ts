@@ -21,7 +21,6 @@ export class AppComponent {
 
   constructor() {
     this.authService.isUserAuthenticated().subscribe(() => {
-      console.log(this.authService.isLoggedIn());
       this.authLoaded = true;
     });
     this.translateService.addLangs(["fr", "en", "de"]);
