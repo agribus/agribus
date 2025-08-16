@@ -23,7 +23,7 @@ export class GreenhouseService {
       .pipe(
         tap(greenhouses => {
           this.greenhouses.set(greenhouses);
-          if (greenhouses.length > 0) {
+          if (!this.selectedSerre()) {
             this.selectedSerre.set(greenhouses[0]);
           }
         })
