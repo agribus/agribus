@@ -15,7 +15,7 @@ export class GreenhouseService {
   public greenhouses = signal<Greenhouse[]>([]);
   public selectedSerre = signal<Greenhouse | null>(null);
 
-  loadUserGreenhouses() {
+  public loadUserGreenhouses() {
     return this.http
       .get<Greenhouse[]>(`${environment.apiUrl}/greenhouses`, {
         withCredentials: true,

@@ -54,13 +54,10 @@ export class NavbarComponent implements OnInit {
   }
 
   goToGreenhouse() {
-    console.log("NAV", this.greenhouseService.selectedSerre());
-    if (this.greenhouseService.selectedSerre()) {
+    if (!this.greenhouseService.selectedSerre()) {
       this.router.navigate(["/greenhouse/create"]);
     } else {
-      // const first = greenhouses[0];
-      // this.greenhouseService.setSelectedGreenhouse(first);
-      // this.router.navigate(['/greenhouse/settings', first.id]);
+      this.router.navigate(["/greenhouse/settings", this.greenhouseService.selectedSerre()?.id]);
     }
   }
 }

@@ -11,19 +11,27 @@
         [tuiTextfieldCleaner]="false"
         [tuiTextfieldAppearance]="'none'"
         [style.width.rem]="maxLengthGreenhouse + 1.5">
-        <input tuiSelect [(ngModel)]="value" (ngModelChange)="onGreenhouseChange($event)" />
-        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouseOptions" />
+        <input tuiSelect [(ngModel)]="value" />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
       </tui-textfield>
 
       @if (showDevTools) {
         <button
           iconStart="@tui.square-code"
-          title="Notifications"
+          title="Dev Tools"
           tuiIconButton
           tuiSlot="right"
           type="button"
           (click)="openDevTools()"></button>
       }
+
+      <button
+        iconStart="@tui.house"
+        title="Create Greenhouse"
+        tuiIconButton
+        tuiSlot="right"
+        type="button"
+        (click)="gotoPage('greenhouse/create')"></button>
 
       <button
         iconStart="@tui.bell"

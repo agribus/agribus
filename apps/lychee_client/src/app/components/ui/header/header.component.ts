@@ -85,6 +85,7 @@ export class HeaderComponent implements OnInit {
   private loadGreenhouses() {
     this.greenhouseService.loadUserGreenhouses().subscribe({
       next: () => {
+        this.greenhouses = this.greenhouseService.greenhouses();
         this.value = this.greenhouseService.selectedSerre();
         this.lastSelectedGreenhouse = this.greenhouseService.selectedSerre();
         this.maxLengthGreenhouse = Math.max(
@@ -95,26 +96,6 @@ export class HeaderComponent implements OnInit {
         console.error("Erreur lors du chargement des serres", err);
       },
     });
-  }
-
-  public get greenhouseOptions() {
-    return [
-      ...this.greenhouses,
-      {
-        id: "new",
-        name: this.translateService.instant("components.ui.header.new-greenhouse"),
-        special: true,
-      },
-    ];
-  }
-
-  public onGreenhouseChange(selected: Greenhouse) {
-    if ((selected as any).special) {
-      this.value = this.lastSelectedGreenhouse;
-      this.router.navigate(["/greenhouse/create"]);
-    } else {
-      this.lastSelectedGreenhouse = selected;
-    }
   }
 
   private getDeepestChild(route: ActivatedRoute): ActivatedRoute {
