@@ -11,7 +11,7 @@ export class AuthService {
   private http = inject(HttpClient);
   public isLoggedIn = signal<boolean>(false);
 
-  sendLoginRequest(credentials: AuthLogin) {
+  public sendLoginRequest(credentials: AuthLogin) {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, {
         withCredentials: true,
@@ -25,11 +25,11 @@ export class AuthService {
       );
   }
 
-  sendRegisterRequest(credentials: AuthRegister) {
+  public sendRegisterRequest(credentials: AuthRegister) {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/users/signup`, credentials);
   }
 
-  sendLogoutRequest() {
+  public sendLogoutRequest() {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
       .pipe(
@@ -41,7 +41,7 @@ export class AuthService {
       );
   }
 
-  isUserAuthenticated() {
+  public isUserAuthenticated() {
     return this.http
       .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, { withCredentials: true })
       .pipe(
