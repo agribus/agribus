@@ -1,10 +1,12 @@
-<tui-root [attr.tuiTheme]="darkMode() ? 'dark' : null">
-  <app-header />
-  <main class="app-content">
-    <app-dev-tools />
-    <router-outlet />
-  </main>
-  @if (showNavbar) {
-    <app-navbar />
-  }
-</tui-root>
+@if (authLoaded) {
+  <tui-root [attr.tuiTheme]="darkMode() ? 'dark' : null">
+    <app-header />
+    <main class="app-content">
+      <app-dev-tools />
+      <router-outlet />
+    </main>
+    @if (showNavbar) {
+      <app-navbar />
+    }
+  </tui-root>
+}

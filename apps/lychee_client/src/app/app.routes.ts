@@ -25,7 +25,7 @@ export const routes: Routes = [
   {
     path: "login",
     component: LoginComponent,
-    canActivate: [platformGuard, guestGuard],
+    canActivate: [guestGuard, platformGuard],
     data: { headerType: HeaderType.None },
   },
   {
@@ -43,13 +43,13 @@ export const routes: Routes = [
   {
     path: "",
     component: HomeComponent,
-    canActivate: [platformGuard, authGuard],
+    canActivate: [authGuard, platformGuard],
     data: { headerType: HeaderType.Default },
   },
   {
     path: "home",
     component: HomeComponent,
-    canActivate: [platformGuard, authGuard],
+    canActivate: [authGuard, platformGuard],
     data: { headerType: HeaderType.Default },
   },
   {

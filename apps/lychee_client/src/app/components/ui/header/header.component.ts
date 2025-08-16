@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
   public url: string = "/";
   public showDevTools = environment.devTools;
 
-  public headerType: HeaderType = HeaderType.Default;
+  public headerType: HeaderType = HeaderType.None;
   public HeaderType = HeaderType;
 
   ngOnInit() {
