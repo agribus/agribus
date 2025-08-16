@@ -83,7 +83,7 @@ export class GreenhouseFormComponent implements OnChanges {
 
   protected readonly greenhouseForm: FormGroup;
 
-  public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
+  public sensors: Sensor[] = [];
   public editingSensor: Sensor | null = null;
 
   public crops: Crop[] = [];
