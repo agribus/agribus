@@ -299,18 +299,6 @@ export class GreenhouseFormComponent implements OnChanges {
   public removeCrop(index: number): void {
     const crop = this.crops[index];
     if (!crop) return;
-
-    this.alerts
-      .open(
-        this.translateService.instant("components.greenhouses-form.alert.remove-sensor") +
-          crop.commonName,
-        {
-          appearance: "info",
-          label: this.translateService.instant("components.ui.alert.info"),
-        }
-      )
-      .subscribe();
-
     this.crops.splice(index, 1);
   }
 
@@ -361,46 +349,19 @@ export class GreenhouseFormComponent implements OnChanges {
 
     if (index !== -1) {
       this.sensors[index] = { ...this.sensors[index], ...sensor };
-
-      this.alerts
-        .open(this.translateService.instant("components.greenhouses-form.alert.sensor-updated"), {
-          appearance: "success",
-          label: this.translateService.instant("components.ui.alert.success"),
-        })
-        .subscribe();
     } else {
       const newSensor: Sensor = {
         id: this.generateSensorId(),
         name: sensor.name || this.getDefaultSensorName(),
         sourceAddress: sensor.sourceAddress,
       };
-
       this.sensors.push(newSensor);
-
-      this.alerts
-        .open(this.translateService.instant("components.greenhouses-form.alert.sensor-added"), {
-          appearance: "success",
-          label: this.translateService.instant("components.ui.alert.success"),
-        })
-        .subscribe();
     }
   }
 
   public removeSensor(index: number): void {
     const sensor = this.sensors[index];
     if (!sensor) return;
-
-    this.alerts
-      .open(
-        this.translateService.instant("components.greenhouses-form.alert.remove-sensor") +
-          sensor.name,
-        {
-          appearance: "info",
-          label: this.translateService.instant("components.ui.alert.info"),
-        }
-      )
-      .subscribe();
-
     this.sensors.splice(index, 1);
   }
   public onSensorSaved(sensor: Sensor): void {
