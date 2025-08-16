@@ -83,15 +83,18 @@ export class HeaderComponent implements OnInit {
   }
 
   private loadGreenhouses() {
-    this.greenhouseService
-      .getGreenhouses()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(greenhouses => {
-        this.greenhouses = greenhouses;
-        this.value = this.greenhouses[0] || null;
-        this.lastSelectedGreenhouse = this.value;
-        this.maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
-      });
+    this.greenhouseService.loadUserGreenhouses().subscribe({
+      next: () => {
+        this.value = this.greenhouseService.selectedSerre();
+        this.lastSelectedGreenhouse = this.greenhouseService.selectedSerre();
+        this.maxLengthGreenhouse = Math.max(
+          ...this.greenhouseService.greenhouses().map(g => g.name.length)
+        );
+      },
+      error: err => {
+        console.error("Erreur lors du chargement des serres", err);
+      },
+    });
   }
 
   public get greenhouseOptions() {

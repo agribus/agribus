@@ -19,6 +19,7 @@ export class GreenhouseSettingsComponent {
 
   constructor() {
     const id = this.route.snapshot.paramMap.get("id");
+    console.log(id);
     if (id) {
       this.isEditMode.set(true);
       this.loadGreenhouse(id);

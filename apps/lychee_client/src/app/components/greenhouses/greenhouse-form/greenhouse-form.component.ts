@@ -167,7 +167,7 @@ export class GreenhouseFormComponent {
       if (this.isEditMode) {
         console.log("edit");
       } else {
-        this.greenhouseService.create(name, city, country, crops, sensors).subscribe({
+        this.greenhouseService.createGreenhouse(name, city, country, crops, sensors).subscribe({
           next: () => {
             this.alerts
               .open(this.translateService.instant("components.greenhouse-form.alert.create"), {
