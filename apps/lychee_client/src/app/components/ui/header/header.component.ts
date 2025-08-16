@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
+import { Component, DestroyRef, inject, Input, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import {
@@ -10,17 +10,16 @@ import {
 } from "@taiga-ui/core";
 import { TuiAppBar } from "@taiga-ui/layout";
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
-import { filter, map, of, switchMap } from "rxjs";
+import { filter, map } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
 import { NgOptimizedImage } from "@angular/common";
-import { HeaderStateService } from "@services/ui/header-state/header-state.service";
 import { AuthService } from "@services/auth/auth.service";
 
 @Component({
@@ -52,9 +51,7 @@ export class HeaderComponent implements OnInit {
   private readonly platformService = inject(PlatformService);
   private readonly greenhouseService = inject(GreenhouseService);
   private readonly devToolsService = inject(DevToolsService);
-  private readonly headerStateService = inject(HeaderStateService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translateService = inject(TranslateService);
   private readonly authService = inject(AuthService);
   protected readonly darkMode = inject(TUI_DARK_MODE);
 
@@ -66,27 +63,27 @@ export class HeaderComponent implements OnInit {
   public url: string = "/";
   public showDevTools = environment.devTools;
 
-  public headerType: HeaderType = HeaderType.None;
+  @Input() headerType: HeaderType = HeaderType.None;
   public HeaderType = HeaderType;
 
   ngOnInit() {
+    this.updateHeader();
+
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
         map(() => this.getDeepestChild(this.activatedRoute)),
-        switchMap(route => of(route.snapshot.data)),
+        map(route => route.snapshot.data),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(data => {
-        this.headerType = data["headerType"] || HeaderType.Default;
-        this.url = this.router.url;
+      .subscribe(() => this.updateHeader());
+  }
 
-        this.headerStateService.headerType.set(this.headerType);
-
-        if (this.headerType === HeaderType.Default && this.authService.isLoggedIn()) {
-          this.loadGreenhouses();
-        }
-      });
+  private updateHeader() {
+    this.url = this.router.url;
+    if (this.headerType === HeaderType.Default && this.authService.isLoggedIn()) {
+      this.loadGreenhouses();
+    }
   }
 
   private loadGreenhouses() {
