@@ -188,34 +188,31 @@ export class GreenhouseFormComponent implements OnChanges {
       const name = step0.name;
       const city = step0.city;
       const country = step0.country;
-      const crops = step1.crops;
+      const crops = step1.crops.map((crop: Crop) => ({
+        commonName: crop.commonName,
+        scientificName: crop.scientificName,
+        date_plantation: crop.date_plantation,
+        quantity: crop.quantity,
+        imageUrl: crop.imageUrl,
+      }));
       const sensors = step2.sensor;
 
       if (this.isEditMode && this.greenhouse?.id) {
         this.greenhouseService
           .updateGreenhouse(this.greenhouse.id, name, city, country, crops, sensors)
-          .subscribe({
-            next: () => {
-              this.alerts
-                .open(this.translateService.instant("shared.alerts.update"), {
-                  appearance: "info",
-                  label: this.translateService.instant("shared.alerts.info"),
-                })
-                .subscribe();
-              this.router.navigate(["/home"]);
-            },
-            error: error => {
-              this.alerts
-                .open(error, {
-                  appearance: "info",
-                  label: this.translateService.instant("shared.alerts.info"),
-                })
-                .subscribe();
-            },
+          .subscribe(() => {
+            this.alerts
+              .open(this.translateService.instant("shared.alerts.update"), {
+                appearance: "info",
+                label: this.translateService.instant("shared.alerts.info"),
+              })
+              .subscribe();
+            this.router.navigate(["/home"]);
           });
       } else {
-        this.greenhouseService.createGreenhouse(name, city, country, crops, sensors).subscribe({
-          next: () => {
+        this.greenhouseService
+          .createGreenhouse(name, city, country, crops, sensors)
+          .subscribe(() => {
             this.alerts
               .open(this.translateService.instant("shared.alerts.create"), {
                 appearance: "positive",
@@ -223,16 +220,7 @@ export class GreenhouseFormComponent implements OnChanges {
               })
               .subscribe();
             this.router.navigate(["/home"]);
-          },
-          error: error => {
-            this.alerts
-              .open(error, {
-                appearance: "error",
-                label: this.translateService.instant("shared.alerts.error"),
-              })
-              .subscribe();
-          },
-        });
+          });
       }
       return;
     }
@@ -385,26 +373,12 @@ export class GreenhouseFormComponent implements OnChanges {
         sourceAddress: sensor.sourceAddress,
       };
       this.sensors.push(newSensor);
-
-      this.alerts
-        .open(this.translateService.instant("shared.alerts.add"), {
-          appearance: "success",
-          label: this.translateService.instant("shared.alerts.success"),
-        })
-        .subscribe();
     }
   }
 
   public removeSensor(index: number): void {
     const sensor = this.sensors[index];
     if (!sensor) return;
-
-    this.alerts
-      .open(this.translateService.instant("shared.alerts.remove") + sensor.name, {
-        appearance: "info",
-        label: this.translateService.instant("shared.alerts.info"),
-      })
-      .subscribe();
 
     this.sensors.splice(index, 1);
   }
