@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { NgOptimizedImage } from "@angular/common";
 import { TranslatePipe } from "@ngx-translate/core";
 import { TuiTitle } from "@taiga-ui/core";
-import { LoginFormComponent } from "@components/login-form/login-form.component";
+import { LoginFormComponent } from "@components/auth/login-form/login-form.component";
 
 @Component({
   selector: "app-login",

@@ -22,6 +22,7 @@ public static class Endpoints
     {
         private const string BasePath = $"{ApiBasePath}/greenhouses";
         public const string GetUserGreenhouses = $"{BasePath}";
+        public const string GetUserGreenhouseById = $"{BasePath}/{{id:guid}}";
         public const string CreateGreenhouse = $"{BasePath}";
         public const string DeleteGreenhouse = $"{BasePath}/{{id:guid}}";
         public const string EditGreenhouse = $"{BasePath}/{{id:guid}}";
@@ -33,5 +34,6 @@ public static class Endpoints
         public const string Login = $"{BasePath}/login";
         public const string Signup = $"{BasePath}/signup";
         public const string Logout = $"{BasePath}/logout";
+        public const string Me = $"{BasePath}/me";
     }
 }

@@ -10,6 +10,90 @@ namespace Agribus.UnitTests.GreenhouseUsecase;
 public class GreenhouseUsecaseTests
 {
     [Fact]
+    public async Task ShouldReturnUserGreenhouses()
+    {
+        // Given
+        var userId = "user_123";
+        var ct = CancellationToken.None;
+
+        var olderGreenhouse = GreenhouseFactory.Build("Serre Sud", userId);
+        var newerGreenhouse = GreenhouseFactory.Build("Serre Nord", userId);
+
+        var repository = Substitute.For<IGreenhouseRepository>();
+        repository
+            .GetByUserIdAsync(userId, ct)
+            .Returns(
+                [
+                    new GreenhouseListItemDto(olderGreenhouse.Id, olderGreenhouse.Name),
+                    new GreenhouseListItemDto(newerGreenhouse.Id, newerGreenhouse.Name),
+                ]
+            );
+
+        var usecase = new GetUserGreenhousesUsecase(repository);
+
+        // When
+        var result = (await usecase.Handle(userId, ct)).ToList();
+
+        // Then
+        await repository.Received(1).GetByUserIdAsync(userId, Arg.Any<CancellationToken>());
+
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count);
+
+        // Assert tri DESC by CreatedAt
+        Assert.Equal("Serre Sud", result[0].Name);
+        Assert.Equal("Serre Nord", result[1].Name);
+    }
+
+    [Fact]
+    public async Task ShouldReturnGreenhouse_WhenExists()
+    {
+        // Given
+        var userId = "user_123";
+        var ct = CancellationToken.None;
+        var greenhouse = GreenhouseFactory.Build("Serre Sud", userId);
+
+        var repository = Substitute.For<IGreenhouseRepository>();
+        repository.GetByIdAsync(greenhouse.Id, userId, ct).Returns(greenhouse);
+
+        var usecase = new GetGreenhouseByIdUsecase(repository);
+
+        // When
+        var result = await usecase.Handle(greenhouse.Id, userId, ct);
+
+        // Then
+        await repository
+            .Received(1)
+            .GetByIdAsync(greenhouse.Id, userId, Arg.Any<CancellationToken>());
+
+        Assert.NotNull(result);
+        Assert.Equal(result.Id, greenhouse.Id);
+        Assert.Equal(result.Name, greenhouse.Name);
+    }
+
+    [Fact]
+    public async Task ShouldReturnNull_WhenGreenhouseNotFound()
+    {
+        var userId = "user_123";
+        Guid fakeId = Guid.NewGuid();
+        var ct = CancellationToken.None;
+
+        var repository = Substitute.For<IGreenhouseRepository>();
+        repository
+            .GetByIdAsync(fakeId, userId, Arg.Any<CancellationToken>())
+            .Returns((Greenhouse?)null);
+
+        var usecase = new GetGreenhouseByIdUsecase(repository);
+
+        // When
+        var result = await usecase.Handle(fakeId, userId, ct);
+
+        // Then
+        await repository.Received(1).GetByIdAsync(fakeId, userId, Arg.Any<CancellationToken>());
+        Assert.Null(result);
+    }
+
+    [Fact]
     public async Task ShouldCreateGreenhouse_GivenValidInput()
     {
         // Given
@@ -140,4 +224,17 @@ public class GreenhouseUsecaseTests
             .UpdateAsync(originalGreenhouse, dto, CancellationToken.None);
         Assert.True(result);
     }
+}
+
+static class GreenhouseFactory
+{
+    public static Greenhouse Build(string name, string userId) =>
+        new()
+        {
+            Name = name,
+            City = "City",
+            Country = "Country",
+            Crops = new(),
+            UserId = userId,
+        };
 }

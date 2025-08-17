@@ -44,7 +44,7 @@ export class SensorFormComponent implements OnInit {
   public form!: FormGroup;
 
   protected readonly optionsSheet: Partial<TuiSheetDialogOptions> = {
-    label: this.translateService.instant("components.sensor-form.title"),
+    label: this.translateService.instant("components.sensors.sensor-form.dialog.title"),
     closeable: true,
   };
 

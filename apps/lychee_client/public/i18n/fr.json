@@ -2,10 +2,10 @@
   "components": {
     "crops": {
       "crop-selector": {
-        "noItemsAvailable": "Aucun crop disponible.",
-        "identifyTitle": "Identifier un crop",
-        "dialogLabel": "Identifier un crop",
-        "selectCrop": "Sélectionner le crop"
+        "noItemsAvailable": "Aucune culture disponible.",
+        "identifyTitle": "Identifier une culture",
+        "dialogLabel": "Identifier une culture",
+        "selectCrop": "Sélectionner la culture"
       }
     },
     "hello-world": {
@@ -44,35 +44,54 @@
       "step": {
         "details": "Identification de la serre",
         "crops": "Cultures présentes",
-        "sensors": "Capteurs connectés"
+        "sensors": "Capteurs connectés",
+        "review": "Résumé"
       },
       "alert": {
-        "remove-sensor": "Suppression de "
+        "remove-sensor": "Suppression de ",
+        "create": "Création réussie",
+        "update": "Modification réussie"
       },
       "sensor": "Capteur"
+    },
+    "sensors": {
+      "sensor-form": {
+        "dialog": {
+          "title": "Ajouter un capteur"
+        },
+        "label": {
+          "name": "Nom du capteur"
+        }
+      }
     },
     "ui": {
       "alert": {
         "info": "Information",
-        "error": "Erreur"
+        "error": "Erreur",
+        "errorCreds": "Les identifiants sont incorrects."
       },
       "button": {
         "add": "Ajouter",
         "save": "Enregistrer",
         "next": "Suivant",
-        "return": "Retour"
+        "return": "Retour",
+        "submit": "Valider"
       },
       "header": {
         "settings": "Paramètres",
         "settings-account": "Paramètres du compte",
-        "greenhouse-form": "Paramètres de la serre"
+        "greenhouse-settings": "Paramètres de la serre",
+        "greenhouse-create": "Ajouter une serre",
+        "new-greenhouse": "➕ Ajouter une serre"
       },
       "fields": {
         "commonName": "Nom commun",
         "scientificName": "Nom scientifique",
         "plantingDate": "Date de plantation",
         "quantity": "Quantité",
-        "enterQuantity": "Entrez la quantité"
+        "enterQuantity": "Entrez la quantité",
+        "sourceAddress": "Identifiant",
+        "name": "Nom"
       },
       "loader": {
         "loadingMessage": "Chargement en cours..."
