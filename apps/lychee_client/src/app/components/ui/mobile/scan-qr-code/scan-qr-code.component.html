@@ -1,0 +1,9 @@
+@if (!isNativePlatform) {
+  @if (scannerEnabled) {
+    <button class="scanner-close" (click)="deactivateScanner()">✕</button>
+    <zxing-scanner
+      [formats]="allowedFormats"
+      [enable]="scannerEnabled"
+      (scanSuccess)="handleScanResult($event)"></zxing-scanner>
+  }
+}

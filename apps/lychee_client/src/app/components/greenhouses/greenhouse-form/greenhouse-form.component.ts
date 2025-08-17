@@ -99,6 +99,8 @@ export class GreenhouseFormComponent implements OnChanges {
   @ViewChild("cropForm") cropForm?: { open: () => void };
   @ViewChild("cropSelector") cropSelector?: { open: () => void };
 
+  @ViewChild(ScanQrCodeComponent) scanQrCode?: ScanQrCodeComponent;
+
   constructor() {
     this.isMobile = this.platformService.isMobile();
 
@@ -323,12 +325,25 @@ export class GreenhouseFormComponent implements OnChanges {
   /* ############################## SENSORS ############################## */
   public openScanQrCode() {
     this.isScanning = true;
+    this.cdr.detectChanges();
+    this.scanQrCode?.activateScanner();
   }
 
   public openSensorForm(sensor: Sensor | null): void {
     this.editingSensor = sensor;
     this.cdr.detectChanges();
     this.sensorForm?.open();
+  }
+
+  public handleScannedSensor(result: string) {
+    const sensor: Sensor = {
+      id: this.generateSensorId(),
+      name: this.getDefaultSensorName(),
+      sourceAddress: result,
+    };
+    this.upsertSensor(sensor);
+
+    this.isScanning = false;
   }
 
   public upsertSensor(sensor: Sensor): void {

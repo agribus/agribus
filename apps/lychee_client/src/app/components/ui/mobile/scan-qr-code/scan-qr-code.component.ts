@@ -1,27 +1,48 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, EventEmitter, inject, Output } from "@angular/core";
 import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 import { PlatformService } from "@services/platform/platform.service";
+import { ZXingScannerModule } from "@zxing/ngx-scanner";
+import { BarcodeFormat } from "@zxing/library";
 
 @Component({
   selector: "app-scan-qr-code",
-  imports: [],
+  imports: [ZXingScannerModule],
   templateUrl: "./scan-qr-code.component.html",
   styleUrl: "./scan-qr-code.component.scss",
 })
-export class ScanQrCodeComponent implements OnInit {
+export class ScanQrCodeComponent {
   private readonly platform = inject(PlatformService);
 
-  async ngOnInit() {
-    if (this.platform.isMobile()) {
-      try {
-        const { barcodes } = await BarcodeScanner.scan();
+  public readonly isNativePlatform = this.platform.isNativePlatform();
+  public readonly allowedFormats = [BarcodeFormat.QR_CODE];
+  public scannerEnabled = false;
 
-        if (barcodes.length > 0 && barcodes[0].rawValue) {
-          // TODO: récupérer le barcode dans le greenhouse form
-        }
-      } catch (err) {
-        console.error(err);
-      }
+  @Output() codeScanned = new EventEmitter<string>();
+
+  public activateScanner() {
+    this.scannerEnabled = true;
+
+    if (this.isNativePlatform) {
+      BarcodeScanner.scan()
+        .then(({ barcodes }) => {
+          if (barcodes.length > 0 && barcodes[0].rawValue) {
+            this.handleDetectedCode(barcodes[0].rawValue);
+          }
+        })
+        .catch(err => console.error(err));
     }
+  }
+
+  public handleScanResult(result: string) {
+    this.handleDetectedCode(result);
+    this.scannerEnabled = false;
+  }
+
+  public handleDetectedCode(result: string) {
+    this.codeScanned.emit(result);
+  }
+
+  public deactivateScanner() {
+    this.scannerEnabled = false;
   }
 }

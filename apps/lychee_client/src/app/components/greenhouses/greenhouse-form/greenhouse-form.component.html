@@ -178,7 +178,7 @@
           }
         </ul>
         @if (isScanning && isMobile) {
-          <app-scan-qr-code />
+          <app-scan-qr-code #scanQrCode (codeScanned)="handleScannedSensor($event)" />
         }
 
         <app-sensor-form
