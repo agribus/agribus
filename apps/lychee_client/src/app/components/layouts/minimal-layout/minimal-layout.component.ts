@@ -4,11 +4,11 @@ import { HeaderComponent } from "@components/ui/header/header.component";
 import { HeaderType } from "@enums/header-type";
 
 @Component({
-  selector: "app-auth-layout",
+  selector: "app-minimal-layout",
   imports: [RouterOutlet, HeaderComponent],
-  templateUrl: "./auth-layout.component.html",
-  styleUrl: "./auth-layout.component.scss",
+  templateUrl: "./minimal-layout.component.html",
+  styleUrl: "./minimal-layout.component.scss",
 })
-export class AuthLayoutComponent {
+export class MinimalLayoutComponent {
   protected HEADER_NONE = HeaderType.None;
 }

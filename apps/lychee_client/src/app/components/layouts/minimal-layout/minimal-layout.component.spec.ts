@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { AuthLayoutComponent } from "./auth-layout.component";
+import { MinimalLayoutComponent } from "./minimal-layout.component";
 
 describe("AuthLayoutComponent", () => {
-  let component: AuthLayoutComponent;
-  let fixture: ComponentFixture<AuthLayoutComponent>;
+  let component: MinimalLayoutComponent;
+  let fixture: ComponentFixture<MinimalLayoutComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AuthLayoutComponent],
+      imports: [MinimalLayoutComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AuthLayoutComponent);
+    fixture = TestBed.createComponent(MinimalLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
