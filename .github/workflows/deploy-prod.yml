@@ -6,7 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-
 jobs:
   build-and-push:
     name: Build Docker Image
@@ -32,7 +31,7 @@ jobs:
           docker build \
             --build-arg CONFIG=production \
             -t agribus/lychee:prod \
-            -t agribus/lychee:v${{ env.VERSION }} \
+            -t agribus/lychee:v${{ steps.vars.outputs.VERSION }} \
             -f ./docker/Dockerfile.lychee .
 
       - name: Build Docker image Tomato
@@ -40,15 +39,15 @@ jobs:
           docker build \
             --build-arg CONFIG=production \
             -t agribus/tomato:prod \
-            -t agribus/tomato:v${{ env.VERSION }} \
+            -t agribus/tomato:v${{ steps.vars.outputs.VERSION }} \
             -f ./docker/Dockerfile.tomato .
 
       - name: Push Docker images
         run: |
           docker push agribus/lychee:prod
-          docker push agribus/lychee:v${{ env.VERSION }}        
+          docker push agribus/lychee:v${{ steps.vars.outputs.VERSION }}        
           docker push agribus/tomato:prod
-          docker push agribus/tomato:v${{ env.VERSION }}
+          docker push agribus/tomato:v${{ steps.vars.outputs.VERSION }}
 
   deploy:
     name: Deploy compose.prod.yml
@@ -77,4 +76,4 @@ jobs:
             echo "==> Pull & Restarting Prod stack"
             docker compose -p agribus-prod -f ./docker/compose.prod.yaml --env-file .env.prod up -d --pull always --remove-orphans
 
-            echo "✅ Prod updated with image: v${{ env.VERSION }}"
+            echo "✅ Prod updated with image: v${{ steps.vars.outputs.VERSION }}"

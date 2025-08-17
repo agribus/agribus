@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+@media screen {
+  /* Dark theme */
+  [tuiTheme="dark"] {
+    color-scheme: dark;
+
+    --tui-text-action: #44c596;
+
+    --tui-background-accent-1: #44c596;
+  }
+
+  /* Default theme */
+  :root,
+  :host,
+  [tuiTheme="light"] {
+    color-scheme: light;
+
+    --tui-text-primary: #374141;
+    --tui-text-secondary: #99a09b;
+    --tui-text-action: #065132;
+
+    --tui-background-accent-1: #065132;
+  }
+}
