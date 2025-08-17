@@ -61,6 +61,12 @@ fi
 
 export ConnectionStrings__Postgres
 
+DOCKER_NETWORK="agribus-network"
+if [[ "$ENV_CHOICE" == "preprod" ]]; then
+  DOCKER_NETWORK="agribus-network-preprod"
+fi
+
+
 # Build and run
 IMAGE="agribus.migration:latest"
 DOCKERFILE="apps/tomato_backend/Dockerfile.migration"
@@ -70,6 +76,6 @@ echo "Building image: ${IMAGE}"
 docker buildx build -f "${DOCKERFILE}" -t "${IMAGE}" "${BUILD_CTX}"
 
 echo "Running migrations..."
-docker run --rm --network agribus-network \
+docker run --rm --network "${DOCKER_NETWORK}" \
   -e "ConnectionStrings__Postgres=${ConnectionStrings__Postgres}" \
   "${IMAGE}"
