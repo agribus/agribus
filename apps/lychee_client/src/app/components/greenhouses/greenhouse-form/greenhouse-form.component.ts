@@ -191,17 +191,15 @@ export class GreenhouseFormComponent implements OnChanges {
       const crops = step1.crops;
       const sensors = step2.sensor;
 
-      console.log("✅ Formulaire valide", this.greenhouseForm.value);
-
       if (this.isEditMode && this.greenhouse?.id) {
         this.greenhouseService
           .updateGreenhouse(this.greenhouse.id, name, city, country, crops, sensors)
           .subscribe({
             next: () => {
               this.alerts
-                .open(this.translateService.instant("components.greenhouse-form.alert.update"), {
+                .open(this.translateService.instant("shared.alerts.update"), {
                   appearance: "info",
-                  label: this.translateService.instant("components.ui.alert.info"),
+                  label: this.translateService.instant("shared.alerts.info"),
                 })
                 .subscribe();
               this.router.navigate(["/home"]);
@@ -210,7 +208,7 @@ export class GreenhouseFormComponent implements OnChanges {
               this.alerts
                 .open(error, {
                   appearance: "info",
-                  label: this.translateService.instant("components.ui.alert.info"),
+                  label: this.translateService.instant("shared.alerts.info"),
                 })
                 .subscribe();
             },
@@ -230,7 +228,7 @@ export class GreenhouseFormComponent implements OnChanges {
             this.alerts
               .open(error, {
                 appearance: "error",
-                label: this.translateService.instant("components.ui.alert.error"),
+                label: this.translateService.instant("shared.alerts.error"),
               })
               .subscribe();
           },

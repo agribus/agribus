@@ -27,7 +27,7 @@ export class ApiResponseService {
 
     this.alerts
       .open(fullMessage, {
-        label: this.translate.instant("components.ui.alert.errorApi"),
+        label: this.translate.instant("shared.alerts.errorApi"),
         appearance: "error",
       })
       .subscribe();
