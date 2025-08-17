@@ -20,7 +20,7 @@ export class ApiResponseService {
 
     const message =
       this.translate.instant(`shared.errors.http.${status}`) ||
-      this.translate.instant("shared.errors.http.default");
+      this.translate.instant("shared.errors.generic.unknown");
     const apiMessage = apiError?.message || apiError;
 
     const fullMessage = this.buildFullMessage(message, apiMessage);

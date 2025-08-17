@@ -56,7 +56,7 @@
   "shared.errors.http.409": "shared.errors.http.409",
   "shared.errors.http.422": "shared.errors.http.422",
   "shared.errors.http.500": "shared.errors.http.500",
-  "shared.errors.http.default": "shared.errors.http.default",
+  "shared.errors.common.unknown": "shared.errors.common.unknown",
   "shared.alerts.errorApi": "shared.alerts.errorApi",
   "shared.dialog.create.sensor": "shared.dialog.create.sensor",
   "shared.alerts.update": "shared.alerts.update",

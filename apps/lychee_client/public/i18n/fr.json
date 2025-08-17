@@ -93,6 +93,9 @@
       "placeholder": "Entrer votre email"
     },
     "errors": {
+      "generic": {
+        "unknown": "Une erreur est survenue."
+      },
       "http": {
         "0": "Impossible de contacter le serveur",
         "400": "Données invalides",
@@ -101,8 +104,7 @@
         "404": "Ressource non trouvée",
         "409": "Cette ressource existe déjà",
         "422": "Données de validation incorrectes",
-        "500": "Erreur serveur, veuillez réessayer plus tard",
-        "default": ""
+        "500": "Erreur serveur, veuillez réessayer plus tard"
       }
     },
     "greenhouses": {
