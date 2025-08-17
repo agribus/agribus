@@ -76,11 +76,11 @@ export class LoginFormComponent {
         error: error => {
           if (error.status === 400) {
             this.isError = true;
-            this.messageError = this.translateService.instant("components.ui.alert.errorCreds");
+            this.messageError = this.translateService.instant("shared.alerts.errorCreds");
           } else {
             this.alerts
               .open(error.message, {
-                label: this.translateService.instant("components.ui.alert.error"),
+                label: this.translateService.instant("shared.alerts.error"),
                 appearance: "error",
               })
               .subscribe();

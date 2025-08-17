@@ -6,13 +6,13 @@
 <form class="form-block" [formGroup]="form">
   <div class="form-input-container">
     <div class="input-container">
-      <label for="email" tuiLabel>{{ "components.login-form.email" | translate }}</label>
+      <label for="email" tuiLabel>{{ "shared.email.label" | translate }}</label>
 
       <tui-textfield>
         <input
           class="form-input"
           formControlName="email"
-          placeholder="{{ 'components.login-form.email-placeholder' | translate }}"
+          placeholder="{{ 'shared.email.placeholder' | translate }}"
           type="text"
           tuiTextfield />
       </tui-textfield>
@@ -22,9 +22,9 @@
 
     <div class="input-container">
       <div class="password-label-container">
-        <label tuiLabel for="password">{{ "components.login-form.password" | translate }}</label>
+        <label tuiLabel for="password">{{ "shared.password.label" | translate }}</label>
         <a href="/forgot-password" class="link">
-          {{ "components.login-form.forgot-password" | translate }}
+          {{ "shared.password.forgot" | translate }}
         </a>
       </div>
 
@@ -42,6 +42,6 @@
   </div>
 
   <button class="button" tuiButton (click)="onSubmit($event)">
-    {{ "components.login-form.connection" | translate }}
+    {{ "shared.buttons.connection" | translate }}
   </button>
 </form>
