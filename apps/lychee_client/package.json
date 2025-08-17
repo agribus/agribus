@@ -9,7 +9,9 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .angular",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write \"**/*.{ts,html,scss,md,json}\"",
-    "generate-assets": "capacitor-assets generate"
+    "generate-assets": "capacitor-assets generate",
+    "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/template.json --key-as-default-value --replace --format json",
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/fr.json --clean --format namespaced-json --sort --marker translate"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +41,7 @@
     "@taiga-ui/kit": "^4.42.0",
     "@taiga-ui/layout": "^4.44.0",
     "@taiga-ui/polymorpheus": "^4.9.0",
+    "@vendure/ngx-translate-extract": "^10.0.1",
     "@zxing/library": "^0.21.3",
     "@zxing/ngx-scanner": "^20.0.0",
     "less": "^4.3.0",
@@ -55,7 +58,8 @@
     "@capacitor/android": "^7.4.0",
     "@capacitor/assets": "^3.0.5",
     "@capacitor/ios": "^7.4.0",
-    "@eslint/js": "^9.29.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.33.0",
     "@types/jasmine": "~5.1.0",
     "@types/three": "^0.179.0",
     "angular-eslint": "20.1.1",

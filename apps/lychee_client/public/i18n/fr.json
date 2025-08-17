@@ -1,145 +1,130 @@
 {
   "components": {
-    "crops": {
-      "crop-selector": {
-        "noItemsAvailable": "Aucune culture disponible.",
-        "identifyTitle": "Identifier une culture",
-        "dialogLabel": "Identifier une culture",
-        "selectCrop": "Sélectionner la culture"
-      }
-    },
-    "hello-world": {
-      "browser": "Bonjour du navigateur",
-      "mobile": "Bonjour depuis un téléphone portable"
-    },
-    "login-form": {
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "password": "Mot de passe",
-      "connection": "Connexion",
-      "forgot-password": "Mot de passe oublié ?",
-      "click-here": "Cliquez ici"
-    },
-    "register-form": {
-      "nickname": "Pseudo",
-      "nickname-placeholder": "Entrer votre pseudo",
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "password": "Mot de passe",
-      "confirm-password": "Confirmer le mot de passe",
-      "register": "Inscription"
-    },
-    "forgot-password-form": {
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "send": "Envoyer"
-    },
-    "greenhouse-form": {
-      "dialog": {
-        "title": "Ajouter un capteur"
-      },
-      "label": {
-        "name": "Nom de la serre"
-      },
-      "step": {
-        "details": "Identification de la serre",
-        "crops": "Cultures présentes",
-        "sensors": "Capteurs connectés",
-        "review": "Résumé"
-      },
-      "alert": {
-        "remove-sensor": "Suppression de ",
-        "create": "Création réussie",
-        "update": "Modification réussie"
-      },
-      "sensor": "Capteur"
-    },
-    "sensors": {
-      "sensor-form": {
-        "dialog": {
-          "title": "Ajouter un capteur"
-        },
-        "label": {
-          "name": "Nom du capteur"
-        }
-      }
-    },
     "ui": {
-      "alert": {
-        "info": "Information",
-        "error": "Erreur",
-        "errorCreds": "Les identifiants sont incorrects."
-      },
-      "button": {
-        "add": "Ajouter",
-        "save": "Enregistrer",
-        "next": "Suivant",
-        "return": "Retour",
-        "submit": "Valider"
-      },
       "header": {
-        "settings": "Paramètres",
-        "settings-account": "Paramètres du compte",
-        "greenhouse-settings": "Paramètres de la serre",
-        "greenhouse-create": "Ajouter une serre",
         "new-greenhouse": "➕ Ajouter une serre"
-      },
-      "fields": {
-        "commonName": "Nom commun",
-        "scientificName": "Nom scientifique",
-        "plantingDate": "Date de plantation",
-        "quantity": "Quantité",
-        "enterQuantity": "Entrez la quantité",
-        "sourceAddress": "Identifiant",
-        "name": "Nom"
-      },
-      "loader": {
-        "loadingMessage": "Chargement en cours..."
       }
     }
   },
   "pages": {
-    "unsupported-platform": {
-      "title": "Cette application est actuellement disponible uniquement sur mobile",
-      "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
-      "progress": "Vous pouvez suivre notre avancement",
-      "here": "ici"
+    "forgot-password": {
+      "connection-page": "Page de connexion",
+      "subtitle": "Entre votre email pour changer de mot de passe",
+      "title": "Mot de passe oublié"
+    },
+    "greenhouse-create": {
+      "title": "Ajouter une serre"
+    },
+    "greenhouse-settings": {
+      "title": "Paramètres de la serre"
     },
     "login": {
-      "title": "Connexion à votre compte",
-      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
       "no-account": "Pas de compte ?",
-      "register": "Inscrivez vous"
+      "register": "Inscrivez vous",
+      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
+      "title": "Connexion à votre compte"
     },
     "register": {
-      "title": "Créer votre compte",
-      "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
       "already-account": "Vous avez déjà un compte ?",
-      "sign-in": "Connectez vous"
+      "sign-in": "Connectez vous",
+      "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
+      "title": "Créer votre compte"
     },
-    "forgot-password": {
-      "title": "Mot de passe oublié",
-      "subtitle": "Entre votre email pour changer de mot de passe",
-      "connection-page": "Page de connexion"
+    "settings-account": {
+      "title": "Paramètres du compte"
     },
-    "not-found": {
-      "message": "Oops ! La page que vous cherchez n'existe pas.",
-      "home": "Retour à l'accueil"
+    "settings": {
+      "title": "Paramètres"
+    },
+    "unsupported-platform": {
+      "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
+      "here": "ici",
+      "progress": "Vous pouvez suivre notre avancement",
+      "title": "Cette application est actuellement disponible uniquement sur mobile"
     }
   },
   "shared": {
+    "alerts": {
+      "add": "",
+      "create": "",
+      "duplicate": "",
+      "error": "Une erreur est survenue.",
+      "errorCreds": "Les identifiants sont incorrects.",
+      "info": "",
+      "invalid": "",
+      "positive": "",
+      "remove": "",
+      "success": "",
+      "updated": "",
+      "warning": ""
+    },
+    "buttons": {
+      "add": "Ajouter",
+      "connection": "Connexion",
+      "next": "Suivant",
+      "register": "Inscription",
+      "return": "Retour",
+      "selectCrop": "Sélectionner une culture",
+      "send": "Envoyer",
+      "submit": "Valider"
+    },
+    "common": {
+      "crops": "Cultures",
+      "location": "Localisation",
+      "name": "Nom",
+      "sensor": "Capteur",
+      "sensors": "Capteurs"
+    },
+    "crops": {
+      "commonName": "Nom commun",
+      "enterQuantity": "Entrez la quantité",
+      "noCropsAvailable": "Aucune culture disponible.",
+      "plantingDate": "Date de plantation",
+      "quantity": "Quantité",
+      "scientificName": "Nom scientifique"
+    },
+    "dialog": {
+      "create": {
+        "crop": "Identifier une culture",
+        "sensor": "Ajouter un capteur"
+      }
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Entrer votre email"
+    },
     "errors": {
       "http": {
+        "0": "Impossible de contacter le serveur",
         "400": "Données invalides",
         "401": "Vous devez vous connecter pour accéder à cette ressource",
         "403": "Vous n'avez pas les permissions nécessaires",
         "404": "Ressource non trouvée",
         "409": "Cette ressource existe déjà",
         "422": "Données de validation incorrectes",
-        "500": "Erreur serveur, veuillez réessayer plus tard",
-        "0": "Impossible de contacter le serveur",
-        "default": "Une erreur est survenue"
+        "500": "Erreur serveur, veuillez réessayer plus tard"
       }
+    },
+    "greenhouses": {
+      "step": {
+        "crops": "Cultures",
+        "details": "Informations",
+        "review": "Résumé",
+        "sensors": "Capteurs"
+      }
+    },
+    "nickname": {
+      "label": "Pseudo",
+      "placeholder": "Entrer votre pseudo"
+    },
+    "password": {
+      "confirm": "Confirmer votre mot de passe",
+      "forgot": "Mot de passe oublié ?",
+      "label": "Mot de passe"
+    },
+    "sensors": {
+      "name": "Nom",
+      "sourceAddress": "Identifiant"
     }
   }
 }

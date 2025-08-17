@@ -4,7 +4,7 @@
       <tui-loader size="l"></tui-loader>
     }
     @if (!loading() && !crops().length) {
-      <p>{{ "components.crops.crop-selector.noItemsAvailable" | translate }}</p>
+      <p>{{ "shared.crops.noCropsAvailable" | translate }}</p>
     }
     @if (!loading() && crops().length) {
       @for (crop of crops(); track $index) {
@@ -12,7 +12,7 @@
           <div class="scientific-name">
             <tui-textfield tuiChevron>
               <label for="scientificName{{ $index }}" class="label">
-                {{ "components.ui.fields.scientificName" | translate }}
+                {{ "shared.crops.scientificName" | translate }}
               </label>
               <input
                 id="scientificName{{ $index }}"
@@ -25,7 +25,7 @@
           <div class="common-name">
             <tui-textfield tuiChevron>
               <label for="commonName{{ $index }}" class="label">
-                {{ "components.ui.fields.commonName" | translate }}
+                {{ "shared.crops.commonName" | translate }}
               </label>
               <input id="commonName{{ $index }}" tuiSelect [(ngModel)]="crop.commonName" />
               <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="crop.commonNames" />
@@ -39,13 +39,13 @@
 
           <tui-textfield>
             <label tuiLabel for="quantity{{ $index }}">
-              {{ "components.ui.fields.enterQuantity" | translate }}
+              {{ "shared.crops.enterQuantity" | translate }}
             </label>
             <input tuiInputNumber [(ngModel)]="crop.quantity" [min]="0" [step]="1" />
           </tui-textfield>
 
           <button tuiButton appearance="primary" size="m" (click)="selectCrop(crop)">
-            {{ "components.crops.crop-selector.selectCrop" | translate }}
+            {{ "shared.buttons.selectCrop" | translate }}
           </button>
         </div>
       }

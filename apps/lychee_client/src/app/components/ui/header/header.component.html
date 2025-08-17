@@ -53,13 +53,13 @@
 
       <h3 tuiSlot="center">
         @if (url === "/settings-account") {
-          {{ "components.ui.header.settings-account" | translate }}
+          {{ "pages.settings-account.title" | translate }}
         } @else if (url === "/greenhouse/settings") {
-          {{ "components.ui.header.greenhouse-settings" | translate }}
+          {{ "pages.greenhouse-settings.title" | translate }}
         } @else if (url === "/greenhouse/create") {
-          {{ "components.ui.header.greenhouse-create" | translate }}
+          {{ "pages.greenhouse-create.title" | translate }}
         } @else {
-          {{ "components.ui.header.settings" | translate }}
+          {{ "pages.settings.title" | translate }}
         }
       </h3>
       @if (showDevTools) {
