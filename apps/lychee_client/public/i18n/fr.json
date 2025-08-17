@@ -1,53 +1,8 @@
 {
   "components": {
-    "greenhouse-form": {
-      "alert": {
-        "create": "Création réussie"
-      },
-      "label": {
-        "name": "Nom de la serre"
-      },
-      "step": {
-        "crops": "Cultures présentes",
-        "details": "Identification de la serre",
-        "review": "Résumé",
-        "sensors": "Capteurs connectés"
-      }
-    },
-    "greenhouses-form": {
-      "alert": {
-        "duplicate-sensor": "",
-        "remove-sensor": "",
-        "sensor-added": "",
-        "sensor-updated": ""
-      },
-      "label": {
-        "crops": "",
-        "location": "",
-        "name": "",
-        "sensors": ""
-      },
-      "sensor": ""
-    },
     "ui": {
-      "alert": {
-        "error": "Erreur",
-        "form-invalid": "",
-        "info": "Information",
-        "success": "",
-        "warning": ""
-      },
-      "button": {
-        "next": "Suivant",
-        "return": "Retour",
-        "submit": "Valider"
-      },
       "header": {
-        "greenhouse-create": "Ajouter une serre",
-        "greenhouse-settings": "Paramètres de la serre",
-        "new-greenhouse": "➕ Ajouter une serre",
-        "settings": "Paramètres",
-        "settings-account": "Paramètres du compte"
+        "new-greenhouse": "➕ Ajouter une serre"
       }
     }
   },
@@ -56,6 +11,12 @@
       "connection-page": "Page de connexion",
       "subtitle": "Entre votre email pour changer de mot de passe",
       "title": "Mot de passe oublié"
+    },
+    "greenhouse-create": {
+      "title": "Ajouter une serre"
+    },
+    "greenhouse-settings": {
+      "title": "Paramètres de la serre"
     },
     "login": {
       "no-account": "Pas de compte ?",
@@ -69,6 +30,12 @@
       "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
       "title": "Créer votre compte"
     },
+    "settings-account": {
+      "title": "Paramètres du compte"
+    },
+    "settings": {
+      "title": "Paramètres"
+    },
     "unsupported-platform": {
       "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
       "here": "ici",
@@ -78,16 +45,35 @@
   },
   "shared": {
     "alerts": {
+      "add": "",
+      "create": "",
+      "duplicate": "",
       "error": "Une erreur est survenue.",
-      "errorCreds": "Les identifiants sont incorrects."
+      "errorCreds": "Les identifiants sont incorrects.",
+      "info": "",
+      "invalid": "",
+      "positive": "",
+      "remove": "",
+      "success": "",
+      "updated": "",
+      "warning": ""
     },
     "buttons": {
       "add": "Ajouter",
       "connection": "Connexion",
+      "next": "Suivant",
       "register": "Inscription",
+      "return": "Retour",
       "selectCrop": "Sélectionner une culture",
       "send": "Envoyer",
       "submit": "Valider"
+    },
+    "common": {
+      "crops": "Cultures",
+      "location": "Localisation",
+      "name": "Nom",
+      "sensor": "Capteur",
+      "sensors": "Capteurs"
     },
     "crops": {
       "commonName": "Nom commun",
@@ -117,6 +103,14 @@
         "409": "Cette ressource existe déjà",
         "422": "Données de validation incorrectes",
         "500": "Erreur serveur, veuillez réessayer plus tard"
+      }
+    },
+    "greenhouses": {
+      "step": {
+        "crops": "Cultures",
+        "details": "Informations",
+        "review": "Résumé",
+        "sensors": "Capteurs"
       }
     },
     "nickname": {
