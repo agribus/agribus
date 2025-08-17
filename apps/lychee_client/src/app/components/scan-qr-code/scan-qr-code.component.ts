@@ -3,10 +3,12 @@ import { BarcodeScanner } from "@capacitor-mlkit/barcode-scanning";
 import { PlatformService } from "@services/platform/platform.service";
 import { ZXingScannerModule } from "@zxing/ngx-scanner";
 import { BarcodeFormat } from "@zxing/library";
+import { TuiButton } from "@taiga-ui/core";
+import { TuiButtonClose } from "@taiga-ui/kit";
 
 @Component({
   selector: "app-scan-qr-code",
-  imports: [ZXingScannerModule],
+  imports: [ZXingScannerModule, TuiButton, TuiButtonClose],
   templateUrl: "./scan-qr-code.component.html",
   styleUrl: "./scan-qr-code.component.scss",
 })

@@ -3,13 +3,12 @@
   top: 16px;
   right: 16px;
   z-index: 1010;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  font-size: 24px;
-  padding: 8px 12px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  cursor: pointer;
 }
 
 :host zxing-scanner::ng-deep video {
