@@ -70,6 +70,9 @@ jobs:
             echo "==> Pull Prod stack"
             docker pull agribus/lychee:prod
             docker pull agribus/tomato:prod
+            
+            echo "==> Migration"
+            ./scripts/migrate.sh --env prod
 
             echo "==> Pull & Restarting Prod stack"
             docker compose -p agribus-prod -f ./docker/compose.prod.yaml --env-file .env.prod up -d --pull always --remove-orphans

@@ -70,7 +70,7 @@ jobs:
             docker pull agribus/tomato:preprod
             
             echo "==> Migration"
-            ./scripts/migrate_preprod.sh
+            ./scripts/migrate.sh --env preprod
 
             echo "==> Restarting Preprod stack"
             docker compose -p agribus-preprod -f ./docker/compose.preprod.yaml --env-file .env.preprod up -d --remove-orphans
