@@ -11,7 +11,7 @@
     "format": "prettier --write \"**/*.{ts,html,scss,md,json}\"",
     "generate-assets": "capacitor-assets generate",
     "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/template.json --key-as-default-value --replace --format json",
-    "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/{en,fr,de}.json --clean --format namespaced-json --sort --marker translate"
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/fr.json --format namespaced-json --sort --marker translate"
   },
   "private": true,
   "dependencies": {

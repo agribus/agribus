@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { TuiButton, TuiError, TuiTextfield } from "@taiga-ui/core";
 import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
-import { AuthRegister, AuthResponse } from "@interfaces/auth.interface";
+import { AuthRegister } from "@interfaces/auth.interface";
 import { AuthService } from "@services/auth/auth.service";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiValidationError } from "@taiga-ui/cdk";
@@ -75,9 +75,7 @@ export class RegisterFormComponent {
           password: this.form.value.password ?? "",
           confirmPassword: this.form.value.confirmPassword ?? "",
         };
-        this.authService.sendRegisterRequest(registerInformation).subscribe({
-          next: (response: AuthResponse) => {},
-        });
+        this.authService.sendRegisterRequest(registerInformation).subscribe();
       }
     }
   }

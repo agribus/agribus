@@ -2,32 +2,11 @@
   "components": {
     "crops": {
       "crop-selector": {
-        "noItemsAvailable": "Aucune culture disponible.",
-        "identifyTitle": "Identifier une culture",
         "dialogLabel": "Identifier une culture",
+        "identifyTitle": "Identifier une culture",
+        "noItemsAvailable": "Aucune culture disponible.",
         "selectCrop": "Sélectionner la culture"
       }
-    },
-    "hello-world": {
-      "browser": "Bonjour du navigateur",
-      "mobile": "Bonjour depuis un téléphone portable"
-    },
-    "login-form": {
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "password": "Mot de passe",
-      "connection": "Connexion",
-      "forgot-password": "Mot de passe oublié ?",
-      "click-here": "Cliquez ici"
-    },
-    "register-form": {
-      "nickname": "Pseudo",
-      "nickname-placeholder": "Entrer votre pseudo",
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "password": "Mot de passe",
-      "confirm-password": "Confirmer le mot de passe",
-      "register": "Inscription"
     },
     "forgot-password-form": {
       "email": "Email",
@@ -35,24 +14,60 @@
       "send": "Envoyer"
     },
     "greenhouse-form": {
+      "alert": {
+        "create": "Création réussie",
+        "remove-sensor": "Suppression de ",
+        "update": "Modification réussie"
+      },
       "dialog": {
         "title": "Ajouter un capteur"
       },
       "label": {
         "name": "Nom de la serre"
       },
+      "sensor": "Capteur",
       "step": {
-        "details": "Identification de la serre",
         "crops": "Cultures présentes",
-        "sensors": "Capteurs connectés",
-        "review": "Résumé"
-      },
+        "details": "Identification de la serre",
+        "review": "Résumé",
+        "sensors": "Capteurs connectés"
+      }
+    },
+    "greenhouses-form": {
       "alert": {
-        "remove-sensor": "Suppression de ",
-        "create": "Création réussie",
-        "update": "Modification réussie"
+        "duplicate-sensor": "",
+        "remove-sensor": "",
+        "sensor-added": "",
+        "sensor-updated": ""
       },
-      "sensor": "Capteur"
+      "label": {
+        "crops": "",
+        "location": "",
+        "name": "",
+        "sensors": ""
+      },
+      "sensor": ""
+    },
+    "hello-world": {
+      "browser": "Bonjour du navigateur",
+      "mobile": "Bonjour depuis un téléphone portable"
+    },
+    "login-form": {
+      "click-here": "Cliquez ici",
+      "connection": "Connexion",
+      "email": "Email",
+      "email-placeholder": "Entrer votre email",
+      "forgot-password": "Mot de passe oublié ?",
+      "password": "Mot de passe"
+    },
+    "register-form": {
+      "confirm-password": "Confirmer le mot de passe",
+      "email": "Email",
+      "email-placeholder": "Entrer votre email",
+      "nickname": "Pseudo",
+      "nickname-placeholder": "Entrer votre pseudo",
+      "password": "Mot de passe",
+      "register": "Inscription"
     },
     "sensors": {
       "sensor-form": {
@@ -66,32 +81,35 @@
     },
     "ui": {
       "alert": {
-        "info": "Information",
         "error": "Erreur",
-        "errorCreds": "Les identifiants sont incorrects."
+        "errorCreds": "Les identifiants sont incorrects.",
+        "form-invalid": "",
+        "info": "Information",
+        "success": "",
+        "warning": ""
       },
       "button": {
         "add": "Ajouter",
-        "save": "Enregistrer",
         "next": "Suivant",
         "return": "Retour",
+        "save": "Enregistrer",
         "submit": "Valider"
-      },
-      "header": {
-        "settings": "Paramètres",
-        "settings-account": "Paramètres du compte",
-        "greenhouse-settings": "Paramètres de la serre",
-        "greenhouse-create": "Ajouter une serre",
-        "new-greenhouse": "➕ Ajouter une serre"
       },
       "fields": {
         "commonName": "Nom commun",
-        "scientificName": "Nom scientifique",
+        "enterQuantity": "Entrez la quantité",
+        "name": "Nom",
         "plantingDate": "Date de plantation",
         "quantity": "Quantité",
-        "enterQuantity": "Entrez la quantité",
-        "sourceAddress": "Identifiant",
-        "name": "Nom"
+        "scientificName": "Nom scientifique",
+        "sourceAddress": "Identifiant"
+      },
+      "header": {
+        "greenhouse-create": "Ajouter une serre",
+        "greenhouse-settings": "Paramètres de la serre",
+        "new-greenhouse": "➕ Ajouter une serre",
+        "settings": "Paramètres",
+        "settings-account": "Paramètres du compte"
       },
       "loader": {
         "loadingMessage": "Chargement en cours..."
@@ -99,28 +117,65 @@
     }
   },
   "pages": {
-    "unsupported-platform": {
-      "title": "Cette application est actuellement disponible uniquement sur mobile",
-      "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
-      "progress": "Vous pouvez suivre notre avancement",
-      "here": "ici"
+    "forgot-password": {
+      "connection-page": "Page de connexion",
+      "subtitle": "Entre votre email pour changer de mot de passe",
+      "title": "Mot de passe oublié"
     },
     "login": {
-      "title": "Connexion à votre compte",
-      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
       "no-account": "Pas de compte ?",
-      "register": "Inscrivez vous"
+      "register": "Inscrivez vous",
+      "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
+      "title": "Connexion à votre compte"
     },
     "register": {
-      "title": "Créer votre compte",
-      "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
       "already-account": "Vous avez déjà un compte ?",
-      "sign-in": "Connectez vous"
+      "sign-in": "Connectez vous",
+      "subtitle": "Bienvenue! Veuillez entrez vos identifiants.",
+      "title": "Créer votre compte"
     },
-    "forgot-password": {
-      "title": "Mot de passe oublié",
-      "subtitle": "Entre votre email pour changer de mot de passe",
-      "connection-page": "Page de connexion"
+    "unsupported-platform": {
+      "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
+      "here": "ici",
+      "progress": "Vous pouvez suivre notre avancement",
+      "title": "Cette application est actuellement disponible uniquement sur mobile"
+    }
+  },
+  "shared": {
+    "alerts": {
+      "error": "Une erreur est survenue.",
+      "errorCreds": "Les identifiants sont incorrects."
+    },
+    "buttons": {
+      "connection": "Connexion",
+      "register": "Inscription",
+      "send": "Envoyer"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Entrer votre email"
+    },
+    "errors": {
+      "http": {
+        "400": "Données invalides",
+        "401": "Vous devez vous connecter pour accéder à cette ressource",
+        "403": "Vous n'avez pas les permissions nécessaires",
+        "404": "Ressource non trouvée",
+        "409": "Cette ressource existe déjà",
+        "422": "Données de validation incorrectes",
+        "500": "Erreur serveur, veuillez réessayer plus tard",
+        "0": "Impossible de contacter le serveur",
+        "default": "Une erreur est survenue"
+      }
+    },
+    "nickname": {
+      "label": "Pseudo",
+      "placeholder": "Entrer votre pseudo"
+    },
+    "password": {
+      "confirm": "Confirmer votre mot de passe",
+      "forgot": "Mot de passe oublié ?",
+      "label": "Mot de passe"
     }
   }
 }
