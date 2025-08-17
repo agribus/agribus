@@ -32,15 +32,4 @@ export class ApiResponseService {
       })
       .subscribe();
   }
-
-  public handleSuccess(messageKey: string): void {
-    const message = this.translate.instant(messageKey);
-
-    this.alerts
-      .open(message, {
-        label: this.translate.instant("components.ui.alert.success"),
-        appearance: "positive",
-      })
-      .subscribe();
-  }
 }
