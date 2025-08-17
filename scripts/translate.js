@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DEEPL_API_KEY = "";
+const DEEPL_API_KEY = loadEnvKey();
 const INPUT_FILE = path.join(__dirname, "../apps/lychee_client/public/i18n/fr.json");
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -276,7 +276,33 @@ async function buildFullTranslation(sourceObj, existingObj, targetLang, currentP
   return sourceObj;
 }
 
+function loadEnvKey() {
+  const envPath = path.resolve(process.cwd(), "./.env");
+
+  if (!fs.existsSync(envPath)) {
+    console.warn(`⚠️  .env not found at ${envPath}`);
+    return "";
+  }
+
+  const lines = fs.readFileSync(envPath, "utf8").split("\n");
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+
+    const [k, ...rest] = trimmed.split("=");
+    if (k.trim() === "DEEPL_API_KEY") {
+      return rest.join("=").trim().replace(/^"|"$/g, ""); // remove quotes if present
+    }
+  }
+
+  return "";
+}
 async function main() {
+  if (!DEEPL_API_KEY) {
+    console.error("No DeepL API key provided. Please set the DEEPL_API_KEY environment variable.");
+    return;
+  }
   try {
     if (!fs.existsSync(INPUT_FILE)) {
       throw new Error(`Source file does not exist: ${INPUT_FILE}`);

@@ -80,7 +80,8 @@
       "enterQuantity": "Geben Sie die Menge ein",
       "noCropsAvailable": "Keine Kulturen vorhanden.",
       "plantingDate": "Datum der Pflanzung",
-      "quantity": "Menge"
+      "quantity": "Menge",
+      "scientificName": "Wissenschaftlicher Name"
     },
     "dialog": {
       "create": {
