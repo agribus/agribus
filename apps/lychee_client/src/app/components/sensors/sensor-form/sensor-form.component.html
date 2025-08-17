@@ -2,21 +2,21 @@
   <form [formGroup]="form" (ngSubmit)="save()" class="sensor-form">
     <tui-textfield>
       <label tuiLabel>
-        {{ "components.ui.fields.name" | translate }}
+        {{ "shared.sensors.name" | translate }}
       </label>
       <input tuiTextfield formControlName="name" />
     </tui-textfield>
 
     <tui-textfield class="mt-4">
       <label tuiLabel>
-        {{ "components.ui.fields.sourceAddress" | translate }}
+        {{ "shared.sensors.sourceAddress" | translate }}
       </label>
       <input tuiTextfield formControlName="sourceAddress" />
     </tui-textfield>
 
     <div class="footer">
       <button tuiButton appearance="primary" type="submit" [disabled]="form.invalid">
-        {{ "components.ui.button.submit" | translate }}
+        {{ "shared.buttons.submit" | translate }}
       </button>
     </div>
   </form>

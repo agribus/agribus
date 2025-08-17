@@ -56,7 +56,7 @@ export class CropSelectorComponent {
   @Output() cropSelected = new EventEmitter<Crop>();
 
   public optionsSheet = computed<Partial<TuiSheetDialogOptions>>(() => ({
-    label: this.translateService.instant("components.crops.crop-selector.dialogLabel"),
+    label: this.translateService.instant("shared.dialog.create.crop"),
     closeable: true,
   }));
 

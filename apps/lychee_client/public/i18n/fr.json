@@ -1,31 +1,12 @@
 {
   "components": {
-    "crops": {
-      "crop-selector": {
-        "dialogLabel": "Identifier une culture",
-        "identifyTitle": "Identifier une culture",
-        "noItemsAvailable": "Aucune culture disponible.",
-        "selectCrop": "Sélectionner la culture"
-      }
-    },
-    "forgot-password-form": {
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "send": "Envoyer"
-    },
     "greenhouse-form": {
       "alert": {
-        "create": "Création réussie",
-        "remove-sensor": "Suppression de ",
-        "update": "Modification réussie"
-      },
-      "dialog": {
-        "title": "Ajouter un capteur"
+        "create": "Création réussie"
       },
       "label": {
         "name": "Nom de la serre"
       },
-      "sensor": "Capteur",
       "step": {
         "crops": "Cultures présentes",
         "details": "Identification de la serre",
@@ -48,61 +29,18 @@
       },
       "sensor": ""
     },
-    "hello-world": {
-      "browser": "Bonjour du navigateur",
-      "mobile": "Bonjour depuis un téléphone portable"
-    },
-    "login-form": {
-      "click-here": "Cliquez ici",
-      "connection": "Connexion",
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "forgot-password": "Mot de passe oublié ?",
-      "password": "Mot de passe"
-    },
-    "register-form": {
-      "confirm-password": "Confirmer le mot de passe",
-      "email": "Email",
-      "email-placeholder": "Entrer votre email",
-      "nickname": "Pseudo",
-      "nickname-placeholder": "Entrer votre pseudo",
-      "password": "Mot de passe",
-      "register": "Inscription"
-    },
-    "sensors": {
-      "sensor-form": {
-        "dialog": {
-          "title": "Ajouter un capteur"
-        },
-        "label": {
-          "name": "Nom du capteur"
-        }
-      }
-    },
     "ui": {
       "alert": {
         "error": "Erreur",
-        "errorCreds": "Les identifiants sont incorrects.",
         "form-invalid": "",
         "info": "Information",
         "success": "",
         "warning": ""
       },
       "button": {
-        "add": "Ajouter",
         "next": "Suivant",
         "return": "Retour",
-        "save": "Enregistrer",
         "submit": "Valider"
-      },
-      "fields": {
-        "commonName": "Nom commun",
-        "enterQuantity": "Entrez la quantité",
-        "name": "Nom",
-        "plantingDate": "Date de plantation",
-        "quantity": "Quantité",
-        "scientificName": "Nom scientifique",
-        "sourceAddress": "Identifiant"
       },
       "header": {
         "greenhouse-create": "Ajouter une serre",
@@ -110,9 +48,6 @@
         "new-greenhouse": "➕ Ajouter une serre",
         "settings": "Paramètres",
         "settings-account": "Paramètres du compte"
-      },
-      "loader": {
-        "loadingMessage": "Chargement en cours..."
       }
     }
   },
@@ -147,9 +82,26 @@
       "errorCreds": "Les identifiants sont incorrects."
     },
     "buttons": {
+      "add": "Ajouter",
       "connection": "Connexion",
       "register": "Inscription",
-      "send": "Envoyer"
+      "selectCrop": "Sélectionner une culture",
+      "send": "Envoyer",
+      "submit": "Valider"
+    },
+    "crops": {
+      "commonName": "Nom commun",
+      "enterQuantity": "Entrez la quantité",
+      "noCropsAvailable": "Aucune culture disponible.",
+      "plantingDate": "Date de plantation",
+      "quantity": "Quantité",
+      "scientificName": "Nom scientifique"
+    },
+    "dialog": {
+      "create": {
+        "crop": "Identifier une culture",
+        "sensor": "Ajouter un capteur"
+      }
     },
     "email": {
       "label": "Email",
@@ -157,15 +109,14 @@
     },
     "errors": {
       "http": {
+        "0": "Impossible de contacter le serveur",
         "400": "Données invalides",
         "401": "Vous devez vous connecter pour accéder à cette ressource",
         "403": "Vous n'avez pas les permissions nécessaires",
         "404": "Ressource non trouvée",
         "409": "Cette ressource existe déjà",
         "422": "Données de validation incorrectes",
-        "500": "Erreur serveur, veuillez réessayer plus tard",
-        "0": "Impossible de contacter le serveur",
-        "default": "Une erreur est survenue"
+        "500": "Erreur serveur, veuillez réessayer plus tard"
       }
     },
     "nickname": {
@@ -176,6 +127,10 @@
       "confirm": "Confirmer votre mot de passe",
       "forgot": "Mot de passe oublié ?",
       "label": "Mot de passe"
+    },
+    "sensors": {
+      "name": "Nom",
+      "sourceAddress": "Identifiant"
     }
   }
 }

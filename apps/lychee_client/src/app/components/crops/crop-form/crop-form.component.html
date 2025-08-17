@@ -1,29 +1,29 @@
 <ng-template [(tuiSheetDialog)]="openSheet" [tuiSheetDialogOptions]="optionsSheet">
   <form [formGroup]="form" (ngSubmit)="submit()" class="crop-form">
     <tui-textfield>
-      <label tuiLabel>{{ "components.ui.fields.commonName" | translate }}</label>
+      <label tuiLabel>{{ "shared.crops.commonName" | translate }}</label>
       <input tuiTextfield formControlName="commonName" required />
     </tui-textfield>
 
     <tui-textfield>
-      <label tuiLabel>{{ "components.ui.fields.scientificName" | translate }}</label>
+      <label tuiLabel>{{ "shared.crops.scientificName" | translate }}</label>
       <input tuiTextfield formControlName="scientificName" />
     </tui-textfield>
 
     <tui-textfield>
-      <label tuiLabel>{{ "components.ui.fields.plantingDate" | translate }}</label>
+      <label tuiLabel>{{ "shared.crops.plantingDate" | translate }}</label>
       <input tuiInputDate formControlName="plantingDate" />
       <tui-calendar *tuiTextfieldDropdown />
     </tui-textfield>
 
     <tui-textfield tuiTextfieldSize="m">
-      <label tuiLabel>{{ "components.ui.fields.quantity" | translate }}</label>
+      <label tuiLabel>{{ "shared.crops.quantity" | translate }}</label>
       <input tuiInputNumber formControlName="quantity" />
     </tui-textfield>
 
     <div class="flex justify-end gap-2 mt-4">
       <button tuiButton type="submit" appearance="primary" [disabled]="form.invalid">
-        {{ "components.ui.button.add" | translate }}
+        {{ "shared.buttons.add" | translate }}
       </button>
     </div>
   </form>
