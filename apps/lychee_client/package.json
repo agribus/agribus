@@ -9,7 +9,9 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf .angular",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write \"**/*.{ts,html,scss,md,json}\"",
-    "generate-assets": "capacitor-assets generate"
+    "generate-assets": "capacitor-assets generate",
+    "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/template.json --key-as-default-value --replace --format json",
+    "i18n:extract": "ngx-translate-extract --input ./src --output ./public/i18n/{en,fr,de}.json --clean --format namespaced-json --sort --marker translate"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +23,7 @@
     "@angular/platform-browser": "^20.0.0",
     "@angular/router": "^20.0.0",
     "@angular/service-worker": "^20.0.0",
+    "@biesbjerg/ngx-translate-extract": "^7.0.4",
     "@capacitor-community/http": "^1.4.1",
     "@capacitor-mlkit/barcode-scanning": "^7.2.1",
     "@capacitor/camera": "^7.0.1",
@@ -38,6 +41,7 @@
     "@taiga-ui/kit": "^4.42.0",
     "@taiga-ui/layout": "^4.44.0",
     "@taiga-ui/polymorpheus": "^4.9.0",
+    "@vendure/ngx-translate-extract": "^10.0.1",
     "@zxing/library": "^0.21.3",
     "@zxing/ngx-scanner": "^20.0.0",
     "less": "^4.3.0",
