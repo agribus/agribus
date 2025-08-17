@@ -1,61 +1,130 @@
 {
   "components": {
-    "hello-world": {
-      "browser": "Hello from browser",
-      "mobile": "Hello from mobile device"
-    },
-    "header": {
-      "settings": "Settings",
-      "settings-account": "Account Settings",
-      "greenhouse-form": "Greenhouse Settings"
-    },
-    "login-form": {
-      "email": "Email",
-      "email-placeholder": "Enter your email",
-      "password": "Password",
-      "connection": "Login",
-      "forgot-password": "Forgot your password?",
-      "click-here": "Click here"
-    },
-    "register-form": {
-      "nickname": "Username",
-      "nickname-placeholder": "Enter your username",
-      "email": "Email",
-      "email-placeholder": "Enter your email",
-      "password": "Password",
-      "confirm-password": "Confirm password",
-      "register": "Sign up"
-    },
-    "forgot-password-form": {
-      "email": "Email",
-      "email-placeholder": "Enter your email",
-      "send": "Send"
+    "ui": {
+      "header": {
+        "new-greenhouse": "➕ Add a greenhouse"
+      }
     }
   },
   "pages": {
-    "unsupported-platform": {
-      "title": "This App Is Currently Mobile-Only",
-      "description": "We're working hard on a desktop version. For now, the application is only available on mobile devices.",
-      "progress": "You can follow our progress",
-      "here": "here"
+    "forgot-password": {
+      "connection-page": "Connection page",
+      "subtitle": "Enter your email to reset your password",
+      "title": "Forgot password"
+    },
+    "greenhouse-create": {
+      "title": "Add a greenhouse"
+    },
+    "greenhouse-settings": {
+      "title": "Greenhouse parameters"
     },
     "login": {
-      "title": "Log in to your account",
-      "subtitle": "Welcome back! Please enter your credentials.",
       "no-account": "No account?",
-      "register": "Sign up"
+      "register": "Sign up",
+      "subtitle": "Welcome back! Please enter your credentials.",
+      "title": "Log in to your account"
     },
     "register": {
-      "title": "Create your account",
-      "subtitle": "Welcome! Please enter your credentials.",
       "already-account": "Already have an account?",
-      "sign-in": "Sign in"
+      "sign-in": "Sign in",
+      "subtitle": "Welcome! Please enter your credentials.",
+      "title": "Create your account"
     },
-    "forgot-password": {
-      "title": "Forgot password",
-      "subtitle": "Enter your email to reset your password",
-
-      "connection-page": "Connection page"
+    "settings-account": {
+      "title": "Account settings"
+    },
+    "settings": {
+      "title": "Parameters"
+    },
+    "unsupported-platform": {
+      "description": "We're working hard on a desktop version. For now, the application is only available on mobile devices.",
+      "here": "here",
+      "progress": "You can follow our progress",
+      "title": "This App Is Currently Mobile-Only"
+    }
+  },
+  "shared": {
+    "alerts": {
+      "add": "",
+      "create": "",
+      "duplicate": "",
+      "error": "An error has occurred.",
+      "errorCreds": "The identifiers are incorrect.",
+      "info": "",
+      "invalid": "",
+      "positive": "",
+      "remove": "",
+      "success": "",
+      "updated": "",
+      "warning": ""
+    },
+    "buttons": {
+      "add": "Add",
+      "connection": "Connection",
+      "next": "Next",
+      "register": "Registration",
+      "return": "Back",
+      "selectCrop": "Select a crop",
+      "send": "Send",
+      "submit": "Confirm"
+    },
+    "common": {
+      "crops": "Crops",
+      "location": "Location",
+      "name": "Name",
+      "sensor": "Sensor",
+      "sensors": "Sensors"
+    },
+    "crops": {
+      "commonName": "Common name",
+      "enterQuantity": "Enter quantity",
+      "noCropsAvailable": "No culture available.",
+      "plantingDate": "Planting date",
+      "quantity": "Quantity",
+      "scientificName": "Scientific name"
+    },
+    "dialog": {
+      "create": {
+        "crop": "Identifying a culture",
+        "sensor": "Add a sensor"
+      }
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "Enter your email"
+    },
+    "errors": {
+      "http": {
+        "0": "Unable to contact server",
+        "400": "Invalid data",
+        "401": "You must log in to access this resource",
+        "403": "You don't have the necessary permissions",
+        "404": "Resource not found",
+        "409": "This resource already exists",
+        "422": "Incorrect validation data",
+        "500": "Server error, please try again later"
+      }
+    },
+    "greenhouses": {
+      "step": {
+        "crops": "Crops",
+        "details": "Information",
+        "review": "Summary",
+        "sensors": "Sensors"
+      }
+    },
+    "nickname": {
+      "label": "Username",
+      "placeholder": "Enter your username"
+    },
+    "password": {
+      "confirm": "Confirm your password",
+      "forgot": "Forgot your password?",
+      "label": "Password"
+    },
+    "sensors": {
+      "name": "Name",
+      "sourceAddress": "Identifier"
     }
   }
 }

@@ -14,7 +14,8 @@
     "ly:add": "pnpm -F lychee add",
     "to:add": "dotnet add ./apps/tomato_backend package",
     "prepare": "husky",
-    "commit": "cz"
+    "commit": "cz",
+    "translate": "node scripts/translate.js"
   },
   "config": {
     "commitizen": {

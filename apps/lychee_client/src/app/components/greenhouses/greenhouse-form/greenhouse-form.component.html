@@ -1,15 +1,15 @@
 <tui-stepper [activeItemIndex]="step()">
   <button tuiStep type="button" [disabled]="true">
-    {{ "components.greenhouse-form.step.details" | translate }}
+    {{ "shared.greenhouses.step.details" | translate }}
   </button>
   <button tuiStep type="button" [disabled]="true">
-    {{ "components.greenhouse-form.step.crops" | translate }}
+    {{ "shared.greenhouses.step.crops" | translate }}
   </button>
   <button tuiStep type="button" [disabled]="true">
-    {{ "components.greenhouse-form.step.sensors" | translate }}
+    {{ "shared.greenhouses.step.sensors" | translate }}
   </button>
   <button tuiStep type="button" [disabled]="true">
-    {{ "components.greenhouse-form.step.review" | translate }}
+    {{ "shared.greenhouses.step.review" | translate }}
   </button>
 </tui-stepper>
 
@@ -19,14 +19,14 @@
       <form [formGroup]="step0">
         <tui-textfield>
           <label tuiLabel for="name">
-            {{ "components.greenhouse-form.label.name" | translate }}
+            {{ "shared.common.name" | translate }}
           </label>
           <input formControlName="name" tuiTextfield placeholder="Serre 1" />
         </tui-textfield>
 
         <footer class="form-footer">
           <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
-            {{ "components.ui.button.next" | translate }}
+            {{ "shared.buttons.next" | translate }}
           </button>
         </footer>
       </form>
@@ -104,10 +104,10 @@
 
         <footer class="form-footer">
           <button tuiButton appearance="primary" (click)="previous()">
-            {{ "components.ui.button.return" | translate }}
+            {{ "shared.buttons.return" | translate }}
           </button>
           <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
-            {{ "components.ui.button.next" | translate }}
+            {{ "shared.buttons.next" | translate }}
           </button>
         </footer>
       </form>
@@ -188,10 +188,10 @@
 
         <footer class="form-footer">
           <button tuiButton appearance="primary" (click)="previous()">
-            {{ "components.ui.button.return" | translate }}
+            {{ "shared.buttons.return" | translate }}
           </button>
           <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
-            {{ "components.ui.button.next" | translate }}
+            {{ "shared.buttons.next" | translate }}
           </button>
         </footer>
       </form>
@@ -258,7 +258,7 @@
       <footer class="form-footer">
         <button tuiButton appearance="secondary" (click)="previous()">Retour</button>
         <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="submitForm()">
-          {{ "components.ui.button.submit" | translate }}
+          {{ "shared.buttons.submit" | translate }}
         </button>
       </footer>
     </ng-container>

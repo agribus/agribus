@@ -1,13 +1,13 @@
 <form class="form-block" [formGroup]="form">
   <div class="form-input-container">
     <div class="input-container">
-      <label for="username" tuiLabel>{{ "components.register-form.nickname" | translate }}</label>
+      <label for="username" tuiLabel>{{ "shared.nickname.label" | translate }}</label>
       <tui-textfield>
         <input
           id="username"
           class="form-input"
           formControlName="username"
-          placeholder="{{ 'components.register-form.nickname-placeholder' | translate }}"
+          placeholder="{{ 'shared.nickname.placeholder' | translate }}"
           type="username"
           tuiTextfield />
       </tui-textfield>
@@ -16,13 +16,13 @@
     </div>
 
     <div class="input-container">
-      <label for="email" tuiLabel>{{ "components.register-form.email" | translate }}</label>
+      <label for="email" tuiLabel>{{ "shared.email.label" | translate }}</label>
       <tui-textfield>
         <input
           id="email"
           class="form-input"
           formControlName="email"
-          placeholder="{{ 'components.register-form.email-placeholder' | translate }}"
+          placeholder="{{ 'shared.email.placeholder' | translate }}"
           type="text"
           tuiTextfield />
       </tui-textfield>
@@ -31,7 +31,7 @@
     </div>
 
     <div class="input-container">
-      <label tuiLabel for="password">{{ "components.register-form.password" | translate }}</label>
+      <label tuiLabel for="password">{{ "shared.password.label" | translate }}</label>
       <tui-textfield>
         <input
           id="password"
@@ -47,7 +47,7 @@
 
     <div class="input-container">
       <label tuiLabel for="confirm-password">
-        {{ "components.register-form.confirm-password" | translate }}
+        {{ "shared.password.confirm" | translate }}
       </label>
       <tui-textfield>
         <input
@@ -64,7 +64,7 @@
     </div>
 
     <button class="button" tuiButton (click)="onSubmit($event)">
-      {{ "components.register-form.register" | translate }}
+      {{ "shared.buttons.register" | translate }}
     </button>
   </div>
 </form>
