@@ -3,6 +3,7 @@ using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
+using Agribus.Core.Ports.Spi.OpenMeteoContext;
 using NSubstitute;
 
 namespace Agribus.UnitTests.GreenhouseUsecase;
@@ -101,6 +102,8 @@ public class GreenhouseUsecaseTests
         var authContext = Substitute.For<IAuthService>();
         authContext.GetCurrentUserId().Returns(fakeUserId);
 
+        var geocodingApiService = Substitute.For<IGeocodingApiService>();
+
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
 
         var dto = new CreateGreenhouseDto
@@ -133,7 +136,11 @@ public class GreenhouseUsecaseTests
             .AddAsync(Arg.Any<Greenhouse>(), Arg.Any<CancellationToken>())
             .Returns(callInfo => callInfo.Arg<Greenhouse>());
 
-        var usecase = new CreateGreenhouseUsecase(greenhouseRepository);
+        geocodingApiService
+            .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
+            .Returns(("45.74846", "4.84671"));
+
+        var usecase = new CreateGreenhouseUsecase(greenhouseRepository, geocodingApiService);
 
         // When
         var result = await usecase.Handle(dto, fakeUserId, CancellationToken.None);
