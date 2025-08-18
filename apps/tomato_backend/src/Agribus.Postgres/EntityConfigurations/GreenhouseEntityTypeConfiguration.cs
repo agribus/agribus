@@ -21,6 +21,10 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
 
         greenhouseConfiguration.Property(g => g.City).IsRequired().HasColumnType("varchar(100)");
 
+        greenhouseConfiguration.Property(g => g.Latitude).IsRequired().HasColumnType("varchar(9)");
+
+        greenhouseConfiguration.Property(g => g.Longitude).IsRequired().HasColumnType("varchar(9)");
+
         greenhouseConfiguration
             .Property(g => g.UserId)
             .HasColumnType("varchar(32)")
