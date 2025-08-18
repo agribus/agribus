@@ -34,10 +34,8 @@ export class AuthService {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
       .pipe(
-        tap(response => {
-          if (response.success) {
-            this.isLoggedIn$.next(false);
-          }
+        tap(() => {
+          this.isLoggedIn$.next(false);
         })
       );
   }
