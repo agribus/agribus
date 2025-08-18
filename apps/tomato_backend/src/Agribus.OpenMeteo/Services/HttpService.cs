@@ -5,11 +5,12 @@ namespace Agribus.OpenMeteo.Services;
 
 public class HttpService : IHttpService
 {
-    private readonly HttpClient _httpClient;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public HttpService(HttpClient httpClient)
+    public HttpService(IHttpClientFactory httpClientFactory)
     {
-        _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
+        _httpClientFactory =
+            httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
     }
 
     public async Task<string> GetAsync(string url, Dictionary<string, string>? parameters = null)
@@ -19,9 +20,10 @@ public class HttpService : IHttpService
 
         try
         {
+            using var httpClient = _httpClientFactory.CreateClient();
             var urlWithParameters = BuildUrlWithParameters(url, parameters);
 
-            var response = await _httpClient.GetAsync(urlWithParameters);
+            var response = await httpClient.GetAsync(urlWithParameters);
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadAsStringAsync();

@@ -57,8 +57,8 @@ public class GeocodingApiServiceTests
         var result = await service.GetCoordinatesAsync(city, country);
 
         // Then
-        Assert.Equal(52.52437f, result.Item1, 5);
-        Assert.Equal(13.41053f, result.Item2, 5);
+        Assert.Equal("52.52437", result.Item1);
+        Assert.Equal("13.41053", result.Item2);
 
         await httpService
             .Received(1)

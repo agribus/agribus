@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Agribus.Core.Domain.AggregatesModels.OpenMeteoAggregates;
 
 public class ForecastHourly
@@ -11,6 +13,7 @@ public class ForecastHourly
     public float? Precipitation { get; set; }
 }
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum WeatherCode
 {
     ClearSky = 0,

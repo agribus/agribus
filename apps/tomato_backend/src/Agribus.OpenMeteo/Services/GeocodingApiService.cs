@@ -3,7 +3,7 @@ using Agribus.Core.Ports.Spi.OpenMeteoContext;
 
 namespace Agribus.OpenMeteo.Services;
 
-public class GeocodingApiService
+public class GeocodingApiService : IGeocodingApiService
 {
     private readonly IHttpService _httpService;
     private readonly string _baseUrl = "https://geocoding-api.open-meteo.com/v1/search";
@@ -15,7 +15,7 @@ public class GeocodingApiService
         _parameters.Add("count", "1");
     }
 
-    public async Task<(float, float)> GetCoordinatesAsync(string city, string country)
+    public async Task<(string, string)> GetCoordinatesAsync(string city, string country)
     {
         _parameters.Add("name", city);
         _parameters.Add("country", country);
@@ -28,8 +28,8 @@ public class GeocodingApiService
             throw new InvalidOperationException("No result data found in the response");
         }
 
-        var lat = resultsElement[0].GetProperty("latitude").GetSingle();
-        var lon = resultsElement[0].GetProperty("longitude").GetSingle();
+        var lat = resultsElement[0].GetProperty("latitude").GetRawText();
+        var lon = resultsElement[0].GetProperty("longitude").GetRawText();
 
         return (lat, lon);
     }
