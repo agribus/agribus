@@ -1,0 +1,20 @@
+@if (!isNativePlatform) {
+  @if (scannerEnabled) {
+    <button
+      iconStart="@tui.x"
+      tuiButtonClose
+      tuiIconButton
+      appearance="glass"
+      type="button"
+      class="scanner-close"
+      (click)="deactivateScanner()">
+      Close
+    </button>
+
+    <zxing-scanner
+      [formats]="allowedFormats"
+      [enable]="scannerEnabled"
+      [videoConstraints]="{ facingMode: 'environment', width: 640, height: 480 }"
+      (scanSuccess)="handleScanResult($event)"></zxing-scanner>
+  }
+}

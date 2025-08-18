@@ -57,6 +57,16 @@ namespace Agribus.Postgres.Migrations
                         .HasColumnName("last_modified")
                         .HasDefaultValueSql("NOW()");
 
+                    b.Property<string>("Latitude")
+                        .IsRequired()
+                        .HasColumnType("varchar(9)")
+                        .HasColumnName("latitude");
+
+                    b.Property<string>("Longitude")
+                        .IsRequired()
+                        .HasColumnType("varchar(9)")
+                        .HasColumnName("longitude");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("varchar(100)")

@@ -1,12 +1,13 @@
 @if (isMobile) {
   @if (headerType === HeaderType.Default) {
-    <tui-app-bar>
+    <tui-app-bar class="header">
       <img
         [ngSrc]="darkMode() ? '/assets/logo/logo-dark.svg' : '/assets/logo/logo-light.png'"
         tuiSlot="left"
         alt="Agribus"
         height="56"
-        width="56" />
+        width="56"
+        priority />
 
       <tui-textfield
         tuiSlot="center"
@@ -17,18 +18,26 @@
         [tuiTextfieldAppearance]="'none'"
         [style.width.rem]="maxLengthGreenhouse + 1.5">
         <input tuiSelect [(ngModel)]="value" (ngModelChange)="onGreenhouseChange($event)" />
-        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouseOptions" />
+        <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="greenhouses" />
       </tui-textfield>
 
       @if (showDevTools) {
         <button
           iconStart="@tui.square-code"
-          title="Notifications"
+          title="Dev Tools"
           tuiIconButton
           tuiSlot="right"
           type="button"
           (click)="openDevTools()"></button>
       }
+
+      <button
+        iconStart="@tui.house-plus"
+        title="Create Greenhouse"
+        tuiIconButton
+        tuiSlot="right"
+        type="button"
+        (click)="gotoPage('greenhouse/create')"></button>
 
       <button
         iconStart="@tui.bell"
@@ -39,7 +48,7 @@
         (click)="gotoPage('settings')"></button>
     </tui-app-bar>
   } @else if (headerType === HeaderType.Settings) {
-    <tui-app-bar>
+    <tui-app-bar class="header">
       <button title="Back" tuiAppBarBack tuiSlot="left" type="button" (click)="back()"></button>
 
       <h3 tuiSlot="center">
@@ -65,16 +74,14 @@
     </tui-app-bar>
   } @else if (headerType === HeaderType.None) {
     @if (showDevTools) {
-      <tui-app-bar>
-        @if (showDevTools) {
-          <button
-            iconStart="@tui.square-code"
-            title="Notifications"
-            tuiIconButton
-            tuiSlot="right"
-            type="button"
-            (click)="openDevTools()"></button>
-        }
+      <tui-app-bar class="header">
+        <button
+          iconStart="@tui.square-code"
+          title="Notifications"
+          tuiIconButton
+          tuiSlot="right"
+          type="button"
+          (click)="openDevTools()"></button>
       </tui-app-bar>
     }
   }

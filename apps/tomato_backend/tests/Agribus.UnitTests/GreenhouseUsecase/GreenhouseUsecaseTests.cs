@@ -6,6 +6,7 @@ using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using Agribus.Core.Ports.Spi.SensorContext;
 using Agribus.Postgres.Persistence.SensorContext;
+using Agribus.Core.Ports.Spi.OpenMeteoContext;
 using NSubstitute;
 
 namespace Agribus.UnitTests.GreenhouseUsecase;
@@ -104,6 +105,8 @@ public class GreenhouseUsecaseTests
         var authContext = Substitute.For<IAuthService>();
         authContext.GetCurrentUserId().Returns(fakeUserId);
 
+        var geocodingApiService = Substitute.For<IGeocodingApiService>();
+
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
 
         var dto = new CreateGreenhouseDto
@@ -136,7 +139,11 @@ public class GreenhouseUsecaseTests
             .AddAsync(Arg.Any<Greenhouse>(), Arg.Any<CancellationToken>())
             .Returns(callInfo => callInfo.Arg<Greenhouse>());
 
-        var usecase = new CreateGreenhouseUsecase(greenhouseRepository);
+        geocodingApiService
+            .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
+            .Returns(("45.74846", "4.84671"));
+
+        var usecase = new CreateGreenhouseUsecase(greenhouseRepository, geocodingApiService);
 
         // When
         var result = await usecase.Handle(dto, fakeUserId, CancellationToken.None);
@@ -194,11 +201,11 @@ public class GreenhouseUsecaseTests
         var dto = new UpdateGreenhouseDto
         {
             Name = "New Name",
-            City = "New City",
-            Country = "New Country",
+            City = "Paris",
+            Country = "France",
             Crops = [],
         };
-
+        var geocodingApiService = Substitute.For<IGeocodingApiService>();
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
         var sensorRepository = Substitute.For<ISensorRepository>();
         var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
@@ -212,11 +219,15 @@ public class GreenhouseUsecaseTests
                 Arg.Any<CancellationToken>()
             )
             .Returns(true);
+        geocodingApiService
+            .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
+            .Returns(("48.85341", "2.3488"));
 
         var usecase = new UpdateGreenhouseUsecase(
             greenhouseRepository,
             updateSensorUsecase,
-            sensorRepository
+            sensorRepository,
+            geocodingApiService
         );
 
         // When
