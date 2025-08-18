@@ -1,7 +1,13 @@
 .tiles {
   gap: 1rem;
-  grid-auto-rows: minmax(6.25rem, auto);
-  overflow: hidden;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 15rem;
+}
+
+.nested {
+  gap: 1rem;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-auto-rows: 5rem;
 }
 
 .tile::before {
@@ -17,6 +23,8 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
   transition: box-shadow 0.3s;
   height: 100%;
   padding: 4px;
@@ -32,13 +40,11 @@
 
 .handle {
   transition: opacity 0.3s;
-
   position: absolute;
   right: 0.75rem;
   top: 1rem;
   background: var(--tui-background-base);
   opacity: 0;
-  cursor: move;
 
   tui-tiles:not(._dragged) tui-tile:hover &,
   tui-tile._dragged & {
@@ -47,17 +53,36 @@
 }
 
 .title-container {
+  height: 50px;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 5px;
+}
+
+.title-nested-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
 }
 
 .title {
   font-weight: bold;
   font-size: 12px;
+  margin: 0;
 }
 
 .custom-icon {
   width: 15px;
+}
+
+.chart-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.axes {
+  width: 100%;
+  height: 100%;
+  color: #bc71c9;
 }

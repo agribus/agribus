@@ -1,21 +1,72 @@
-<h2>Latest measures</h2>
 <tui-tiles class="tiles" [debounce]="500" [(order)]="order">
-  @for (item of items; track index; let index = $index) {
-    <tui-tile class="tile" [height]="item.h" [style.order]="order.get(index)" [width]="item.w">
-      @if (item?.isChart) {
-      } @else {}
+  @for (section of sections; track $index) {
+    <tui-tile class="tile" tuiTileHandle [style.order]="order.get($index)">
       <div class="content">
         <div class="title-container">
-          @if (item?.icon) {
-            <tui-icon [icon]="item?.icon || 'null'" class="custom-icon"></tui-icon>
-          }
-          <h3 class="title">{{ item.content }}</h3>
-          @if (item?.isChart) {
-            i am a chart
-          }
+          <h3 class="title">{{ section.content }}</h3>
+          <!--          <tui-icon-->
+          <!--            icon="@tui.grip-vertical"-->
+          <!--            tuiTileHandle-->
+          <!--            class="handle"-->
+          <!--          />-->
         </div>
-        <tui-icon icon="@tui.grip-vertical" tuiTileHandle class="handle" />
+
+        <tui-tiles class="nested" [(order)]="section.order">
+          @for (child of section?.children; track $index) {
+            <tui-tile tuiTileHandle class="tile" [style.order]="section.order.get($index)">
+              <div class="content">
+                <div class="title-nested-container">
+                  @if (child?.icon) {
+                    <tui-icon [icon]="child?.icon || 'null'" class="custom-icon"></tui-icon>
+                  }
+                  <h3 class="title">{{ child.content }}</h3>
+                </div>
+                <div class="body">{{ child.data }}°C</div>
+              </div>
+            </tui-tile>
+          }
+        </tui-tiles>
       </div>
     </tui-tile>
   }
 </tui-tiles>
+
+<!--<h2>Latest measures</h2>-->
+<!--<tui-tiles class="tiles" [debounce]="500" [(order)]="order">-->
+<!--  @for (item of items; track index; let index = $index) {-->
+<!--    <tui-tile class="tile" [height]="item.h" [style.order]="order.get(index)" [width]="item.w">-->
+<!--      @if (item?.isChart) {-->
+<!--      } @else {-->
+<!--      }-->
+<!--      <div class="content">-->
+<!--        <div class="title-container">-->
+<!--          @if (item?.icon) {-->
+<!--            <tui-icon [icon]="item?.icon || 'null'" class="custom-icon"></tui-icon>-->
+<!--          }-->
+<!--          <h3 class="title">{{ item.content }}</h3>-->
+<!--        </div>-->
+<!--        @if (item?.isChart) {-->
+<!--          <div class="chart-container">-->
+
+<!--            <tui-axes-->
+<!--              class="axes"-->
+<!--              [horizontalLines]="3"-->
+<!--              [verticalLines]="4"-->
+<!--            >-->
+<!--              <tui-line-chart-->
+<!--                [filled]="true"-->
+<!--                [height]="200"-->
+<!--                [smoothingFactor]="50"-->
+<!--                [value]="value"-->
+<!--                [width]="400"-->
+<!--                [x]="0"-->
+<!--                [y]="0"-->
+<!--              />-->
+<!--            </tui-axes>-->
+<!--          </div>-->
+<!--        }-->
+<!--        <tui-icon icon="@tui.grip-vertical" tuiTileHandle class="handle" />-->
+<!--      </div>-->
+<!--    </tui-tile>-->
+<!--  }-->
+<!--</tui-tiles>-->
