@@ -46,11 +46,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
-      - "traefik.http.routers.influxdb.rule=Host(`${INFLUXDB_DOMAIN}`)"
-      - "traefik.http.routers.influxdb.entrypoints=websecure"
-      - "traefik.http.routers.influxdb.tls=true"
-      - "traefik.http.routers.influxdb.tls.certresolver=tmhttpchallenge"
-      - "traefik.http.services.influxdb.loadbalancer.server.port=8181"
+      - "traefik.http.routers.hot-potato.rule=Host(`${INFLUXDB_DOMAIN}`)"
+      - "traefik.http.routers.hot-potato.entrypoints=websecure"
+      - "traefik.http.routers.hot-potato.tls=true"
+      - "traefik.http.routers.hot-potato.tls.certresolver=tmhttpchallenge"
+      - "traefik.http.services.hot-potato.loadbalancer.server.port=8181"
 
   lychee:
     container_name: lychee-client
