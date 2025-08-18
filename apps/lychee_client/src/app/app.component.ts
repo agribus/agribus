@@ -17,17 +17,20 @@ export class AppComponent {
   protected readonly darkMode = inject(TUI_DARK_MODE);
 
   private readonly lang = localStorage.getItem("lang");
-  public authLoaded = false;
+  public authLoaded = true;
 
   constructor() {
-    this.authService.isUserAuthenticated().subscribe(() => {
-      this.authLoaded = true;
+    this.authService.isUserAuthenticated().subscribe({
+      next: () => {
+        this.authLoaded = true;
+      },
+      error: () => {
+        this.authLoaded = true;
+      },
     });
     this.translateService.addLangs(["fr", "en", "de"]);
-    if (!this.lang) {
-      this.lang = "fr";
-    }
-    this.translateService.setDefaultLang(this.lang);
-    this.translateService.use(this.lang);
+    const currentLang = this.lang || "fr";
+    this.translateService.setDefaultLang(currentLang);
+    this.translateService.use(currentLang);
   }
 }
