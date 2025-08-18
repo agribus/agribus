@@ -4,6 +4,7 @@ using Agribus.Application.Extensions;
 using Agribus.Clerk.Extensions;
 using Agribus.Core.Extensions;
 using Agribus.InfluxDB.Extensions;
+using Agribus.OpenMeteo.Extensions;
 using Agribus.Postgres.Extensions;
 using Scalar.AspNetCore;
 
@@ -16,7 +17,8 @@ builder
     .ConfigureInfluxDB(config)
     .AddClerk(config)
     .AddApplication()
-    .ConfigurePostgres(config);
+    .ConfigurePostgres(config)
+    .ConfigureOpenMeteo();
 
 var app = builder.Build();
 

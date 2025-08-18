@@ -4,7 +4,7 @@ using Agribus.Core.Ports.Spi.OpenMeteoContext;
 
 namespace Agribus.OpenMeteo.Services;
 
-public class ForecastService
+public class ForecastService : IForecastService
 {
     private readonly IHttpService _httpService;
     private readonly string _baseUrl = "https://api.open-meteo.com/v1/forecast";
