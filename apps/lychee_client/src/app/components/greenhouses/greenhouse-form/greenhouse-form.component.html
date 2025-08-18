@@ -56,7 +56,7 @@
         </div>
 
         @if (crops.length) {
-          <ul>
+          <ul class="container-list">
             @for (crop of crops; track $index) {
               <li>
                 <tui-swipe-actions [autoClose]="true">
@@ -103,7 +103,7 @@
           (cropSelected)="onCropSelected($event)"></app-crop-selector>
 
         <footer class="form-footer">
-          <button tuiButton appearance="primary" (click)="previous()">
+          <button tuiButton appearance="secondary" (click)="previous()">
             {{ "shared.buttons.return" | translate }}
           </button>
           <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
@@ -143,7 +143,7 @@
             Vous pouvez scanner le QR Code sur votre capteur ou saisir l'identifiant manuellement.
           </div>
         </div>
-        <ul>
+        <ul class="container-list">
           @for (sensor of sensors; track $index) {
             <li>
               <tui-swipe-actions [autoClose]="true">
@@ -178,7 +178,7 @@
           }
         </ul>
         @if (isScanning && isMobile) {
-          <app-scan-qr-code />
+          <app-scan-qr-code #scanQrCode (codeScanned)="handleScannedSensor($event)" />
         }
 
         <app-sensor-form
@@ -187,7 +187,7 @@
           (sensorSubmitted)="onSensorSaved($event)"></app-sensor-form>
 
         <footer class="form-footer">
-          <button tuiButton appearance="primary" (click)="previous()">
+          <button tuiButton appearance="secondary" (click)="previous()">
             {{ "shared.buttons.return" | translate }}
           </button>
           <button tuiButton appearance="primary" [disabled]="!isStepValid()" (click)="next()">
@@ -240,7 +240,7 @@
       }
 
       <h3>Sensors</h3>
-      <ul>
+      <ul class="container-list">
         @for (sensor of sensors; track $index) {
           <li>
             <tui-swipe-actions [autoClose]="true">

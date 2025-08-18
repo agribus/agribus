@@ -20,9 +20,11 @@
       "@directives/*": ["app/directives/*"],
       "@enums/*": ["app/enums/*"],
       "@guards/*": ["app/guards/*"],
+      "@interceptors/*": ["app/interceptors/*"],
       "@interfaces/*": ["app/interfaces/*"],
       "@pages/*": ["app/pages/*"],
       "@pipes/*": ["app/pipes/*"],
+      "@routes/*": ["app/routes/*"],
       "@services/*": ["app/services/*"],
       "@utils/*": ["app/utils/*"],
       "@environment/*": ["environments/*"]

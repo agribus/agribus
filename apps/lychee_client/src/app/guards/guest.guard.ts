@@ -1,19 +1,13 @@
-import { CanActivateFn, Router } from "@angular/router";
+import { CanActivateFn, CanMatchFn, Router } from "@angular/router";
 import { inject } from "@angular/core";
 import { AuthService } from "@services/auth/auth.service";
 import { map } from "rxjs";
 
-export const guestGuard: CanActivateFn = () => {
+export const guestGuard: CanActivateFn & CanMatchFn = () => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  return authService.isUserAuthenticated().pipe(
-    map(isAuth => {
-      if (isAuth) {
-        router.navigate(["/home"]);
-        return false;
-      }
-      return true;
-    })
-  );
+  return authService
+    .isUserAuthenticated()
+    .pipe(map(isAuth => (!isAuth ? true : router.createUrlTree(["/home"]))));
 };

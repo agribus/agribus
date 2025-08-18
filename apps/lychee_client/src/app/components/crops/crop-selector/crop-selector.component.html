@@ -14,7 +14,11 @@
               <label for="scientificName{{ $index }}" class="label">
                 {{ "shared.crops.scientificName" | translate }}
               </label>
-              <input tuiSelect [(ngModel)]="crop.scientificName" disabled />
+              <input
+                id="scientificName{{ $index }}"
+                tuiSelect
+                [(ngModel)]="crop.scientificName"
+                disabled />
             </tui-textfield>
           </div>
 
@@ -23,7 +27,7 @@
               <label for="commonName{{ $index }}" class="label">
                 {{ "shared.crops.commonName" | translate }}
               </label>
-              <input tuiSelect [(ngModel)]="crop.commonName" />
+              <input id="commonName{{ $index }}" tuiSelect [(ngModel)]="crop.commonName" />
               <tui-data-list-wrapper *tuiTextfieldDropdown new [items]="crop.commonNames" />
             </tui-textfield>
           </div>
@@ -34,7 +38,9 @@
           </label>
 
           <tui-textfield>
-            <label tuiLabel>{{ "shared.crops.enterQuantity" | translate }}</label>
+            <label tuiLabel for="quantity{{ $index }}">
+              {{ "shared.crops.enterQuantity" | translate }}
+            </label>
             <input tuiInputNumber [(ngModel)]="crop.quantity" [min]="0" [step]="1" />
           </tui-textfield>
 

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from "@angular/core";
+import { Component, DestroyRef, inject, Input, OnInit, signal } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import {
@@ -10,17 +10,17 @@ import {
 } from "@taiga-ui/core";
 import { TuiAppBar } from "@taiga-ui/layout";
 import { TuiChevron, TuiDataListWrapper, TuiSelect } from "@taiga-ui/kit";
-import { filter, map, of, switchMap } from "rxjs";
+import { filter, map } from "rxjs";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { PlatformService } from "@services/platform/platform.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
-import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { TranslatePipe } from "@ngx-translate/core";
 import { DevToolsService } from "@services/dev-tools/dev-tools.service";
 import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
-import { HeaderStateService } from "@services/header-state.service";
 import { NgOptimizedImage } from "@angular/common";
+import { AuthService } from "@services/auth/auth.service";
 
 @Component({
   selector: "app-header",
@@ -51,58 +51,44 @@ export class HeaderComponent implements OnInit {
   private readonly platformService = inject(PlatformService);
   private readonly greenhouseService = inject(GreenhouseService);
   private readonly devToolsService = inject(DevToolsService);
-  private readonly headerStateService = inject(HeaderStateService);
   private readonly destroyRef = inject(DestroyRef);
-  private readonly translateService = inject(TranslateService);
+  private readonly authService = inject(AuthService);
   protected readonly darkMode = inject(TUI_DARK_MODE);
 
   public readonly isMobile = this.platformService.isMobile();
-  public readonly greenhouses = this.greenhouseService.getGreenhouses();
+  public greenhouses!: Greenhouse[];
 
-  public value: Greenhouse | null = this.greenhouses[0];
-  public maxLengthGreenhouse = Math.max(...this.greenhouses.map(g => g.name.length));
+  public value!: Greenhouse | null;
+  public maxLengthGreenhouse!: number;
   public url: string = "/";
   public showDevTools = environment.devTools;
 
-  public headerType: HeaderType = HeaderType.Default;
+  @Input() headerType: HeaderType = HeaderType.None;
   public HeaderType = HeaderType;
 
-  private lastSelectedGreenhouse: Greenhouse | null = this.value;
-
   ngOnInit() {
+    this.updateHeader();
+
     this.router.events
       .pipe(
         filter(event => event instanceof NavigationEnd),
         map(() => this.getDeepestChild(this.activatedRoute)),
-        switchMap(route => of(route.snapshot.data)),
+        map(route => route.snapshot.data),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(data => {
-        this.headerType = data["headerType"] || HeaderType.Default;
-        this.url = this.router.url;
+      .subscribe(() => this.updateHeader());
+  }
 
-        this.headerStateService.headerType.set(this.headerType);
+  private updateHeader() {
+    this.url = this.router.url;
+    if (this.headerType === HeaderType.Default && this.authService.isLoggedIn()) {
+      this.greenhouseService.loadUserGreenhouses().subscribe(() => {
+        this.greenhouses = this.greenhouseService.greenhouses();
+        this.value = this.greenhouseService.selectedSerre();
+        this.maxLengthGreenhouse = Math.max(
+          ...this.greenhouseService.greenhouses().map(g => g.name.length)
+        );
       });
-  }
-
-  public get greenhouseOptions() {
-    return [
-      ...this.greenhouses,
-      {
-        id: "new",
-        name: this.translateService.instant("components.ui.header.new-greenhouse"),
-        special: true,
-      },
-    ];
-  }
-
-  public onGreenhouseChange(selected: Greenhouse) {
-    console.log(selected);
-    if ((selected as any).special) {
-      this.value = this.lastSelectedGreenhouse;
-      this.router.navigate(["/greenhouse/create"]);
-    } else {
-      this.lastSelectedGreenhouse = selected;
     }
   }
 
@@ -123,5 +109,9 @@ export class HeaderComponent implements OnInit {
 
   public openDevTools() {
     this.devToolsService.toggle();
+  }
+
+  public onGreenhouseChange(greenhouse: Greenhouse) {
+    this.greenhouseService.selectedSerre.set(greenhouse);
   }
 }

@@ -3,7 +3,7 @@ import { TuiIcon } from "@taiga-ui/core";
 import { TuiSegmented } from "@taiga-ui/kit";
 import { NavigationEnd, Router } from "@angular/router";
 import { filter } from "rxjs";
-import { Greenhouse } from "@interfaces/greenhouse.interface";
+import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 
 @Component({
   selector: "app-navbar",
@@ -13,6 +13,7 @@ import { Greenhouse } from "@interfaces/greenhouse.interface";
 })
 export class NavbarComponent implements OnInit {
   private readonly router = inject(Router);
+  private readonly greenhouseService = inject(GreenhouseService);
   protected activeIndex = 0;
 
   protected readonly greenhouseSettingsIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
@@ -53,13 +54,10 @@ export class NavbarComponent implements OnInit {
   }
 
   goToGreenhouse() {
-    // this.greenhouseService.getCurrentUserGreenhouses().subscribe(greenhouses => {
-    const greenhouses: Greenhouse[] = []; // TODO: Ajouter le service de greenhouse
-    if (greenhouses.length === 0) {
+    if (!this.greenhouseService.selectedSerre()) {
       this.router.navigate(["/greenhouse/create"]);
     } else {
-      this.router.navigate(["/greenhouse/settings", greenhouses[0].id]);
+      this.router.navigate(["/greenhouse/settings", this.greenhouseService.selectedSerre()?.id]);
     }
-    // });
   }
 }
