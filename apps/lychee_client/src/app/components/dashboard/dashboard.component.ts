@@ -11,34 +11,11 @@ import { TuiAxes, TuiLineChart } from "@taiga-ui/addon-charts";
   styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent {
-  protected sections = [
-    {
-      content: "Latest Measures",
-      order: new Map(),
-      children: [
-        { content: "Temperature", icon: "thermometer", data: "24" },
-        { content: "Humidity", icon: "droplet", data: "24" },
-        { content: "Pression atmosphérique", icon: "gauge", data: "24" },
-      ],
-    },
-    { content: "Latest Alerts", order: new Map() },
-    { content: "Charts", order: new Map() },
-  ];
-
   protected order = new Map();
-  // protected items = [
-  //   { w: 1, h: 1, isChart: false, content: "Temperature", icon: "thermometer" },
-  //   { w: 1, h: 1, isChart: false, content: "Humidity", icon: "droplet" },
-  //   { w: 1, h: 1, isChart: false, content: "Air pressure", icon: "gauge" },
-  //   { w: 1, h: 1, isChart: false, content: "Item 4" },
-  //   { w: 3, h: 1, isChart: false, content: "Item 5" },
-  //   { w: 1, h: 1, isChart: false, content: "Item 6" },
-  //   { w: 3, h: 2, isChart: true, content: "Item 7" },
-  //   { w: 1, h: 1, isChart: false, content: "Item 8" },
-  //   { w: 1, h: 1, isChart: false, content: "Item 9" },
-  // ];
-  //
-  // protected order = new Map();
+  protected measuresOrder = new Map();
+  protected sensorsOrder = new Map();
+  protected alertsOrder = new Map();
+  protected chartsOrder = new Map();
 
   protected readonly value: readonly TuiPoint[] = [
     [50, 50],
@@ -49,4 +26,37 @@ export class DashboardComponent {
     [300, 190],
     [350, 90],
   ];
+
+  protected measures = [
+    { content: "Temperature", icon: "thermometer", data: "24", lastUpdateDate: "08/07/2025 12:00" },
+    { content: "Humidity", icon: "droplet", data: "65", lastUpdateDate: "08/07/2025 08:45" },
+    { content: "Air Pressure", icon: "gauge", data: "1013", lastUpdateDate: "08/07/2025 11:11" },
+  ];
+
+  protected alerts = [
+    {
+      content: "Low Temperature Detected",
+      date: "08/07/2025",
+      description: "temperature below 20°C",
+    },
+    { content: "Low Humidity Detected", date: "08/07/2025", description: "humidity below 50%" },
+  ];
+
+  protected charts = [{ id: "chart1", data: this.value }];
+
+  protected sensors = [
+    { id: "1", temperature: "13,0", humidity: "53", air_pressure: "1025" },
+    { id: "2", temperature: "13,2", humidity: "54", air_pressure: "1025" },
+    { id: "3", temperature: "12,9", humidity: "51", air_pressure: "1025" },
+  ];
+
+  private units: Record<string, string> = {
+    temperature: "°C",
+    humidity: "%",
+    air_pressure: "hPa",
+  };
+
+  getUnit(type: keyof typeof this.units): string {
+    return this.units[type] || "";
+  }
 }

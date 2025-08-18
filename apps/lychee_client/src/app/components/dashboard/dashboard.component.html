@@ -1,72 +1,127 @@
 <tui-tiles class="tiles" [debounce]="500" [(order)]="order">
-  @for (section of sections; track $index) {
-    <tui-tile class="tile" tuiTileHandle [style.order]="order.get($index)">
-      <div class="content">
+  <!-- Measures -->
+  <tui-tile class="tile" [style.order]="order.get(0)">
+    <div class="content">
+      <div class="content-container">
         <div class="title-container">
-          <h3 class="title">{{ section.content }}</h3>
-          <!--          <tui-icon-->
-          <!--            icon="@tui.grip-vertical"-->
-          <!--            tuiTileHandle-->
-          <!--            class="handle"-->
-          <!--          />-->
+          <h3 class="title">Latest Measures</h3>
+          <tui-icon icon="@tui.grip-vertical" tuiTileHandle class="handle" />
         </div>
 
-        <tui-tiles class="nested" [(order)]="section.order">
-          @for (child of section?.children; track $index) {
-            <tui-tile tuiTileHandle class="tile" [style.order]="section.order.get($index)">
+        <tui-tiles class="measures-grid" [(order)]="measuresOrder">
+          @for (measure of measures; track $index) {
+            <tui-tile
+              tuiTileHandle
+              class="tile tile-children"
+              [style.order]="measuresOrder.get($index)">
               <div class="content">
                 <div class="title-nested-container">
-                  @if (child?.icon) {
-                    <tui-icon [icon]="child?.icon || 'null'" class="custom-icon"></tui-icon>
-                  }
-                  <h3 class="title">{{ child.content }}</h3>
+                  <tui-icon [icon]="measure.icon"></tui-icon>
+                  <h3 class="title">{{ measure.content }}</h3>
                 </div>
-                <div class="body">{{ child.data }}°C</div>
+                <div class="body">
+                  {{ measure.data }}
+                  {{
+                    getUnit(
+                      measure.content === "Temperature"
+                        ? "temperature"
+                        : measure.content === "Humidity"
+                          ? "humidity"
+                          : "air_pressure"
+                    )
+                  }}
+                </div>
+                <span class="lastUpdateText">Latest update: {{ measure.lastUpdateDate }}</span>
+              </div>
+            </tui-tile>
+          }
+        </tui-tiles>
+
+        <!-- Sensors -->
+        <tui-tiles class="sensors-grid" [(order)]="sensorsOrder">
+          @for (sensor of sensors; track $index) {
+            <tui-tile
+              tuiTileHandle
+              class="tile tile-children"
+              [style.order]="sensorsOrder.get($index)">
+              <div class="content">
+                <div class="body">
+                  {{ sensor.temperature }} {{ getUnit("temperature") }}
+                  <br />
+                  {{ sensor.humidity }} {{ getUnit("humidity") }}
+                  <br />
+                  {{ sensor.air_pressure }} {{ getUnit("air_pressure") }}
+                </div>
               </div>
             </tui-tile>
           }
         </tui-tiles>
       </div>
-    </tui-tile>
-  }
+    </div>
+  </tui-tile>
+
+  <!-- Alerts -->
+  <tui-tile class="tile" [style.order]="order.get(1)">
+    <div class="content">
+      <div class="content-container">
+        <div class="title-container">
+          <h3 class="title">Latest Alerts</h3>
+          <tui-icon icon="@tui.grip-vertical" tuiTileHandle class="handle" />
+        </div>
+
+        <tui-tiles class="alerts-grid" [(order)]="alertsOrder">
+          @for (alert of alerts; track $index) {
+            <tui-tile
+              tuiTileHandle
+              class="tile tile-children"
+              [style.order]="alertsOrder.get($index)">
+              <div class="content">
+                <div class="title-nested-container">
+                  <h3 class="title">{{ alert.content }}</h3>
+                </div>
+                <div class="body">
+                  <span class="lastUpdateText">{{ alert.date }}</span>
+                  <span class="lastUpdateText">{{ alert.description }}</span>
+                </div>
+              </div>
+            </tui-tile>
+          }
+        </tui-tiles>
+      </div>
+    </div>
+  </tui-tile>
+
+  <!-- Charts -->
+  <tui-tile class="tile" [style.order]="order.get(2)">
+    <div class="content">
+      <div class="content-container">
+        <div class="title-container">
+          <h3 class="title">Charts</h3>
+          <tui-icon icon="@tui.grip-vertical" tuiTileHandle class="handle" />
+        </div>
+
+        <tui-tiles class="charts-grid" [(order)]="chartsOrder">
+          @for (chart of charts; track $index) {
+            <tui-tile
+              tuiTileHandle
+              class="tile tile-children"
+              [style.order]="chartsOrder.get($index)">
+              <div class="content">
+                <tui-axes class="axes" [horizontalLines]="2" [verticalLines]="4">
+                  <tui-line-chart
+                    [filled]="true"
+                    [height]="200"
+                    [smoothingFactor]="50"
+                    [value]="chart.data"
+                    [width]="400"
+                    [x]="0"
+                    [y]="0" />
+                </tui-axes>
+              </div>
+            </tui-tile>
+          }
+        </tui-tiles>
+      </div>
+    </div>
+  </tui-tile>
 </tui-tiles>
-
-<!--<h2>Latest measures</h2>-->
-<!--<tui-tiles class="tiles" [debounce]="500" [(order)]="order">-->
-<!--  @for (item of items; track index; let index = $index) {-->
-<!--    <tui-tile class="tile" [height]="item.h" [style.order]="order.get(index)" [width]="item.w">-->
-<!--      @if (item?.isChart) {-->
-<!--      } @else {-->
-<!--      }-->
-<!--      <div class="content">-->
-<!--        <div class="title-container">-->
-<!--          @if (item?.icon) {-->
-<!--            <tui-icon [icon]="item?.icon || 'null'" class="custom-icon"></tui-icon>-->
-<!--          }-->
-<!--          <h3 class="title">{{ item.content }}</h3>-->
-<!--        </div>-->
-<!--        @if (item?.isChart) {-->
-<!--          <div class="chart-container">-->
-
-<!--            <tui-axes-->
-<!--              class="axes"-->
-<!--              [horizontalLines]="3"-->
-<!--              [verticalLines]="4"-->
-<!--            >-->
-<!--              <tui-line-chart-->
-<!--                [filled]="true"-->
-<!--                [height]="200"-->
-<!--                [smoothingFactor]="50"-->
-<!--                [value]="value"-->
-<!--                [width]="400"-->
-<!--                [x]="0"-->
-<!--                [y]="0"-->
-<!--              />-->
-<!--            </tui-axes>-->
-<!--          </div>-->
-<!--        }-->
-<!--        <tui-icon icon="@tui.grip-vertical" tuiTileHandle class="handle" />-->
-<!--      </div>-->
-<!--    </tui-tile>-->
-<!--  }-->
-<!--</tui-tiles>-->
