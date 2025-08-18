@@ -8,6 +8,8 @@ public class Greenhouse : BaseEntity
     public required string Name { get; set; }
     public required string Country { get; set; }
     public required string City { get; set; }
+    public string? Latitude { get; set; }
+    public string? Longitude { get; set; }
     public required string UserId { get; set; }
     public List<Crop> Crops { get; set; } = new();
 
@@ -23,6 +25,12 @@ public class Greenhouse : BaseEntity
                 return s;
             })
         );
+    }
+
+    public void AddCoordinate(string latitude, string longitude)
+    {
+        Latitude = latitude;
+        Longitude = longitude;
     }
 
     public void Update(UpdateGreenhouseDto dto)
