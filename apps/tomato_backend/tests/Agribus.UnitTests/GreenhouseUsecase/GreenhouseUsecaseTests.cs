@@ -1,8 +1,11 @@
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
+using Agribus.Core.Ports.Api.SensorUsecases;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
+using Agribus.Core.Ports.Spi.SensorContext;
+using Agribus.Postgres.Persistence.SensorContext;
 using NSubstitute;
 
 namespace Agribus.UnitTests.GreenhouseUsecase;
@@ -197,10 +200,11 @@ public class GreenhouseUsecaseTests
         };
 
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        var sensorRepository = Substitute.For<ISensorRepository>();
+        var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
         greenhouseRepository
             .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
             .Returns(originalGreenhouse);
-
         greenhouseRepository
             .UpdateAsync(
                 Arg.Any<Greenhouse>(),
@@ -209,7 +213,11 @@ public class GreenhouseUsecaseTests
             )
             .Returns(true);
 
-        var usecase = new UpdateGreenhouseUsecase(greenhouseRepository);
+        var usecase = new UpdateGreenhouseUsecase(
+            greenhouseRepository,
+            updateSensorUsecase,
+            sensorRepository
+        );
 
         // When
         var result = await usecase.Handle(
