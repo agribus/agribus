@@ -198,11 +198,11 @@ public class GreenhouseUsecaseTests
         var dto = new UpdateGreenhouseDto
         {
             Name = "New Name",
-            City = "New City",
-            Country = "New Country",
+            City = "Paris",
+            Country = "France",
             Crops = [],
         };
-
+        var geocodingApiService = Substitute.For<IGeocodingApiService>();
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
         greenhouseRepository
             .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
@@ -215,8 +215,11 @@ public class GreenhouseUsecaseTests
                 Arg.Any<CancellationToken>()
             )
             .Returns(true);
+        geocodingApiService
+            .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
+            .Returns(("48.85341", "2.3488"));
 
-        var usecase = new UpdateGreenhouseUsecase(greenhouseRepository);
+        var usecase = new UpdateGreenhouseUsecase(greenhouseRepository, geocodingApiService);
 
         // When
         var result = await usecase.Handle(
