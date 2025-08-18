@@ -123,6 +123,7 @@ public class GreenhouseUsecaseTests
                     ScientificName = "X",
                     Quantity = 2,
                     PlantingDate = DateTime.Now,
+                    ImageUrl = "imageUrl",
                 },
             ],
             Sensors = [],
@@ -157,7 +158,7 @@ public class GreenhouseUsecaseTests
             Name = "Test Greenhouse",
             City = "Paris",
             Country = "France",
-            Crops = new List<Crop>(),
+            Crops = [],
             UserId = fakeUserId,
         };
         greenhouseRepository
