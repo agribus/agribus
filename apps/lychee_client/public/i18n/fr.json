@@ -1,11 +1,4 @@
 {
-  "components": {
-    "ui": {
-      "header": {
-        "new-greenhouse": "➕ Ajouter une serre"
-      }
-    }
-  },
   "pages": {
     "forgot-password": {
       "connection-page": "Page de connexion",
@@ -23,6 +16,10 @@
       "register": "Inscrivez vous",
       "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
       "title": "Connexion à votre compte"
+    },
+    "not-found": {
+      "home": "",
+      "message": ""
     },
     "register": {
       "already-account": "Vous avez déjà un compte ?",
@@ -49,12 +46,14 @@
       "create": "",
       "duplicate": "",
       "error": "Une erreur est survenue.",
+      "errorApi": "",
       "errorCreds": "Les identifiants sont incorrects.",
       "info": "",
       "invalid": "",
       "positive": "",
       "remove": "",
       "success": "",
+      "update": "",
       "updated": "",
       "warning": ""
     },
@@ -94,6 +93,9 @@
       "placeholder": "Entrer votre email"
     },
     "errors": {
+      "generic": {
+        "unknown": "Une erreur est survenue."
+      },
       "http": {
         "0": "Impossible de contacter le serveur",
         "400": "Données invalides",

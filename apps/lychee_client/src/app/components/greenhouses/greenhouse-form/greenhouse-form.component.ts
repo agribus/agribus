@@ -1,4 +1,13 @@
-import { ChangeDetectorRef, Component, inject, Input, signal, ViewChild } from "@angular/core";
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Input,
+  OnChanges,
+  signal,
+  SimpleChanges,
+  ViewChild,
+} from "@angular/core";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiAvatar, TuiStepper } from "@taiga-ui/kit";
 import {
@@ -21,7 +30,7 @@ import { TuiCard, TuiCardLarge, TuiCell } from "@taiga-ui/layout";
 import { TuiSwipeActions, TuiSwipeActionsAutoClose } from "@taiga-ui/addon-mobile";
 import { Sensor } from "@interfaces/sensor.interface";
 import { Crop } from "@interfaces/crop.interface";
-import { ScanQrCodeComponent } from "@components/ui/mobile/scan-qr-code/scan-qr-code.component";
+import { ScanQrCodeComponent } from "@components/scan-qr-code/scan-qr-code.component";
 import { CropFormComponent } from "@components/crops/crop-form/crop-form.component";
 import { CropSelectorComponent } from "@components/crops/crop-selector/crop-selector.component";
 import { PlatformService } from "@services/platform/platform.service";
@@ -61,7 +70,7 @@ import { Greenhouse } from "@interfaces/greenhouse.interface";
   templateUrl: "./greenhouse-form.component.html",
   styleUrl: "./greenhouse-form.component.scss",
 })
-export class GreenhouseFormComponent {
+export class GreenhouseFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
   private translateService = inject(TranslateService);
   private readonly alerts = inject(TuiAlertService);
@@ -74,7 +83,7 @@ export class GreenhouseFormComponent {
 
   protected readonly greenhouseForm: FormGroup;
 
-  public sensors: Sensor[] = [{ id: 1, sourceAddress: "1234567890", name: "Sensor 1" }];
+  public sensors: Sensor[] = [];
   public editingSensor: Sensor | null = null;
 
   public crops: Crop[] = [];
@@ -83,19 +92,21 @@ export class GreenhouseFormComponent {
   public isScanning = false;
   public isMobile = false;
 
-  @Input() greenhouse?: Greenhouse;
+  @Input() greenhouse?: Greenhouse | null;
   @Input() isEditMode = false;
 
   @ViewChild("sensorForm") sensorForm?: { open: () => void };
   @ViewChild("cropForm") cropForm?: { open: () => void };
   @ViewChild("cropSelector") cropSelector?: { open: () => void };
 
+  @ViewChild(ScanQrCodeComponent) scanQrCode?: ScanQrCodeComponent;
+
   constructor() {
     this.isMobile = this.platformService.isMobile();
 
     this.greenhouseForm = this.fb.group({
       step0: this.fb.group({
-        name: ["", Validators.required],
+        name: [this.greenhouse?.name, Validators.required],
         city: ["Paris", Validators.required],
         country: ["France", Validators.required],
       }),
@@ -106,6 +117,24 @@ export class GreenhouseFormComponent {
         sensor: [[], Validators.required],
       }),
     });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes["greenhouse"] && this.greenhouse) {
+      this.greenhouseForm.patchValue({
+        step0: {
+          name: this.greenhouse.name,
+          city: this.greenhouse.city,
+          country: this.greenhouse.country,
+        },
+        step1: {
+          crops: this.greenhouse.crops || [],
+        },
+        step2: {
+          sensor: this.greenhouse.sensors || [],
+        },
+      });
+    }
   }
 
   /* ############################ Navigation ############################ */
@@ -152,14 +181,47 @@ export class GreenhouseFormComponent {
     this.step2.get("sensor")?.setValue(this.sensors);
 
     if (this.greenhouseForm.valid) {
-      console.log("✅ Formulaire valide", this.greenhouseForm.value);
-      this.alerts
-        .open(this.translateService.instant("shared.alerts.create"), {
-          appearance: "positive",
-          label: this.translateService.instant("shared.alerts.positive"),
-        })
-        .subscribe();
-      this.router.navigate(["/home"]);
+      const step0 = this.greenhouseForm.get("step0")?.value;
+      const step1 = this.greenhouseForm.get("step1")?.value;
+      const step2 = this.greenhouseForm.get("step2")?.value;
+
+      const name = step0.name;
+      const city = step0.city;
+      const country = step0.country;
+      const crops = step1.crops.map((crop: Crop) => ({
+        commonName: crop.commonName,
+        scientificName: crop.scientificName,
+        date_plantation: crop.date_plantation,
+        quantity: crop.quantity,
+        imageUrl: crop.imageUrl,
+      }));
+      const sensors = step2.sensor;
+
+      if (this.isEditMode && this.greenhouse?.id) {
+        this.greenhouseService
+          .updateGreenhouse(this.greenhouse.id, name, city, country, crops, sensors)
+          .subscribe(() => {
+            this.alerts
+              .open(this.translateService.instant("shared.alerts.update"), {
+                appearance: "info",
+                label: this.translateService.instant("shared.alerts.info"),
+              })
+              .subscribe();
+            this.router.navigate(["/home"]);
+          });
+      } else {
+        this.greenhouseService
+          .createGreenhouse(name, city, country, crops, sensors)
+          .subscribe(() => {
+            this.alerts
+              .open(this.translateService.instant("shared.alerts.create"), {
+                appearance: "positive",
+                label: this.translateService.instant("shared.alerts.positive"),
+              })
+              .subscribe();
+            this.router.navigate(["/home"]);
+          });
+      }
       return;
     }
 
@@ -258,12 +320,25 @@ export class GreenhouseFormComponent {
   /* ############################## SENSORS ############################## */
   public openScanQrCode() {
     this.isScanning = true;
+    this.cdr.detectChanges();
+    this.scanQrCode?.activateScanner();
   }
 
   public openSensorForm(sensor: Sensor | null): void {
     this.editingSensor = sensor;
     this.cdr.detectChanges();
     this.sensorForm?.open();
+  }
+
+  public handleScannedSensor(result: string) {
+    const sensor: Sensor = {
+      id: this.generateSensorId(),
+      name: this.getDefaultSensorName(),
+      sourceAddress: result,
+    };
+    this.upsertSensor(sensor);
+
+    this.isScanning = false;
   }
 
   public upsertSensor(sensor: Sensor): void {
@@ -297,28 +372,13 @@ export class GreenhouseFormComponent {
         name: sensor.name || this.getDefaultSensorName(),
         sourceAddress: sensor.sourceAddress,
       };
-
       this.sensors.push(newSensor);
-
-      this.alerts
-        .open(this.translateService.instant("shared.alerts.add"), {
-          appearance: "success",
-          label: this.translateService.instant("shared.alerts.success"),
-        })
-        .subscribe();
     }
   }
 
   public removeSensor(index: number): void {
     const sensor = this.sensors[index];
     if (!sensor) return;
-
-    this.alerts
-      .open(this.translateService.instant("shared.alerts.remove") + sensor.name, {
-        appearance: "info",
-        label: this.translateService.instant("shared.alerts.info"),
-      })
-      .subscribe();
 
     this.sensors.splice(index, 1);
   }
