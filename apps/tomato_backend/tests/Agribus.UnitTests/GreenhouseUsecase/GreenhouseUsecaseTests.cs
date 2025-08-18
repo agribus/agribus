@@ -8,6 +8,8 @@ using Agribus.Core.Ports.Spi.SensorContext;
 using Agribus.Postgres.Persistence.SensorContext;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
 using Agribus.Core.Ports.Spi.TrefleContext;
+using Agribus.Core.Ports.Spi.SensorContext;
+using Agribus.Postgres.Persistence.SensorContext;
 using NSubstitute;
 
 namespace Agribus.UnitTests.GreenhouseUsecase;
@@ -238,6 +240,8 @@ public class GreenhouseUsecaseTests
         var sensorRepository = Substitute.For<ISensorRepository>();
         var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
         var trefleService = Substitute.For<ITrefleService>();
+        var sensorRepository = Substitute.For<ISensorRepository>();
+        var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
         greenhouseRepository
             .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
             .Returns(originalGreenhouse);
