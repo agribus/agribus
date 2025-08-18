@@ -3,6 +3,7 @@ using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
+using Agribus.Core.Ports.Spi.OpenMeteoContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Agribus.Api.Controllers;
@@ -14,6 +15,7 @@ public class GreenhousesController(
     IUpdateGreenhouseUsecase updateGreenhouseUsecase,
     IGetUserGreenhousesUsecase getUserGreenhousesUsecase,
     IGetGreenhouseByIdUsecase getGreenhouseByIdUsecase,
+    IForecastService forecastService,
     IAuthService authService
 ) : ControllerBase
 {
@@ -29,6 +31,27 @@ public class GreenhousesController(
         var result = await getGreenhouseByIdUsecase.Handle(id, userId, cancellationToken);
 
         return result is null ? NotFound() : Ok(result);
+    }
+
+    [HttpGet(Endpoints.Greenhouses.GetGreenhouseForecastById)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGreenhouseForecastById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var userId = authService.GetCurrentUserId();
+        var greenhouse = await getGreenhouseByIdUsecase.Handle(id, userId, cancellationToken);
+        if (greenhouse is null)
+            return NotFound();
+
+        var forecast = await forecastService.GetForecastAsync(
+            greenhouse.Latitude!,
+            greenhouse.Longitude!
+        );
+
+        return Ok(forecast);
     }
 
     [HttpGet(Endpoints.Greenhouses.GetUserGreenhouses)]
