@@ -82,23 +82,14 @@ export class HeaderComponent implements OnInit {
   private updateHeader() {
     this.url = this.router.url;
     if (this.headerType === HeaderType.Default && this.authService.isLoggedIn()) {
-      this.loadGreenhouses();
-    }
-  }
-
-  private loadGreenhouses() {
-    this.greenhouseService.loadUserGreenhouses().subscribe({
-      next: () => {
+      this.greenhouseService.loadUserGreenhouses().subscribe(() => {
         this.greenhouses = this.greenhouseService.greenhouses();
         this.value = this.greenhouseService.selectedSerre();
         this.maxLengthGreenhouse = Math.max(
           ...this.greenhouseService.greenhouses().map(g => g.name.length)
         );
-      },
-      error: err => {
-        console.error("Erreur lors du chargement des serres", err);
-      },
-    });
+      });
+    }
   }
 
   private getDeepestChild(route: ActivatedRoute): ActivatedRoute {
