@@ -28,7 +28,7 @@ export class ScanQrCodeComponent {
       BarcodeScanner.scan()
         .then(({ barcodes }) => {
           if (barcodes.length > 0 && barcodes[0].rawValue) {
-            this.handleDetectedCode(barcodes[0].rawValue);
+            this.codeScanned.emit(barcodes[0].rawValue);
           }
         })
         .catch(err => console.error(err));
@@ -36,12 +36,8 @@ export class ScanQrCodeComponent {
   }
 
   public handleScanResult(result: string) {
-    this.handleDetectedCode(result);
-    this.scannerEnabled = false;
-  }
-
-  public handleDetectedCode(result: string) {
     this.codeScanned.emit(result);
+    this.scannerEnabled = false;
   }
 
   public deactivateScanner() {
