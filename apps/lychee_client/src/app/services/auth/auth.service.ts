@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { AuthLogin, AuthRegister, AuthResponse } from "@interfaces/auth.interface";
 import { HttpClient } from "@angular/common/http";
-import { BehaviorSubject, map, Observable, of, tap } from "rxjs";
+import { BehaviorSubject, filter, map, Observable, of, shareReplay, take, tap } from "rxjs";
 import { environment } from "@environment/environment";
 
 @Injectable({
@@ -11,6 +11,7 @@ export class AuthService {
   private http = inject(HttpClient);
 
   private isLoggedIn$ = new BehaviorSubject<boolean | null>(null);
+  private authCheckInProgress = false;
 
   public sendLoginRequest(credentials: AuthLogin): Observable<AuthResponse> {
     return this.http
@@ -45,11 +46,24 @@ export class AuthService {
       return of(this.isLoggedIn$.value);
     }
 
+    if (this.authCheckInProgress) {
+      return this.isLoggedIn$.pipe(
+        filter(value => value !== null),
+        take(1)
+      );
+    }
+
+    this.authCheckInProgress = true;
+
     return this.http
       .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, { withCredentials: true })
       .pipe(
-        tap(response => this.isLoggedIn$.next(response.message)),
-        map(response => response.message)
+        tap(response => {
+          this.isLoggedIn$.next(response.message);
+          this.authCheckInProgress = false;
+        }),
+        map(response => response.message),
+        shareReplay(1)
       );
   }
 
