@@ -102,11 +102,37 @@ services:
     networks:
       - agribus-network
 
+  strawberry:
+    image: 'minio/minio:latest'
+    container_name: strawberry-bucket
+    restart: unless-stopped
+    ports:
+      - '9999:9000'
+      - '8999:8900'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - 'minio_data:/data/minio'
+    command: 'minio server /data/minio --console-address ":8900"'
+    healthcheck:
+      test: >
+        sh -c "curl -sSf http://localhost:9000/minio/health/live || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agribus-network
+
 volumes:
   postgres_data:
     name: agribus-cold-potato-data
   influxdb_data:
     name: agribus-hot-potato-data
+  minio_data:
+    name: agribus-strawberry-data
+    driver: local
+
 
 networks:
   agribus-network:
