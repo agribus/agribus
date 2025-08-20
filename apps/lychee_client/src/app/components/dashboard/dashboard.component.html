@@ -1,12 +1,47 @@
 <h2>Latest Measures</h2>
 
-<div class="container">
-  @for (m of metrics; track m.id) {
+<div class="latest-measures-container">
+  <div class="weather-container">
+    @for (metric of metrics; track metric.id) {
+      <div class="card" tuiAppearance="neutral" tuiCardMedium>
+        <tui-avatar [src]="metric.icon" class="avatar" [ngClass]="metric.color" size="m" />
+        <h2 tuiTitle>
+          <span class="title">{{ metric.label }}</span>
+          {{ metric.value }} {{ getUnit(metric.type) }}
+          <span tuiSubtitle class="latest-update">latest update : {{ metric.last_update }}</span>
+        </h2>
+      </div>
+    }
+  </div>
+
+  <div class="sensor-container">
     <div class="card" tuiAppearance="neutral" tuiCardMedium>
-      <tui-avatar [src]="m.icon" class="avatar" [ngClass]="m.color" size="m" />
+      <h2 tuiTitle>Sensor 1</h2>
+    </div>
+    <div class="card" tuiAppearance="neutral" tuiCardMedium>
+      <h2 tuiTitle>Sensor 2</h2>
+    </div>
+    <div class="card" tuiAppearance="neutral" tuiCardMedium>
+      <h2 tuiTitle>Sensor 3</h2>
+    </div>
+  </div>
+</div>
+
+<h2>Latest Alerts</h2>
+
+<div class="alerts-container">
+  @for (alert of alerts; track alert.id) {
+    <div class="card" tuiAppearance="neutral" tuiCardMedium>
+      <tui-badge [appearance]="badgeAppearance[alert.type]" tuiStatus>
+        {{ badgeLabel[alert.type] }}
+      </tui-badge>
+
       <h2 tuiTitle>
-        {{ m.value }} {{ getUnit(m.type) }}
-        <span tuiSubtitle class="latest-update">latest update : {{ m.updated }}</span>
+        {{ alert.title }}
+        <span tuiSubtitle class="latest-update">{{ alert.last_update }}</span>
+        @if (alert.description) {
+          <span tuiSubtitle class="informative-alert">{{ alert.description }}</span>
+        }
       </h2>
     </div>
   }
