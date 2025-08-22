@@ -18,6 +18,7 @@ export class ChartDashboard implements OnChanges {
   @Input() range: TuiDayRange | null = null;
   @Input() yMin = 0;
   @Input() yMax = 100;
+  @Input() horizontalLines = 4;
 
   private readonly months$ = inject(TUI_MONTHS);
 
@@ -53,6 +54,14 @@ export class ChartDashboard implements OnChanges {
 
   get height(): number {
     return Math.max(this.yMax - this.yMin, 1);
+  }
+
+  get labelsY(): ReadonlyArray<string> {
+    const steps = Math.max(this.horizontalLines, 0);
+    const labels = Array<string>(steps + 1).fill("");
+    labels[0] = this.yToLabel(this.yMin);
+    labels[steps] = this.yToLabel(this.yMax);
+    return labels;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
