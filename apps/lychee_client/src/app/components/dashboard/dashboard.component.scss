@@ -3,46 +3,64 @@
   flex-direction: column;
   gap: 1rem;
 }
+
 .weather-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
+
 .sensor-container {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
+
 .alerts-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
+
 .card {
   width: auto;
-  background-color: white;
+  background-color: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
+
 .card h2 {
-  color: #065132;
+  color: var(--tui-text-action);
 }
+
 .card span.latest-update[tuiSubtitle] {
-  color: #065132;
+  color: var(--tui-text-action);
   font-size: xx-small;
 }
+
 .card span.informative-alert[tuiSubtitle] {
-  color: #065132;
+  color: var(--tui-text-action);
   font-size: smaller;
 }
+
 .thermometer {
   background: #ff7043;
   color: #fff;
 }
+
 .droplet {
   background: #26c6da;
   color: #fff;
 }
+
 .gauge {
   background: #546e7a;
   color: #fff;
+}
+
+.charts-container {
+  margin-bottom: 16rem;
+}
+
+.calendar-button {
+  border-radius: 100%;
 }

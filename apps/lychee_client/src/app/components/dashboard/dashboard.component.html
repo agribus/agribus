@@ -46,3 +46,39 @@
     </div>
   }
 </div>
+
+<h2>Charts</h2>
+<div class="charts-container">
+  <button
+    class="calendar-button"
+    appearance="secondary"
+    iconStart="@tui.calendar"
+    tuiIconButton
+    type="button"
+    (click)="onClick()"></button>
+  <span>{{ date$ | async }}</span>
+
+  <app-chart-dashboard
+    title="Temperature"
+    [data]="tempData"
+    [range]="selectedRange"
+    unit="°C"
+    [yMin]="0"
+    [yMax]="50"></app-chart-dashboard>
+
+  <app-chart-dashboard
+    title="Humidity"
+    [data]="humidityData"
+    [range]="selectedRange"
+    unit="%"
+    [yMin]="0"
+    [yMax]="100"></app-chart-dashboard>
+
+  <app-chart-dashboard
+    title="Air pressure"
+    [data]="pressureData"
+    [range]="selectedRange"
+    unit="hPa"
+    [yMin]="950"
+    [yMax]="1050"></app-chart-dashboard>
+</div>

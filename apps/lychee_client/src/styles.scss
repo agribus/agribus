@@ -21,11 +21,3 @@
     --tui-background-accent-1: #065132;
   }
 }
-
-html,
-body,
-*:not(input):not(textarea):not([contenteditable="true"]) {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-touch-callout: none;
-}
