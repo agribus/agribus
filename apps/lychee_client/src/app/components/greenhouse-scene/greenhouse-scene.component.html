@@ -1,1 +1,8 @@
-<div #greenhouseCanva class="canvas-container"></div>
+<div class="scene-container">
+  @if (isInsideView) {
+    <button tuiButton appearance="secondary" (click)="onReturnToDefault()">
+      {{ "shared.buttons.return" | translate }}
+    </button>
+  }
+  <div #greenhouseCanva class="canvas-container"></div>
+</div>
