@@ -1,3 +1,7 @@
+* {
+  overflow: hidden;
+}
+
 .latest-measures-container {
   display: flex;
   flex-direction: column;
@@ -16,6 +20,11 @@
   gap: 1rem;
 }
 
+.sensor-metrics {
+  display: flex;
+  flex-direction: column;
+}
+
 .alerts-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -24,8 +33,9 @@
 
 .card {
   width: auto;
-  background-color: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 12px 24px rgba(0, 0, 0, 0.12),
+    0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
 .card h2 {
@@ -40,25 +50,6 @@
 .card span.informative-alert[tuiSubtitle] {
   color: var(--tui-text-action);
   font-size: smaller;
-}
-
-.thermometer {
-  background: #ff7043;
-  color: #fff;
-}
-
-.droplet {
-  background: #26c6da;
-  color: #fff;
-}
-
-.gauge {
-  background: #546e7a;
-  color: #fff;
-}
-
-.charts-container {
-  margin-bottom: 16rem;
 }
 
 .calendar-button {

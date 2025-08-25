@@ -1,18 +1,24 @@
 import { Component, inject, Injector, INJECTOR } from "@angular/core";
-import { AsyncPipe, NgClass } from "@angular/common";
+import { AsyncPipe } from "@angular/common";
 import { FormsModule, FormControl } from "@angular/forms";
 import { combineLatest, map, Observable } from "rxjs";
 
 import { TuiCard } from "@taiga-ui/layout";
-import { TUI_MONTHS, TuiAppearance, TuiButton, TuiDialogService, TuiTitle } from "@taiga-ui/core";
-import { TUI_CALENDAR_DATE_STREAM, TuiAvatar, TuiBadge, TuiStatus } from "@taiga-ui/kit";
+import {
+  TUI_MONTHS,
+  TuiAppearance,
+  TuiButton,
+  TuiDialogService,
+  TuiIcon,
+  TuiTitle,
+} from "@taiga-ui/core";
+import { TUI_CALENDAR_DATE_STREAM, TuiBadge, TuiStatus } from "@taiga-ui/kit";
 import { TuiMobileCalendarDropdown } from "@taiga-ui/addon-mobile";
 import { tuiControlValue, TuiDay, TuiDayRange } from "@taiga-ui/cdk";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { ChartDashboard } from "../../chart-dashboard/chart-dashboard";
 
 type MetricType = "temperature" | "humidity" | "air_pressure";
-type MetricColor = "thermometer" | "droplet" | "gauge";
 type MetricIcon = "@tui.thermometer" | "@tui.droplet" | "@tui.gauge";
 
 interface Metric {
@@ -22,7 +28,15 @@ interface Metric {
   value: number;
   last_update: string;
   icon: MetricIcon;
-  color: MetricColor;
+}
+
+interface Sensor {
+  id: number;
+  name: string;
+  last_update: string;
+  temperature: number;
+  humidity: number;
+  air_pressure: number;
 }
 
 type AlertType = "success" | "warning" | "error" | "info";
@@ -41,9 +55,7 @@ interface Alert {
   imports: [
     TuiAppearance,
     TuiCard,
-    TuiAvatar,
     TuiTitle,
-    NgClass,
     TuiBadge,
     TuiStatus,
     TuiButton,
@@ -51,6 +63,7 @@ interface Alert {
     AsyncPipe,
     ChartDashboard,
     ChartDashboard,
+    TuiIcon,
   ],
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.scss"],
@@ -65,7 +78,6 @@ export class DashboardComponent {
       value: 18,
       last_update: "08/07/2025 12:00",
       icon: "@tui.thermometer",
-      color: "thermometer",
     },
     {
       id: 2,
@@ -74,7 +86,6 @@ export class DashboardComponent {
       value: 54,
       last_update: "08/07/2025 08:45",
       icon: "@tui.droplet",
-      color: "droplet",
     },
     {
       id: 3,
@@ -83,7 +94,6 @@ export class DashboardComponent {
       value: 1013,
       last_update: "08/07/2025 11:26",
       icon: "@tui.gauge",
-      color: "gauge",
     },
   ];
 
@@ -92,9 +102,38 @@ export class DashboardComponent {
     humidity: "%",
     air_pressure: "hPa",
   };
+
   getUnit(type: MetricType): string {
     return this.units[type];
   }
+
+  // Sensor section
+  sensors: Sensor[] = [
+    {
+      id: 1,
+      name: "Sensor 1",
+      last_update: "08/07/2025 12:10",
+      temperature: 26.4,
+      humidity: 41,
+      air_pressure: 1016,
+    },
+    {
+      id: 2,
+      name: "Sensor 2",
+      last_update: "08/07/2025 12:07",
+      temperature: 18.9,
+      humidity: 67,
+      air_pressure: 1003,
+    },
+    {
+      id: 3,
+      name: "Sensor 3",
+      last_update: "08/07/2025 11:59",
+      temperature: 30.1,
+      humidity: 52,
+      air_pressure: 1022,
+    },
+  ];
 
   // Alerts section
   alerts: Alert[] = [
@@ -126,6 +165,7 @@ export class DashboardComponent {
   private readonly months$ = inject(TUI_MONTHS);
 
   private readonly control = new FormControl<TuiDayRange | null>(null);
+
   get selectedRange(): TuiDayRange | null {
     return this.control.value;
   }
@@ -152,7 +192,7 @@ export class DashboardComponent {
     let v = 55;
     for (let i = 0; i < this.DAYS; i++) {
       const d = this.start.append({ day: i });
-      v += this.rand(-20, 20);
+      v += this.random(-20, 20);
       if (i >= 35 && i <= 38) v -= 25;
       if (i >= 90 && i <= 95) v += 30;
       v = this.clamp(v, 0, 100);
@@ -165,7 +205,7 @@ export class DashboardComponent {
     const arr: Array<[TuiDay, number]> = [];
     for (let i = 0; i < this.DAYS; i++) {
       const d = this.start.append({ day: i });
-      let v = 1015 + 8 * Math.sin(i / 12) + this.rand(-3, 3);
+      let v = 1015 + 8 * Math.sin(i / 12) + this.random(-3, 3);
       if (i >= 40 && i <= 45) v -= 35;
       if (i >= 100 && i <= 104) v += 18;
       v = this.clamp(v, 950, 1050);
@@ -209,7 +249,8 @@ export class DashboardComponent {
   private clamp(n: number, min: number, max: number): number {
     return Math.min(max, Math.max(min, n));
   }
-  private rand(min: number, max: number): number {
+
+  private random(min: number, max: number): number {
     return min + Math.random() * (max - min);
   }
 }
