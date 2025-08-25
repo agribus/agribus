@@ -36,10 +36,12 @@ public class SensorsController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> EditSensor(
         [FromRoute] Guid id,
-        [FromBody] UpdateSensorDto dto,
+        [FromBody] UpdateSensorDto? dto,
         CancellationToken cancellationToken = default
     )
     {
+        if (dto is null) return BadRequest();
+        
         var userId = authService.GetCurrentUserId();
         var updated = await updateSensorUsecase.Handle(id, userId, dto, cancellationToken);
 

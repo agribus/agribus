@@ -9,3 +9,8 @@ public class UpdateSensorDto
     public SensorModel? Model { get; set; }
     public bool? IsActive { get; set; }
 }
+
+public class UpdateSensorFromGreenhouseDto : UpdateSensorDto
+{
+    public Guid Id { get; set; }
+}

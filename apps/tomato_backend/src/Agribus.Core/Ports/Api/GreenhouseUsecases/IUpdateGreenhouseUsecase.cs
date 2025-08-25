@@ -5,7 +5,7 @@ namespace Agribus.Core.Ports.Api.GreenhouseUsecases;
 
 public interface IUpdateGreenhouseUsecase
 {
-    Task<bool?> Handle(
+    Task<bool> Handle(
         Guid greenhouseId,
         string userId,
         UpdateGreenhouseDto dto,

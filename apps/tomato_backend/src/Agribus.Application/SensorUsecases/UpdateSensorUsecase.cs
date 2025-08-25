@@ -19,4 +19,17 @@ public class UpdateSensorUsecase(ISensorRepository sensorRepository) : IUpdateSe
 
         return await sensorRepository.UpdateAsync(sensor, dto, cancellationToken);
     }
+
+    public async Task<bool?> HandleFromGreenhouse(
+        string userId,
+        UpdateSensorFromGreenhouseDto dto,
+        CancellationToken cancellationToken
+    )
+    {
+        var sensor = await sensorRepository.Exists(dto.Id, userId, cancellationToken);
+        if (sensor == null)
+            return null;
+
+        return await sensorRepository.UpdateAsync(sensor, dto, cancellationToken);
+    }
 }

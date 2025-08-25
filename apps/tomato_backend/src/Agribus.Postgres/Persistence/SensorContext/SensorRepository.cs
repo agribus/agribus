@@ -44,4 +44,15 @@ public class SensorRepository(AgribusDbContext context) : ISensorRepository
         //     is not null;
         return true;
     }
+
+    public async Task<Sensor[]> GetByGreenhouseIdAsync(
+        Guid greenhouseId,
+        string userId,
+        CancellationToken cancellationToken
+    )
+    {
+        return await context
+            .Sensor.Where(s => s.GreenhouseId == greenhouseId && s.Greenhouse.UserId == userId)
+            .ToArrayAsync(cancellationToken);
+    }
 }

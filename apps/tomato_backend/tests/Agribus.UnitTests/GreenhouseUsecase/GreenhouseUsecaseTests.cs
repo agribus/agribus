@@ -1,8 +1,11 @@
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
+using Agribus.Core.Ports.Api.SensorUsecases;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
+using Agribus.Core.Ports.Spi.SensorContext;
+using Agribus.Postgres.Persistence.SensorContext;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
 using NSubstitute;
 
@@ -204,10 +207,11 @@ public class GreenhouseUsecaseTests
         };
         var geocodingApiService = Substitute.For<IGeocodingApiService>();
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        var sensorRepository = Substitute.For<ISensorRepository>();
+        var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
         greenhouseRepository
             .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
             .Returns(originalGreenhouse);
-
         greenhouseRepository
             .UpdateAsync(
                 Arg.Any<Greenhouse>(),
@@ -219,7 +223,12 @@ public class GreenhouseUsecaseTests
             .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
             .Returns(("48.85341", "2.3488"));
 
-        var usecase = new UpdateGreenhouseUsecase(greenhouseRepository, geocodingApiService);
+        var usecase = new UpdateGreenhouseUsecase(
+            greenhouseRepository,
+            updateSensorUsecase,
+            sensorRepository,
+            geocodingApiService
+        );
 
         // When
         var result = await usecase.Handle(
