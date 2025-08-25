@@ -1,7 +1,7 @@
-import { inject, Injectable, signal } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { AuthLogin, AuthRegister, AuthResponse } from "@interfaces/auth.interface";
 import { HttpClient } from "@angular/common/http";
-import { map, tap } from "rxjs";
+import { BehaviorSubject, filter, map, Observable, of, shareReplay, take, tap } from "rxjs";
 import { environment } from "@environment/environment";
 
 @Injectable({
@@ -9,9 +9,11 @@ import { environment } from "@environment/environment";
 })
 export class AuthService {
   private http = inject(HttpClient);
-  public isLoggedIn = signal<boolean>(false);
 
-  sendLoginRequest(credentials: AuthLogin) {
+  private isLoggedIn$ = new BehaviorSubject<boolean | null>(null);
+  private authCheckInProgress = false;
+
+  public sendLoginRequest(credentials: AuthLogin): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, {
         withCredentials: true,
@@ -19,34 +21,53 @@ export class AuthService {
       .pipe(
         tap(response => {
           if (response.success) {
-            this.isLoggedIn.set(true);
+            this.isLoggedIn$.next(true);
           }
         })
       );
   }
 
-  sendRegisterRequest(credentials: AuthRegister) {
+  public sendRegisterRequest(credentials: AuthRegister): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/users/signup`, credentials);
   }
 
-  sendLogoutRequest() {
+  public sendLogoutRequest(): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
       .pipe(
-        tap(response => {
-          if (response.success) {
-            this.isLoggedIn.set(false);
-          }
+        tap(() => {
+          this.isLoggedIn$.next(false);
         })
       );
   }
 
-  isUserAuthenticated() {
+  public isUserAuthenticated(): Observable<boolean> {
+    if (this.isLoggedIn$.value !== null) {
+      return of(this.isLoggedIn$.value);
+    }
+
+    if (this.authCheckInProgress) {
+      return this.isLoggedIn$.pipe(
+        filter(value => value !== null),
+        take(1)
+      );
+    }
+
+    this.authCheckInProgress = true;
+
     return this.http
       .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, { withCredentials: true })
       .pipe(
-        tap(response => this.isLoggedIn.set(response.message)),
-        map(response => response.message)
+        tap(response => {
+          this.isLoggedIn$.next(response.message);
+          this.authCheckInProgress = false;
+        }),
+        map(response => response.message),
+        shareReplay(1)
       );
+  }
+
+  public isLoggedIn(): boolean {
+    return !!this.isLoggedIn$.value;
   }
 }

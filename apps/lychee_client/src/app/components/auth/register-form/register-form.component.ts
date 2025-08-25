@@ -7,6 +7,7 @@ import { AuthRegister } from "@interfaces/auth.interface";
 import { AuthService } from "@services/auth/auth.service";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { TuiValidationError } from "@taiga-ui/cdk";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-register-form",
@@ -34,6 +35,7 @@ import { TuiValidationError } from "@taiga-ui/cdk";
 export class RegisterFormComponent {
   private readonly translateService = inject(TranslateService);
   private readonly authService: AuthService = inject(AuthService);
+  private readonly router = inject(Router);
   protected readonly form = new FormGroup({
     username: new FormControl("", [Validators.required]),
     email: new FormControl("", [Validators.required, Validators.email]),
@@ -75,7 +77,9 @@ export class RegisterFormComponent {
           password: this.form.value.password ?? "",
           confirmPassword: this.form.value.confirmPassword ?? "",
         };
-        this.authService.sendRegisterRequest(registerInformation).subscribe();
+        this.authService.sendRegisterRequest(registerInformation).subscribe(() => {
+          this.router.navigate(["/home"]);
+        });
       }
     }
   }

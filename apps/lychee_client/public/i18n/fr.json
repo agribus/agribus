@@ -1,11 +1,4 @@
 {
-  "components": {
-    "ui": {
-      "header": {
-        "new-greenhouse": "➕ Ajouter une serre"
-      }
-    }
-  },
   "pages": {
     "forgot-password": {
       "connection-page": "Page de connexion",
@@ -23,6 +16,10 @@
       "register": "Inscrivez vous",
       "subtitle": "Bon retour parmi nous! Veuillez rentrez vos identifiant. ",
       "title": "Connexion à votre compte"
+    },
+    "not-found": {
+      "home": "",
+      "message": ""
     },
     "register": {
       "already-account": "Vous avez déjà un compte ?",
@@ -45,18 +42,20 @@
   },
   "shared": {
     "alerts": {
-      "add": "",
-      "create": "",
-      "duplicate": "",
+      "add": "Élément ajouté avec succès.",
+      "create": "Création effectuée avec succès.",
+      "duplicate": "Cet élément existe déjà.",
       "error": "Une erreur est survenue.",
+      "errorApi": "Une erreur est survenue lors de l'appel au serveur.",
       "errorCreds": "Les identifiants sont incorrects.",
-      "info": "",
-      "invalid": "",
-      "positive": "",
-      "remove": "",
-      "success": "",
-      "updated": "",
-      "warning": ""
+      "info": "Informations",
+      "invalid": "Les données fournies sont invalides.",
+      "positive": "L'opération s'est déroulée avec succès.",
+      "remove": "Élément supprimé avec succès.",
+      "success": "Action effectuée avec succès.",
+      "update": "Mise à jour effectuée avec succès.",
+      "updated": "Les informations ont été mises à jour.",
+      "warning": "Attention"
     },
     "buttons": {
       "add": "Ajouter",
@@ -94,6 +93,9 @@
       "placeholder": "Entrer votre email"
     },
     "errors": {
+      "generic": {
+        "unknown": "Une erreur est survenue."
+      },
       "http": {
         "0": "Impossible de contacter le serveur",
         "400": "Données invalides",
