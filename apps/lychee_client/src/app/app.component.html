@@ -1,6 +1,6 @@
 <tui-root [attr.tuiTheme]="darkMode() ? 'dark' : null">
   <app-header />
-  <main class="app-content">
+  <main class="app-content" [class.has-navbar]="showNavbar">
     <app-dev-tools />
     <router-outlet />
   </main>
