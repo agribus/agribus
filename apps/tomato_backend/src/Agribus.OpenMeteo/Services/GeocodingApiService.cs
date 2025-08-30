@@ -1,17 +1,18 @@
 using System.Text.Json;
+using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
 
 namespace Agribus.OpenMeteo.Services;
 
 public class GeocodingApiService : IGeocodingApiService
 {
-    private readonly IHttpService _httpService;
+    private readonly IGetHttpUsecase _getHttpUsecase;
     private readonly string _baseUrl = "https://geocoding-api.open-meteo.com/v1/search";
     private Dictionary<string, string> _parameters = [];
 
-    public GeocodingApiService(IHttpService httpService)
+    public GeocodingApiService(IGetHttpUsecase getHttpUsecase)
     {
-        _httpService = httpService;
+        _getHttpUsecase = getHttpUsecase;
         _parameters.Add("count", "1");
     }
 
@@ -19,7 +20,7 @@ public class GeocodingApiService : IGeocodingApiService
     {
         _parameters.Add("name", city);
         _parameters.Add("country", country);
-        var jsonResponse = await _httpService.GetAsync(_baseUrl, _parameters);
+        var jsonResponse = await _getHttpUsecase.GetAsync(_baseUrl, _parameters);
 
         var jsonDocument = JsonDocument.Parse(jsonResponse);
         var jsonElement = jsonDocument.RootElement;
