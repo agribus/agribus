@@ -1,13 +1,13 @@
 using System.Web;
-using Agribus.Core.Ports.Spi.OpenMeteoContext;
+using Agribus.Core.Ports.Api.GenericUsecases;
 
-namespace Agribus.OpenMeteo.Services;
+namespace Agribus.Application.GenericUsecases;
 
-public class HttpService : IHttpService
+public class GetHttpUsecase : IGetHttpUsecase
 {
     private readonly IHttpClientFactory _httpClientFactory;
 
-    public HttpService(IHttpClientFactory httpClientFactory)
+    public GetHttpUsecase(IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory =
             httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
