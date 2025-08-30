@@ -3,32 +3,34 @@
 <div class="latest-measures-container">
   <div class="weather-container">
     @for (metric of metrics; track metric.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium>
-        <tui-icon [icon]="metric.icon" />
-        <h2 tuiTitle>
-          <span class="title">{{ metric.label }}</span>
-          {{ metric.value }} {{ getUnit(metric.type) }}
-          <span tuiSubtitle class="latest-update">latest update : {{ metric.last_update }}</span>
-        </h2>
+      <div class="card" tuiAppearance="neutral" tuiCardMedium [tuiHint]="tooltipMetrics">
+        <tui-icon [icon]="getIcon(metric.type)" />
+        <h2 tuiTitle>{{ metric.label }}</h2>
+        <span class="data-text">{{ metric.value }} {{ getUnit(metric.type) }}</span>
+        <span tuiSubtitle class="latest-update">Last update: {{ metric.last_update }}</span>
       </div>
+
+      <ng-template #tooltipMetrics>
+        <span>Last update: {{ metric.last_update }}</span>
+      </ng-template>
     }
   </div>
 
   <div class="sensor-container">
     @for (sensor of sensors; track sensor.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium>
-        <h2 tuiTitle>
-          {{ sensor.name }}
-          <span tuiSubtitle class="latest-update">latest update : {{ sensor.last_update }}</span>
-        </h2>
+      <div class="card" tuiAppearance="neutral" tuiCardMedium [tuiHint]="tooltipSensors">
+        <h2 tuiTitle>{{ sensor.name }}</h2>
+        <span tuiSubtitle class="latest-update">Last update: {{ sensor.last_update }}</span>
         <div class="sensor-metrics">
-          <span class="value">{{ sensor.temperature }} {{ getUnit("temperature") }}</span>
-
-          <span class="value">{{ sensor.humidity }} {{ getUnit("humidity") }}</span>
-
-          <span class="value">{{ sensor.air_pressure }} {{ getUnit("air_pressure") }}</span>
+          <span class="data-text">{{ sensor.temperature }} {{ getUnit("temperature") }}</span>
+          <span class="data-text">{{ sensor.humidity }} {{ getUnit("humidity") }}</span>
+          <span class="data-text">{{ sensor.air_pressure }} {{ getUnit("air_pressure") }}</span>
         </div>
       </div>
+
+      <ng-template #tooltipSensors>
+        <span>Last update: {{ sensor.last_update }}</span>
+      </ng-template>
     }
   </div>
 

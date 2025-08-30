@@ -25,6 +25,10 @@
   flex-direction: column;
 }
 
+.data-text {
+  color: var(--tui-text-action);
+}
+
 .alerts-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
