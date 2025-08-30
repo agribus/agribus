@@ -7,6 +7,7 @@ using Agribus.Core.Ports.Spi.GreenhouseContext;
 using Agribus.Core.Ports.Spi.SensorContext;
 using Agribus.Postgres.Persistence.SensorContext;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
+using Agribus.Core.Ports.Spi.TrefleContext;
 using NSubstitute;
 
 namespace Agribus.UnitTests.GreenhouseUsecase;
@@ -106,8 +107,8 @@ public class GreenhouseUsecaseTests
         authContext.GetCurrentUserId().Returns(fakeUserId);
 
         var geocodingApiService = Substitute.For<IGeocodingApiService>();
-
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        var trefleService = Substitute.For<ITrefleService>();
 
         var dto = new CreateGreenhouseDto
         {
@@ -143,7 +144,26 @@ public class GreenhouseUsecaseTests
             .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
             .Returns(("45.74846", "4.84671"));
 
-        var usecase = new CreateGreenhouseUsecase(greenhouseRepository, geocodingApiService);
+        var cropXGrowthConditions = new CropGrowthConditions
+        {
+            AtmosphericHumidity = 70.0f,
+            MinimumTemperature = 18.0f,
+            MaximumTemperature = 28.0f,
+        };
+        trefleService.GetCropIdealConditions("X").Returns(cropXGrowthConditions);
+        var cropYGrowthConditions = new CropGrowthConditions
+        {
+            AtmosphericHumidity = 65.0f,
+            MinimumTemperature = 15.0f,
+            MaximumTemperature = 25.0f,
+        };
+        trefleService.GetCropIdealConditions("Y").Returns(cropYGrowthConditions);
+
+        var usecase = new CreateGreenhouseUsecase(
+            greenhouseRepository,
+            geocodingApiService,
+            trefleService
+        );
 
         // When
         var result = await usecase.Handle(dto, fakeUserId, CancellationToken.None);
@@ -155,6 +175,14 @@ public class GreenhouseUsecaseTests
         Assert.Equal(dto.Country, result.Country);
         Assert.Equal(dto.Crops.Count, result.Crops.Count);
         Assert.Equal(dto.Sensors.Count, result.Sensors.Count);
+        Assert.Equivalent(
+            result.Crops.FirstOrDefault(c => c.ScientificName == "X")!.IdealConditions,
+            cropXGrowthConditions
+        );
+        Assert.Equivalent(
+            result.Crops.FirstOrDefault(c => c.ScientificName == "Y")!.IdealConditions,
+            cropYGrowthConditions
+        );
     }
 
     [Fact]
@@ -209,6 +237,7 @@ public class GreenhouseUsecaseTests
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
         var sensorRepository = Substitute.For<ISensorRepository>();
         var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
+        var trefleService = Substitute.For<ITrefleService>();
         greenhouseRepository
             .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
             .Returns(originalGreenhouse);
@@ -227,7 +256,8 @@ public class GreenhouseUsecaseTests
             greenhouseRepository,
             updateSensorUsecase,
             sensorRepository,
-            geocodingApiService
+            geocodingApiService,
+            trefleService
         );
 
         // When
