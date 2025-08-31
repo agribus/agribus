@@ -34,7 +34,7 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
         greenhouseConfiguration
             .HasMany(g => g.Sensors)
             .WithOne()
-            .HasForeignKey(s => s.Id)
+            .HasForeignKey(s => s.GreenhouseId)
             .OnDelete(DeleteBehavior.Cascade);
 
         greenhouseConfiguration
