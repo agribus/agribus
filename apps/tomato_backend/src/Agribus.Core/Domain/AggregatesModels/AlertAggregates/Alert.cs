@@ -17,8 +17,10 @@ public class Alert : BaseEntity
 
     [JsonIgnore]
     public Guid GreenhouseId { get; init; }
+
     [JsonIgnore]
     public Greenhouse Greenhouse { get; init; }
 
-    // TODO: add EventLists to keep historical records
+    public ICollection<AlertEvents> AlertEvents => _events.AsReadOnly();
+    private readonly List<AlertEvents> _events = [];
 }

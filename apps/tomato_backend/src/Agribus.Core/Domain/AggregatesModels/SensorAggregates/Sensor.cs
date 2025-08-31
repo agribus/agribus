@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Agribus.Core.Domain.AggregatesModels.AlertAggregates;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Domain.Enums;
 using Agribus.Core.Ports.Api.SensorUsecases.DTOs;
@@ -17,6 +18,8 @@ public class Sensor : BaseEntity
 
     [JsonIgnore]
     public Greenhouse? Greenhouse { get; set; }
+    
+    public ICollection<AlertEvents> AlertEvents {  get; set; } = [];
 
     public void Update(UpdateSensorDto dto)
     {

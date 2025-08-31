@@ -1,9 +1,10 @@
-using System.Text.Json;
 using Agribus.Core.Domain.AggregatesModels.AlertAggregates;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Domain.Enums;
 using Agribus.Postgres.Extensions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Agribus.Postgres.EntityConfigurations;
 
 public class AlertEntityTypeConfiguration : IEntityTypeConfiguration<Alert>
 {
@@ -31,11 +32,13 @@ public class AlertEntityTypeConfiguration : IEntityTypeConfiguration<Alert>
 
         alertConfiguration.ToTable(t =>
         {
-            t.HasCheckConstraint("CK_RuleType_IsValid",
+            t.HasCheckConstraint(
+                "CK_RuleType_IsValid",
                 sql: $"rule_type IN ({EnumToSqlHelper.GetEnumValuesSql<AlertRuleType>()})"
             );
 
-            t.HasCheckConstraint("CK_MeasureType_IsValid",
+            t.HasCheckConstraint(
+                "CK_MeasureType_IsValid",
                 sql: $"measure_type IN ({EnumToSqlHelper.GetEnumValuesSql<SensorType>()})"
             );
         });
