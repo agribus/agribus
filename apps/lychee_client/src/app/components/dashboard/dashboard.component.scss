@@ -1,0 +1,52 @@
+* {
+  overflow: visible;
+}
+
+.dashboard-container {
+  padding-bottom: 1.5rem;
+}
+
+.latest-measures-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.data-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.sensor-metrics {
+  display: flex;
+  flex-direction: column;
+}
+
+.data-text {
+  color: var(--tui-text-action);
+}
+
+.alerts-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.card {
+  width: auto;
+}
+
+.card span.latest-update[tuiSubtitle] {
+  color: var(--tui-text-action);
+  font-size: xx-small;
+}
+
+.card span.informative-alert[tuiSubtitle] {
+  color: var(--tui-text-action);
+  font-size: smaller;
+}
+
+.calendar-button {
+  border-radius: 100%;
+}
