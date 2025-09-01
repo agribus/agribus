@@ -8,9 +8,9 @@ public class Alert : BaseEntity
 {
     public required string Name { get; init; }
     public required bool Enabled { get; init; } = true;
-    public required double ThresholdValue { get; init; }
-    public required double RangeMinValue { get; init; }
-    public required double RangeMaxValue { get; init; }
+    public double? ThresholdValue { get; init; }
+    public double? RangeMinValue { get; init; }
+    public double? RangeMaxValue { get; init; }
 
     public required SensorType MeasureType { get; init; }
     public required AlertRuleType RuleType { get; init; }

@@ -18,8 +18,8 @@ public class Sensor : BaseEntity
 
     [JsonIgnore]
     public Greenhouse? Greenhouse { get; set; }
-    
-    public ICollection<AlertEvents> AlertEvents {  get; set; } = [];
+
+    public ICollection<AlertEvents> AlertEvents { get; set; } = [];
 
     public void Update(UpdateSensorDto dto)
     {
