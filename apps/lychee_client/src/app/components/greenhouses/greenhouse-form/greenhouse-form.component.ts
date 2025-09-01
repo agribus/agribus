@@ -193,7 +193,7 @@ export class GreenhouseFormComponent implements OnChanges {
         scientificName: crop.scientificName,
         date_plantation: crop.date_plantation,
         quantity: crop.quantity,
-        imageUrl: "crop.png",
+        imageUrl: "",
       }));
       const sensors = step2.sensor;
 
