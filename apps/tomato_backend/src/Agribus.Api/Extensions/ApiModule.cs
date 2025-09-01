@@ -24,6 +24,20 @@ public static class ApiModule
                 }
             );
         });
+        services.Configure<CookiePolicyOptions>(o =>
+        {
+            o.MinimumSameSitePolicy = SameSiteMode.None;
+            o.Secure = CookieSecurePolicy.Always;
+            o.OnAppendCookie = ctx => SetSameSiteNone(ctx.CookieOptions);
+            o.OnDeleteCookie = ctx => SetSameSiteNone(ctx.CookieOptions);
+
+            static void SetSameSiteNone(CookieOptions opts)
+            {
+                opts.SameSite = SameSiteMode.None;
+                opts.Secure = true;
+            }
+        });
+
         return services;
     }
 }

@@ -113,6 +113,21 @@
         "sensors": "Sensoren"
       }
     },
+    "dashboard": {
+      "title-section": {
+        "latest-measures": "Neueste Maßnahmen",
+        "latest-alerts": "Neueste Warnmeldungen",
+        "charts": "Grafiken"
+      },
+      "calendar": {
+        "title": {
+          "temperature": "Temperatur",
+          "humidity": "Luftfeuchtigkeit",
+          "air-pressure": "Luftdruck"
+        },
+        "no-selection": "Zeitraum auswählen"
+      }
+    },
     "nickname": {
       "label": "Nickname",
       "placeholder": "Geben Sie Ihren Nickname ein"

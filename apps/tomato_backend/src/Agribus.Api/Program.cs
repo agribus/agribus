@@ -37,6 +37,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseCookiePolicy();
 app.UseMiddleware<ClerkAuthenticationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
