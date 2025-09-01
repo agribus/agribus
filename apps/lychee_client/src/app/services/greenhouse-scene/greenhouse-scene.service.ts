@@ -2,7 +2,8 @@ import { ElementRef, Injectable } from "@angular/core";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
+import { Font, FontLoader } from "three/addons/loaders/FontLoader.js";
+import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { VEGETABLES } from "@utils/vegetables-config/vegetables.config";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { Crop } from "@interfaces/crop.interface";
@@ -24,20 +25,20 @@ type CameraType = "default" | "inside";
 @Injectable({ providedIn: "root" })
 export class GreenhouseSceneService {
   private readonly MODEL_PATH = "./models/greenhouse.glb";
+  private readonly FONT_PATH = "./fonts/helvetiker_regular.typeface.json";
   private readonly MAX_PLANTS = 6;
   private readonly DEFAULT_FOV = 60;
-  private readonly INSIDE_FOV = 95;
+  private readonly INSIDE_FOV = 100;
   private readonly ANIMATION_DURATION = 1500;
 
   private scene!: THREE.Scene;
   private camera!: THREE.PerspectiveCamera;
   private renderer!: THREE.WebGLRenderer;
-  private CSS2DRenderer!: CSS2DRenderer;
   private controls!: OrbitControls;
   private container!: HTMLElement;
-  private css2dContainer!: HTMLElement;
 
-  private readonly loader = new GLTFLoader();
+  private readonly gltfLoader = new GLTFLoader();
+  private readonly fontLoader = new FontLoader();
   private readonly raycaster = new THREE.Raycaster();
   private readonly pointer = new THREE.Vector2();
 
@@ -51,23 +52,27 @@ export class GreenhouseSceneService {
 
   private spawnPoints: THREE.Object3D[] = [];
   private plantedVegetables: PlantedVegetable[] = [];
+  private textContainers: THREE.Group[] = [];
+  private font!: Font;
 
   isInsideView(): boolean {
     return this.cameraType === "inside";
   }
 
-  async createScene(canvaContainer: ElementRef, css2dContainer: ElementRef): Promise<void> {
-    this.initializeScene(canvaContainer, css2dContainer);
+  async createScene(canvaContainer: ElementRef): Promise<void> {
+    this.initializeScene(canvaContainer);
     this.setupRenderer();
     this.setupLighting();
     this.setupCamera();
     this.setupControls();
     this.setupEventListeners();
+    await this.loadFont();
     await this.loadModel();
     this.animate();
   }
 
   async plantVegetablesFromGreenhouse(greenhouse: Greenhouse): Promise<void> {
+    this.plantedVegetables = [];
     greenhouse.crops.forEach(crop => {
       this.plantVegetable(crop, crop.quantity ?? 1);
     });
@@ -80,7 +85,7 @@ export class GreenhouseSceneService {
       return;
     }
 
-    this.loader.load(config.modelPath, gltf => {
+    this.gltfLoader.load(config.modelPath, gltf => {
       const baseModel = gltf.scene;
       for (let i = 0; i < quantity; i++) {
         this.processPlantPlacement(crop, baseModel);
@@ -97,14 +102,13 @@ export class GreenhouseSceneService {
     this.controls.enableRotate = true;
     this.smoothReset = true;
 
-    this.clearCSS2DContent();
+    this.clearTextContainers();
 
     this.animateCamera(this.defaultCameraState);
   }
 
-  private initializeScene(container: ElementRef, css2dContainer: ElementRef): void {
+  private initializeScene(container: ElementRef): void {
     this.container = container.nativeElement;
-    this.css2dContainer = css2dContainer.nativeElement;
     this.scene = new THREE.Scene();
   }
 
@@ -122,10 +126,6 @@ export class GreenhouseSceneService {
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.container.appendChild(this.renderer.domElement);
-
-    this.CSS2DRenderer = new CSS2DRenderer();
-    this.CSS2DRenderer.setSize(window.innerWidth, window.innerHeight);
-    this.css2dContainer.appendChild(this.CSS2DRenderer.domElement);
   }
 
   private setupLighting(): void {
@@ -152,9 +152,23 @@ export class GreenhouseSceneService {
     this.renderer.domElement.addEventListener("click", this.onPointerClick.bind(this));
   }
 
+  private async loadFont(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.fontLoader.load(
+        this.FONT_PATH,
+        font => {
+          this.font = font;
+          resolve();
+        },
+        undefined,
+        reject
+      );
+    });
+  }
+
   private async loadModel(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.loader.load(
+      this.gltfLoader.load(
         this.MODEL_PATH,
         gltf => {
           this.processModelLoad(gltf.scene);
@@ -225,6 +239,7 @@ export class GreenhouseSceneService {
     vegClone.position.copy(point.getWorldPosition(new THREE.Vector3()));
     vegClone.rotation.y = Math.random() * Math.PI * 2;
     vegClone.position.y += 0.1;
+    vegClone.name = `greenhouse_pot_${availableSpawnIndex + 1}`;
 
     this.scene.add(vegClone);
     this.plantedVegetables.push({
@@ -292,6 +307,197 @@ export class GreenhouseSceneService {
     }
   }
 
+  private create3DTextContainer(text: string, position: THREE.Vector3): THREE.Group {
+    const container = new THREE.Group();
+
+    const fontSize = 0.05;
+    const margin = 0.08;
+    const containerDepth = 0.04;
+
+    const textGeometry = new TextGeometry(text, {
+      font: this.font,
+      size: fontSize,
+      depth: 0,
+    });
+
+    textGeometry.computeBoundingBox();
+    const textWidth = textGeometry.boundingBox!.max.x - textGeometry.boundingBox!.min.x;
+    const textHeight = textGeometry.boundingBox!.max.y - textGeometry.boundingBox!.min.y;
+
+    textGeometry.translate(-textWidth / 2, textHeight / 2 - fontSize, containerDepth / 2 + 0.011);
+
+    const textMaterial = new THREE.MeshBasicMaterial({ color: 0x374141 });
+    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+    const containerWidth = textWidth + margin * 2;
+    const containerHeight = textHeight + margin * 2;
+
+    const containerGeometry = this.createContainerGeometry(
+      containerWidth,
+      containerHeight,
+      containerDepth - 0.01
+    );
+    const containerMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      emissive: 0xfafafa,
+      emissiveIntensity: 0.5,
+    });
+    const containerMesh = new THREE.Mesh(containerGeometry, containerMaterial);
+
+    container.add(containerMesh);
+    container.add(textMesh);
+
+    const direction = new THREE.Vector3();
+    direction.subVectors(this.camera.position, position).normalize();
+    const yAxisRotation = Math.atan2(direction.x, direction.z);
+
+    container.position.copy(position);
+    container.rotation.set(0, yAxisRotation, 0);
+
+    return container;
+  }
+
+  private createContainerGeometry(
+    containerWidth: number,
+    containerHeight: number,
+    containerDepth: number
+  ): THREE.BufferGeometry {
+    const borderRadius = containerDepth;
+
+    const shape = new THREE.Shape();
+    const x = -containerWidth / 2;
+    const y = -containerHeight / 2;
+
+    shape.moveTo(x, y + borderRadius);
+    shape.lineTo(x, y + containerHeight - borderRadius);
+    shape.quadraticCurveTo(x, y + containerHeight, x + borderRadius, y + containerHeight);
+    shape.lineTo(x + containerWidth - borderRadius, y + containerHeight);
+    shape.quadraticCurveTo(
+      x + containerWidth,
+      y + containerHeight,
+      x + containerWidth,
+      y + containerHeight - borderRadius
+    );
+    shape.lineTo(x + containerWidth, y + borderRadius);
+    shape.quadraticCurveTo(x + containerWidth, y, x + containerWidth - borderRadius, y);
+    shape.lineTo(x + borderRadius, y);
+    shape.quadraticCurveTo(x, y, x, y + borderRadius);
+
+    return new THREE.ExtrudeGeometry(shape, {
+      depth: containerDepth,
+      bevelEnabled: false,
+    });
+  }
+
+  showCropIdealConditions(index: number): void {
+    const plantedVegetable = this.plantedVegetables.find(plant => plant.spawnPointIndex === index);
+    if (!plantedVegetable) {
+      console.error("No planted vegetable found at index:", index);
+      return;
+    }
+
+    const infoText = `${plantedVegetable.crop.commonName}\n${plantedVegetable.crop.cropGrowthConditions?.atmosphericHumidity} %RH\n${plantedVegetable.crop.cropGrowthConditions?.miniumTemperature}° - ${plantedVegetable.crop.cropGrowthConditions?.maximumTemperature}°C\n`;
+
+    const textPosition = new THREE.Vector3(
+      plantedVegetable.mesh.position.x,
+      plantedVegetable.mesh.position.y + 0.5,
+      plantedVegetable.mesh.position.z
+    );
+
+    const textContainer = this.create3DTextContainer(infoText, textPosition);
+
+    this.adjustTextContainerPosition(textContainer, textPosition);
+
+    this.textContainers.push(textContainer);
+    this.scene.add(textContainer);
+  }
+
+  private clearTextContainers(): void {
+    this.textContainers.forEach(container => {
+      this.scene.remove(container);
+      container.traverse(child => {
+        if (child instanceof THREE.Mesh) {
+          child.geometry?.dispose();
+          if (Array.isArray(child.material)) {
+            child.material.forEach(material => material.dispose());
+          } else {
+            child.material?.dispose();
+          }
+        }
+      });
+    });
+    this.textContainers = [];
+  }
+
+  private isObjectVisibleOnScreen(object: THREE.Object3D): boolean {
+    const box = new THREE.Box3().setFromObject(object);
+    const corners = [
+      new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+      new THREE.Vector3(box.min.x, box.min.y, box.max.z),
+      new THREE.Vector3(box.min.x, box.max.y, box.min.z),
+      new THREE.Vector3(box.min.x, box.max.y, box.max.z),
+      new THREE.Vector3(box.max.x, box.min.y, box.min.z),
+      new THREE.Vector3(box.max.x, box.min.y, box.max.z),
+      new THREE.Vector3(box.max.x, box.max.y, box.min.z),
+      new THREE.Vector3(box.max.x, box.max.y, box.max.z),
+    ];
+
+    const screenCorners = corners.map(corner => {
+      const screenPos = corner.clone().project(this.camera);
+      return {
+        x: (screenPos.x + 1) / 2,
+        y: (screenPos.y + 1) / 2,
+      };
+    });
+
+    const minX = Math.min(...screenCorners.map(c => c.x)) + 0.1;
+    const maxX = Math.max(...screenCorners.map(c => c.x)) - 0.1;
+    const minY = Math.min(...screenCorners.map(c => c.y)) + 0.1;
+    const maxY = Math.max(...screenCorners.map(c => c.y)) - 0.1;
+
+    return minX >= 0 && maxX <= 1 && minY >= 0 && maxY <= 1;
+  }
+
+  private adjustTextContainerPosition(
+    container: THREE.Group,
+    originalPosition: THREE.Vector3
+  ): void {
+    const maxIterations = 50;
+    const zStep = 0.01;
+    let iterations = 0;
+
+    container.position.copy(originalPosition);
+
+    while (!this.isObjectVisibleOnScreen(container) && iterations < maxIterations) {
+      if (container.position.z > 0) {
+        container.position.z = Math.max(0, container.position.z - zStep);
+      } else if (container.position.z < 0) {
+        container.position.z = Math.min(0, container.position.z + zStep);
+      } else {
+        break;
+      }
+
+      const direction = new THREE.Vector3();
+      direction.subVectors(this.camera.position, container.position).normalize();
+      const yAxisRotation = Math.atan2(direction.x, direction.z);
+      container.rotation.set(0, yAxisRotation, 0);
+
+      iterations++;
+    }
+
+    if (!this.isObjectVisibleOnScreen(container) && iterations >= maxIterations) {
+      const originalY = container.position.y;
+
+      container.position.y += 0.3;
+      if (!this.isObjectVisibleOnScreen(container)) {
+        container.position.y = originalY - 0.3;
+        if (!this.isObjectVisibleOnScreen(container)) {
+          container.position.y = originalY;
+        }
+      }
+    }
+  }
+
   private animateCamera(targetState: CameraState, onComplete?: () => void): void {
     const startState: CameraState = {
       position: this.camera.position.clone(),
@@ -300,7 +506,6 @@ export class GreenhouseSceneService {
     };
 
     this.smoothReset = false;
-    this.controls.enableRotate = false;
 
     this.performCameraAnimation(startState, targetState, onComplete);
   }
@@ -353,6 +558,7 @@ export class GreenhouseSceneService {
     if (this.cameraType === "inside") return;
 
     this.cameraType = "inside";
+    this.controls.enableRotate = false;
 
     const spherical = new THREE.Spherical();
     spherical.setFromVector3(
@@ -415,59 +621,36 @@ export class GreenhouseSceneService {
 
     this.camera.aspect = window.innerWidth / window.innerHeight;
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.CSS2DRenderer.setSize(window.innerWidth, window.innerHeight);
   };
 
   private onPointerClick(event: MouseEvent): void {
-    this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    const rect = this.renderer.domElement.getBoundingClientRect();
+
+    this.pointer.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.pointer.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
     const intersectedObject = this.getIntersectedObject();
 
     if (intersectedObject) {
-      console.log(intersectedObject);
-      if (intersectedObject.name.startsWith("greenhouse_")) {
+      this.clearTextContainers();
+      if (
+        intersectedObject.parent?.name.startsWith("greenhouse_pot_") ||
+        intersectedObject.parent?.parent?.name.startsWith("greenhouse_pot_")
+      ) {
+        const str = intersectedObject.parent?.name.startsWith("greenhouse_pot_")
+          ? intersectedObject.parent?.name
+          : intersectedObject.parent?.parent?.name;
+        const index = parseInt(str!.charAt(str!.length - 1)) - 1;
+        this.showCropIdealConditions(index);
+      } else if (intersectedObject.name.startsWith("greenhouse_")) {
         this.transitionToInsideView();
-      }
-      if (intersectedObject.parent?.name.startsWith("greenhouse_pot_")) {
-        // nécessite de récupérer l'index, pour cela il faudrait modifier le model de la greenhouse pour directement changer le nom des spawn avec l'index dedans car plus simple
-        this.showCropIdealConditions(0); //remplacer 0 par l'index une fois fait
       }
     }
   }
 
-  showCropIdealConditions(index: number): void {
-    const plantedVegetable = this.plantedVegetables.find(plant => plant.spawnPointIndex === index)!;
-    const crop = plantedVegetable.crop;
-    console.log("Crop :", crop);
-    const textContainerElement = document.createElement("p");
-    textContainerElement.textContent = "test";
-    console.log(textContainerElement);
-    const textContainerObject = new CSS2DObject(textContainerElement);
-    textContainerObject.position.set(
-      plantedVegetable.mesh.position.x,
-      plantedVegetable.mesh.position.y + 0.5,
-      plantedVegetable.mesh.position.z
-    );
-    this.scene.add(textContainerObject);
-    // Maintenant vous avez accès à toutes les propriétés de l'interface Crop :
-    // crop.commonName, crop.scientificName, crop.score, etc.
-  }
-
-  clearCSS2DContent(): void {
-    const objectsToRemove: THREE.Object3D[] = [];
-
-    this.scene.traverse(child => {
-      if (child instanceof CSS2DObject) {
-        objectsToRemove.push(child);
-      }
-    });
-
-    objectsToRemove.forEach(obj => this.scene.remove(obj));
-  }
-
   private getIntersectedObject(): THREE.Object3D | null {
     this.raycaster.setFromCamera(this.pointer, this.camera);
-    const intersects = this.raycaster.intersectObjects(this.scene.children);
+    const intersects = this.raycaster.intersectObjects(this.scene.children, true);
     return intersects.length > 0 ? intersects[0].object : null;
   }
 
@@ -477,9 +660,7 @@ export class GreenhouseSceneService {
     if (this.smoothReset && this.cameraType === "default") {
       this.doSmoothReset();
     }
-
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
-    this.CSS2DRenderer.render(this.scene, this.camera);
   };
 }

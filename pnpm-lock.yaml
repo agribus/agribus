@@ -131,9 +131,6 @@ importers:
       three:
         specifier: ^0.178.0
         version: 0.178.0
-      three-css2drender:
-        specifier: ^1.0.0
-        version: 1.0.0(three@0.178.0)
       tslib:
         specifier: ^2.3.0
         version: 2.8.1
@@ -4902,11 +4899,6 @@ packages:
   text-extensions@2.4.0:
     resolution: {integrity: sha512-te/NtwBwfiNRLf9Ijqx3T0nlqZiQ2XrrtBvu+cLL8ZRrGkO0NHTug8MYFKyoSrv/sHTaSKfilUkizV6XhxMJ3g==}
     engines: {node: '>=8'}
-
-  three-css2drender@1.0.0:
-    resolution: {integrity: sha512-redDCSBDvgxiJIm6EDT8WO5WJTVg5gUEy/vjtAgJa/zX4peEUnZ8K+mXo6v94EudbnuI5h48/hQo9NExf04ENg==}
-    peerDependencies:
-      three: '>= 0.91'
 
   three@0.178.0:
     resolution: {integrity: sha512-ybFIB0+x8mz0wnZgSGy2MO/WCO6xZhQSZnmfytSPyNpM0sBafGRVhdaj+erYh5U+RhQOAg/eXqw5uVDiM2BjhQ==}
@@ -10623,10 +10615,6 @@ snapshots:
   text-extensions@1.9.0: {}
 
   text-extensions@2.4.0: {}
-
-  three-css2drender@1.0.0(three@0.178.0):
-    dependencies:
-      three: 0.178.0
 
   three@0.178.0: {}
 

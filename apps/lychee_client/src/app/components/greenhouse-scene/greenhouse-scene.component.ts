@@ -15,9 +15,6 @@ export class GreenhouseSceneComponent implements OnInit {
   @ViewChild("greenhouseCanva", { static: true })
   public greenhouseCanva!: ElementRef<HTMLElement>;
 
-  @ViewChild("css2dRenderer", { static: true })
-  public css2dRendererElement!: ElementRef<HTMLElement>;
-
   private readonly threeSceneService = inject(GreenhouseSceneService);
 
   private readonly carrotCrop: Crop = {
@@ -27,6 +24,11 @@ export class GreenhouseSceneComponent implements OnInit {
     score: 85,
     quantity: 7,
     date_plantation: new Date("2025-03-01"),
+    cropGrowthConditions: {
+      atmosphericHumidity: 23.4,
+      miniumTemperature: 15.6,
+      maximumTemperature: 25.6,
+    },
   };
 
   private readonly greenhouse: Greenhouse = {
@@ -39,7 +41,7 @@ export class GreenhouseSceneComponent implements OnInit {
   };
 
   async ngOnInit(): Promise<void> {
-    await this.threeSceneService.createScene(this.greenhouseCanva, this.css2dRendererElement);
+    await this.threeSceneService.createScene(this.greenhouseCanva);
     await this.threeSceneService.plantVegetablesFromGreenhouse(this.greenhouse);
   }
 
