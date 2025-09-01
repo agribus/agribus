@@ -1,10 +1,10 @@
+using Agribus.Core.Ports.Spi.AlertContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using Agribus.Core.Ports.Spi.SensorContext;
 using Agribus.Postgres.Persistence;
 using Agribus.Postgres.Persistence.AlertContext;
 using Agribus.Postgres.Persistence.GreenhouseContext;
 using Agribus.Postgres.Persistence.SensorContext;
-using Agribus.UnitTests.AlertUsecase;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Agribus.Postgres.Extensions;

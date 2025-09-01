@@ -1,8 +1,12 @@
 using Agribus.Application.AlertUsecases;
 using Agribus.Core.Domain.AggregatesModels.AlertAggregates;
+using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Domain.Enums;
+using Agribus.Core.Domain.Exceptions;
 using Agribus.Core.Ports.Api.AlertUsecases.DTOs;
 using Agribus.Core.Ports.Api.AlertUsecases.Validators;
+using Agribus.Core.Ports.Spi.AlertContext;
+using Agribus.Core.Ports.Spi.GreenhouseContext;
 using FluentValidation;
 using NSubstitute;
 
@@ -95,6 +99,64 @@ public class AlertUsecaseTests
         // Then
         await Assert.ThrowsAsync<ValidationException>(() => usecase.Handle(dto, userId, ct));
         await repo.DidNotReceiveWithAnyArgs().AddAsync(Arg.Any<Alert>(), CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task ShouldReturnAlertsByGreenhouse()
+    {
+        // Given
+        var userId = "user_id123";
+        var ct = CancellationToken.None;
+        var greenhouseId = Guid.NewGuid();
+
+        var repo = Substitute.For<IAlertRepository>();
+        repo.GetByGreenhouseAsync(greenhouseId, ct)
+            .Returns(
+                [CreateAlert(AlertRuleType.Above, 10.0), CreateAlert(AlertRuleType.Below, 10.0)]
+            );
+        var ghRepo = Substitute.For<IGreenhouseRepository>();
+        var mockGreenhouse = new Greenhouse
+        {
+            UserId = userId,
+            Name = null,
+            Country = null,
+            City = null,
+        };
+        ghRepo.Exists(greenhouseId, userId, ct).Returns(mockGreenhouse);
+
+        var usecase = new GetAlertsByGreenhouseUsecase(repo, ghRepo);
+
+        // When
+        var result = (await usecase.Handle(greenhouseId, userId, ct)).ToList();
+
+        // Then
+        await repo.Received(1).GetByGreenhouseAsync(greenhouseId, ct);
+        await ghRepo.Received(1).Exists(greenhouseId, userId, ct);
+        Assert.Equal(2, result.Count);
+    }
+
+    [Fact]
+    public async Task ShouldThrowNotFound_WhenGreenhouseDoesNotExist()
+    {
+        // Given
+        var userId = "user_id123";
+        var ct = CancellationToken.None;
+        var greenhouseId = Guid.NewGuid();
+
+        var repo = Substitute.For<IAlertRepository>();
+        var ghRepo = Substitute.For<IGreenhouseRepository>();
+        ghRepo.Exists(greenhouseId, userId, ct).Returns((Greenhouse?)null);
+
+        var usecase = new GetAlertsByGreenhouseUsecase(repo, ghRepo);
+
+        // When
+        var result = async () => await usecase.Handle(greenhouseId, userId, ct);
+
+        // Then
+        await Assert.ThrowsAsync<NotFoundEntityException>(result);
+        await repo.DidNotReceiveWithAnyArgs()
+            .GetByGreenhouseAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
+        await ghRepo.Received(1).Exists(greenhouseId, userId, ct);
     }
 
     private Alert CreateAlert(

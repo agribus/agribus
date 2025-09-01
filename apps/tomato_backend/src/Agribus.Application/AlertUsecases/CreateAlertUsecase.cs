@@ -2,7 +2,7 @@ using Agribus.Core.Domain.AggregatesModels.AlertAggregates;
 using Agribus.Core.Ports.Api.AlertUsecases;
 using Agribus.Core.Ports.Api.AlertUsecases.DTOs;
 using Agribus.Core.Ports.Api.AlertUsecases.Validators;
-using Agribus.UnitTests.AlertUsecase;
+using Agribus.Core.Ports.Spi.AlertContext;
 using FluentValidation;
 
 namespace Agribus.Application.AlertUsecases;
