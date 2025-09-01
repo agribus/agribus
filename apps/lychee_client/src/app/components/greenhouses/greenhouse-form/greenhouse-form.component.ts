@@ -196,6 +196,7 @@ export class GreenhouseFormComponent implements OnChanges {
         imageUrl: "",
       }));
       const sensors = step2.sensor;
+      console.log(sensors);
 
       if (this.isEditMode && this.greenhouse?.id) {
         this.greenhouseService
@@ -371,6 +372,8 @@ export class GreenhouseFormComponent implements OnChanges {
         id: this.generateSensorId(),
         name: sensor.name || this.getDefaultSensorName(),
         sourceAddress: sensor.sourceAddress,
+        isActive: true,
+        sensorModel: "RuuviTag",
       };
       this.sensors.push(newSensor);
     }
