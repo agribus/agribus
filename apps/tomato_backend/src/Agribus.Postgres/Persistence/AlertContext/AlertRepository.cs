@@ -13,11 +13,37 @@ public class AlertRepository(AgribusDbContext context) : IAlertRepository
         return result.Entity;
     }
 
-    public async Task<Alert[]> GetByGreenhouseAsync(
+    public async Task<IEnumerable<Alert>> GetByGreenhouseAsync(
         Guid greenhouseId,
         CancellationToken cancellationToken
     )
     {
+        return await context
+            .Alert.Where(x => x.GreenhouseId == greenhouseId)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Alert?> Exists(
+        Guid alertId,
+        string userId,
+        CancellationToken cancellationToken
+    )
+    {
         throw new NotImplementedException();
+    }
+
+    public async Task<bool> DeleteAsync(Guid alertId, CancellationToken cancellationToken)
+    {
+        var entity = await context.Alert.FirstOrDefaultAsync(
+            x => x.Id == alertId,
+            cancellationToken
+        );
+        if (entity == null)
+            return false;
+
+        context.Alert.Remove(entity);
+        await context.SaveChangesAsync(cancellationToken);
+
+        return true;
     }
 }
