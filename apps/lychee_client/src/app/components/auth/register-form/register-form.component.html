@@ -6,9 +6,10 @@
         <input
           id="username"
           class="form-input"
+          autocapitalize="off"
           formControlName="username"
           placeholder="{{ 'shared.nickname.placeholder' | translate }}"
-          type="username"
+          type="text"
           tuiTextfield />
       </tui-textfield>
 
@@ -21,6 +22,7 @@
         <input
           id="email"
           class="form-input"
+          autocapitalize="off"
           formControlName="email"
           placeholder="{{ 'shared.email.placeholder' | translate }}"
           type="text"
@@ -36,10 +38,12 @@
         <input
           id="password"
           class="form-input"
+          autocapitalize="off"
           formControlName="password"
           placeholder="********"
           type="password"
           tuiTextfield />
+        <tui-icon tuiPassword />
       </tui-textfield>
 
       <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />
@@ -53,10 +57,12 @@
         <input
           id="confirm-password"
           class="form-input"
+          autocapitalize="off"
           formControlName="confirmPassword"
           placeholder="********"
           type="password"
           tuiTextfield />
+        <tui-icon tuiPassword />
       </tui-textfield>
 
       <tui-error formControlName="confirmPassword" [error]="[] | tuiFieldError | async" />
