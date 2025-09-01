@@ -1,40 +1,30 @@
-<h2>Latest Measures</h2>
+<h2>{{ "shared.dashboard.title-section.latest-measures" | translate }}</h2>
 
 <div class="latest-measures-container">
-  <div class="weather-container">
+  <div class="data-container">
     @for (metric of metrics; track metric.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium [tuiHint]="tooltipMetrics">
+      <div class="card" tuiAppearance="neutral" tuiCardMedium>
         <tui-icon [icon]="getIcon(metric.type)" />
         <h2 tuiTitle>{{ metric.label }}</h2>
         <span class="data-text">{{ metric.value }} {{ getUnit(metric.type) }}</span>
-        <span tuiSubtitle class="latest-update">Last update: {{ metric.last_update }}</span>
+        <span tuiSubtitle class="latest-update">{{ metric.last_update }}</span>
       </div>
-
-      <ng-template #tooltipMetrics>
-        <span>Last update: {{ metric.last_update }}</span>
-      </ng-template>
     }
-  </div>
 
-  <div class="sensor-container">
     @for (sensor of sensors; track sensor.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium [tuiHint]="tooltipSensors">
+      <div class="card" tuiAppearance="neutral" tuiCardMedium>
         <h2 tuiTitle>{{ sensor.name }}</h2>
-        <span tuiSubtitle class="latest-update">Last update: {{ sensor.last_update }}</span>
         <div class="sensor-metrics">
           <span class="data-text">{{ sensor.temperature }} {{ getUnit("temperature") }}</span>
           <span class="data-text">{{ sensor.humidity }} {{ getUnit("humidity") }}</span>
           <span class="data-text">{{ sensor.air_pressure }} {{ getUnit("air_pressure") }}</span>
         </div>
+        <span tuiSubtitle class="latest-update">{{ sensor.last_update }}</span>
       </div>
-
-      <ng-template #tooltipSensors>
-        <span>Last update: {{ sensor.last_update }}</span>
-      </ng-template>
     }
   </div>
 
-  <h2>Latest Alerts</h2>
+  <h2>{{ "shared.dashboard.title-section.latest-alerts" | translate }}</h2>
 
   <div class="alerts-container">
     @for (alert of alerts; track alert.id) {
@@ -45,16 +35,16 @@
 
         <h2 tuiTitle>
           {{ alert.title }}
-          <span tuiSubtitle class="latest-update">{{ alert.last_update }}</span>
           @if (alert.description) {
             <span tuiSubtitle class="informative-alert">{{ alert.description }}</span>
           }
+          <span tuiSubtitle class="latest-update">{{ alert.last_update }}</span>
         </h2>
       </div>
     }
   </div>
 
-  <h2>Charts</h2>
+  <h2>{{ "shared.dashboard.title-section.charts" | translate }}</h2>
   <div class="charts-container">
     <button
       class="calendar-button"
@@ -66,7 +56,7 @@
     <span>{{ date$ | async }}</span>
 
     <app-chart-dashboard
-      title="Temperature"
+      title="{{ 'shared.dashboard.calendar.title.temperature' | translate }}"
       [data]="tempData"
       [range]="selectedRange"
       unit="°C"
@@ -74,7 +64,7 @@
       [yMax]="50"></app-chart-dashboard>
 
     <app-chart-dashboard
-      title="Humidity"
+      title="{{ 'shared.dashboard.calendar.title.humidity' | translate }}"
       [data]="humidityData"
       [range]="selectedRange"
       unit="%"
@@ -82,7 +72,7 @@
       [yMax]="100"></app-chart-dashboard>
 
     <app-chart-dashboard
-      title="Air pressure"
+      title="{{ 'shared.dashboard.calendar.title.air-pressure' | translate }}"
       [data]="pressureData"
       [range]="selectedRange"
       unit="hPa"

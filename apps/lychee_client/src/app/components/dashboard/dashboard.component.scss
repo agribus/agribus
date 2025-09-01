@@ -8,15 +8,9 @@
   gap: 1rem;
 }
 
-.weather-container {
+.data-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.sensor-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -37,10 +31,6 @@
 
 .card {
   width: auto;
-}
-
-.card h2 {
-  color: var(--tui-text-action);
 }
 
 .card span.latest-update[tuiSubtitle] {

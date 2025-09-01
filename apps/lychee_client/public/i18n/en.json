@@ -113,6 +113,21 @@
         "sensors": "Sensors"
       }
     },
+    "dashboard": {
+      "title-section": {
+        "latest-measures": "Latest measures",
+        "latest-alerts": "Latest alerts",
+        "charts": "Charts"
+      },
+      "calendar": {
+        "title": {
+          "temperature": "Temperature",
+          "humidity": "Humidity",
+          "air-pressure": "Air pressure"
+        },
+        "no-selection": "Choose a date range"
+      }
+    },
     "nickname": {
       "label": "Username",
       "placeholder": "Enter your username"

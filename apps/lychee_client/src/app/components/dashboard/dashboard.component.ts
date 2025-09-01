@@ -9,7 +9,6 @@ import {
   TuiAppearance,
   TuiButton,
   TuiDialogService,
-  TuiHint,
   TuiIcon,
   TuiTitle,
 } from "@taiga-ui/core";
@@ -18,6 +17,7 @@ import { TuiMobileCalendarDropdown } from "@taiga-ui/addon-mobile";
 import { tuiControlValue, TuiDay, TuiDayRange } from "@taiga-ui/cdk";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { ChartDashboard } from "../../chart-dashboard/chart-dashboard";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 
 type MetricType = "temperature" | "humidity" | "air_pressure";
 
@@ -63,7 +63,7 @@ interface Alert {
     ChartDashboard,
     ChartDashboard,
     TuiIcon,
-    TuiHint,
+    TranslatePipe,
   ],
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.scss"],
@@ -185,6 +185,7 @@ export class DashboardComponent {
 
   // Calendar
   private readonly dialogs = inject(TuiDialogService);
+  private translateService = inject(TranslateService);
   private readonly injector = inject(INJECTOR);
   private readonly months$ = inject(TUI_MONTHS);
 
@@ -256,9 +257,10 @@ export class DashboardComponent {
   protected readonly date$ = combineLatest([
     tuiControlValue<TuiDayRange>(this.control),
     this.months$,
+    this.translateService.stream("shared.dashboard.calendar.no-selection"),
   ]).pipe(
-    map(([value, months]) => {
-      if (!value) return "Choose a date range";
+    map(([value, months, noSelectionText]) => {
+      if (!value) return noSelectionText;
       return value.isSingleDay
         ? `${months[value.from.month]} ${value.from.day}, ${value.from.year}`
         : `${months[value.from.month]} ${value.from.day}, ${value.from.year} - ${months[value.to.month]} ${value.to.day}, ${value.to.year}`;
