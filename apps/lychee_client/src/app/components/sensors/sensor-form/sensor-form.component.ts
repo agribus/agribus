@@ -74,6 +74,8 @@ export class SensorFormComponent implements OnInit {
       id: [null],
       sourceAddress: ["", Validators.required],
       name: ["", Validators.required],
+      sensorModel: "RuuviTag",
+      isActive: true,
     });
   }
 
@@ -82,6 +84,8 @@ export class SensorFormComponent implements OnInit {
       id: this.sensor?.id ?? null,
       sourceAddress: this.sensor?.sourceAddress ?? "",
       name: this.sensor?.name ?? "",
+      sensorModel: "RuuviTag",
+      isActive: true,
     });
   }
 
