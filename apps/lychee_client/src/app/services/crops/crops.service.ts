@@ -22,6 +22,7 @@ export class CropsService {
           map((crops: Crop[]) =>
             crops.map(crop => ({
               ...crop,
+              date_plantation: new Date(),
               imageUrl: `data:image/jpeg;base64,${base64}`,
             }))
           )
