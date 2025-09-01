@@ -195,9 +195,12 @@ export class GreenhouseFormComponent implements OnChanges {
         quantity: crop.quantity,
         imageUrl: "",
       }));
-      const sensors = step2.sensor;
-      console.log(sensors);
-
+      const sensors = step2.sensor.map((sensor: Sensor) => ({
+        name: sensor.name,
+        sourceAddress: sensor.sourceAddress,
+        isActive: sensor.isActive,
+        sensorModel: sensor.sensorModel,
+      }));
       if (this.isEditMode && this.greenhouse?.id) {
         this.greenhouseService
           .updateGreenhouse(this.greenhouse.id, name, city, country, crops, sensors)
