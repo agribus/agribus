@@ -3,8 +3,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Agribus.OpenMeteo</RootNamespace>
+    <RootNamespace>Agribus.Trefle</RootNamespace>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.6" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Agribus.Core\Agribus.Core.csproj" />
   </ItemGroup>

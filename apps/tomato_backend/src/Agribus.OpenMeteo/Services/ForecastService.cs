@@ -1,18 +1,19 @@
 using System.Text.Json;
 using Agribus.Core.Domain.AggregatesModels.OpenMeteoAggregates;
+using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
 
 namespace Agribus.OpenMeteo.Services;
 
 public class ForecastService : IForecastService
 {
-    private readonly IHttpService _httpService;
+    private readonly IGetHttpUsecase _getHttpUsecase;
     private readonly string _baseUrl = "https://api.open-meteo.com/v1/forecast";
     private Dictionary<string, string> _parameters = [];
 
-    public ForecastService(IHttpService httpService)
+    public ForecastService(IGetHttpUsecase getHttpUsecase)
     {
-        _httpService = httpService;
+        _getHttpUsecase = getHttpUsecase;
         _parameters.Add(
             "hourly",
             "temperature_2m,relative_humidity_2m,weather_code,pressure_msl,precipitation_probability,precipitation"
@@ -23,7 +24,7 @@ public class ForecastService : IForecastService
     {
         _parameters.Add("latitude", lat);
         _parameters.Add("longitude", lon);
-        var jsonResponse = await _httpService.GetAsync(_baseUrl, _parameters);
+        var jsonResponse = await _getHttpUsecase.GetAsync(_baseUrl, _parameters);
         return ParseOpenMeteoResponse(jsonResponse);
     }
 
@@ -79,27 +80,23 @@ public class ForecastService : IForecastService
             .Select(x => (float?)x.GetSingle())
             .ToArray();
 
-        var results = new List<ForecastHourly>();
-
-        for (int i = 0; i < times.Length; i++)
-        {
-            results.Add(
-                new ForecastHourly
-                {
-                    Time = times[i],
-                    Temperature = i < temperatures.Length ? temperatures[i] : null,
-                    Humidity = i < humidities.Length ? humidities[i] : null,
-                    WeatherCode = i < weatherCodes.Length ? weatherCodes[i] : null,
-                    Pressure = i < pressures.Length ? pressures[i] : null,
-                    PrecipitationProbability =
-                        i < precipitationProbabilities.Length
-                            ? precipitationProbabilities[i]
-                            : null,
-                    Precipitation = i < precipitations.Length ? precipitations[i] : null,
-                }
-            );
-        }
-
-        return results;
+        return times
+            .Select(
+                (t, i) =>
+                    new ForecastHourly
+                    {
+                        Time = t,
+                        Temperature = i < temperatures.Length ? temperatures[i] : null,
+                        Humidity = i < humidities.Length ? humidities[i] : null,
+                        WeatherCode = i < weatherCodes.Length ? weatherCodes[i] : null,
+                        Pressure = i < pressures.Length ? pressures[i] : null,
+                        PrecipitationProbability =
+                            i < precipitationProbabilities.Length
+                                ? precipitationProbabilities[i]
+                                : null,
+                        Precipitation = i < precipitations.Length ? precipitations[i] : null,
+                    }
+            )
+            .ToList();
     }
 }

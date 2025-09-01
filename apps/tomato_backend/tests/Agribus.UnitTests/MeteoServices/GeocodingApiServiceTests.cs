@@ -1,4 +1,4 @@
-using Agribus.Core.Ports.Spi.OpenMeteoContext;
+using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.OpenMeteo.Services;
 using NSubstitute;
 
@@ -10,7 +10,7 @@ public class GeocodingApiServiceTests
     public async Task ShouldGetCoordinates_GivenValidCityAndCountry()
     {
         // Given
-        var httpService = Substitute.For<IHttpService>();
+        var httpService = Substitute.For<IGetHttpUsecase>();
         var expectedJsonResponse = """
             {
               "results": [
@@ -74,7 +74,7 @@ public class GeocodingApiServiceTests
     public async Task ShouldThrowException_WhenNoResultsFound()
     {
         // Given
-        var httpService = Substitute.For<IHttpService>();
+        var httpService = Substitute.For<IGetHttpUsecase>();
         var emptyJsonResponse = """
             {
               "generationtime_ms": 0.44429302

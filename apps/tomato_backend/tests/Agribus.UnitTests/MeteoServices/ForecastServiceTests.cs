@@ -1,5 +1,5 @@
 using Agribus.Core.Domain.AggregatesModels.OpenMeteoAggregates;
-using Agribus.Core.Ports.Spi.OpenMeteoContext;
+using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.OpenMeteo.Services;
 using NSubstitute;
 
@@ -11,7 +11,7 @@ public class ForecastServiceTests
     public async Task ShouldGetForecast_GivenValidCoordinates()
     {
         // Given
-        var httpService = Substitute.For<IHttpService>();
+        var httpService = Substitute.For<IGetHttpUsecase>();
         var expectedJsonResponse = """
             {
               "latitude": 52.52,
@@ -102,7 +102,7 @@ public class ForecastServiceTests
     public async Task ShouldThrowException_WhenNoHourlyDataFound()
     {
         // Given
-        var httpService = Substitute.For<IHttpService>();
+        var httpService = Substitute.For<IGetHttpUsecase>();
         var invalidJsonResponse = """
             {
               "latitude": 52.52,
@@ -127,7 +127,7 @@ public class ForecastServiceTests
     public async Task ShouldHandleMismatchedArrayLengths_InMeteoData()
     {
         // Given
-        var httpService = Substitute.For<IHttpService>();
+        var httpService = Substitute.For<IGetHttpUsecase>();
         var jsonWithMismatchedArrays = """
             {
               "hourly": {

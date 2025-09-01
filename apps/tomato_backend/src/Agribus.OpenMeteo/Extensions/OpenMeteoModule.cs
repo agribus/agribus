@@ -8,9 +8,6 @@ public static class OpenMeteoModule
 {
     public static IServiceCollection ConfigureOpenMeteo(this IServiceCollection services)
     {
-        services.AddHttpClient();
-
-        services.AddScoped<IHttpService, HttpService>();
         services.AddScoped<IForecastService, ForecastService>();
         services.AddScoped<IGeocodingApiService, GeocodingApiService>();
 
