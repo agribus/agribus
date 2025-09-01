@@ -1,82 +1,84 @@
-<h2>{{ "shared.dashboard.title-section.latest-measures" | translate }}</h2>
+<div class="dashboard-container">
+  <h2>{{ "shared.dashboard.title-section.latest-measures" | translate }}</h2>
 
-<div class="latest-measures-container">
-  <div class="data-container">
-    @for (metric of metrics; track metric.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium>
-        <tui-icon [icon]="getIcon(metric.type)" />
-        <h2 tuiTitle>{{ metric.label }}</h2>
-        <span class="data-text">{{ metric.value }} {{ getUnit(metric.type) }}</span>
-        <span tuiSubtitle class="latest-update">{{ metric.last_update }}</span>
-      </div>
-    }
-
-    @for (sensor of sensors; track sensor.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium>
-        <h2 tuiTitle>{{ sensor.name }}</h2>
-        <div class="sensor-metrics">
-          <span class="data-text">{{ sensor.temperature }} {{ getUnit("temperature") }}</span>
-          <span class="data-text">{{ sensor.humidity }} {{ getUnit("humidity") }}</span>
-          <span class="data-text">{{ sensor.air_pressure }} {{ getUnit("air_pressure") }}</span>
+  <div class="latest-measures-container">
+    <div class="data-container">
+      @for (metric of metrics; track metric.id) {
+        <div class="card" tuiAppearance="neutral" tuiCardMedium>
+          <tui-icon [icon]="getIcon(metric.type)" />
+          <h2 tuiTitle>{{ metric.label }}</h2>
+          <span class="data-text">{{ metric.value }} {{ getUnit(metric.type) }}</span>
+          <span tuiSubtitle class="latest-update">{{ metric.last_update }}</span>
         </div>
-        <span tuiSubtitle class="latest-update">{{ sensor.last_update }}</span>
-      </div>
-    }
-  </div>
+      }
 
-  <h2>{{ "shared.dashboard.title-section.latest-alerts" | translate }}</h2>
+      @for (sensor of sensors; track sensor.id) {
+        <div class="card" tuiAppearance="neutral" tuiCardMedium>
+          <h2 tuiTitle>{{ sensor.name }}</h2>
+          <div class="sensor-metrics">
+            <span class="data-text">{{ sensor.temperature }} {{ getUnit("temperature") }}</span>
+            <span class="data-text">{{ sensor.humidity }} {{ getUnit("humidity") }}</span>
+            <span class="data-text">{{ sensor.air_pressure }} {{ getUnit("air_pressure") }}</span>
+          </div>
+          <span tuiSubtitle class="latest-update">{{ sensor.last_update }}</span>
+        </div>
+      }
+    </div>
 
-  <div class="alerts-container">
-    @for (alert of alerts; track alert.id) {
-      <div class="card" tuiAppearance="neutral" tuiCardMedium>
-        <tui-badge [appearance]="badgeAppearance[alert.type]" tuiStatus>
-          {{ badgeLabel[alert.type] }}
-        </tui-badge>
+    <h2>{{ "shared.dashboard.title-section.latest-alerts" | translate }}</h2>
 
-        <h2 tuiTitle>
-          {{ alert.title }}
-          @if (alert.description) {
-            <span tuiSubtitle class="informative-alert">{{ alert.description }}</span>
-          }
-          <span tuiSubtitle class="latest-update">{{ alert.last_update }}</span>
-        </h2>
-      </div>
-    }
-  </div>
+    <div class="alerts-container">
+      @for (alert of alerts; track alert.id) {
+        <div class="card" tuiAppearance="neutral" tuiCardMedium>
+          <tui-badge [appearance]="badgeAppearance[alert.type]" tuiStatus>
+            {{ badgeLabel[alert.type] }}
+          </tui-badge>
 
-  <h2>{{ "shared.dashboard.title-section.charts" | translate }}</h2>
-  <div class="charts-container">
-    <button
-      class="calendar-button"
-      appearance="secondary"
-      iconStart="@tui.calendar"
-      tuiIconButton
-      type="button"
-      (click)="onClick()"></button>
-    <span>{{ date$ | async }}</span>
+          <h2 tuiTitle>
+            {{ alert.title }}
+            @if (alert.description) {
+              <span tuiSubtitle class="informative-alert">{{ alert.description }}</span>
+            }
+            <span tuiSubtitle class="latest-update">{{ alert.last_update }}</span>
+          </h2>
+        </div>
+      }
+    </div>
 
-    <app-chart-dashboard
-      title="{{ 'shared.dashboard.calendar.title.temperature' | translate }}"
-      [data]="tempData"
-      [range]="selectedRange"
-      unit="°C"
-      [yMin]="0"
-      [yMax]="50"></app-chart-dashboard>
+    <h2>{{ "shared.dashboard.title-section.charts" | translate }}</h2>
+    <div class="charts-container">
+      <button
+        class="calendar-button"
+        appearance="secondary"
+        iconStart="@tui.calendar"
+        tuiIconButton
+        type="button"
+        (click)="onClick()"></button>
+      <span>{{ date$ | async }}</span>
 
-    <app-chart-dashboard
-      title="{{ 'shared.dashboard.calendar.title.humidity' | translate }}"
-      [data]="humidityData"
-      [range]="selectedRange"
-      unit="%"
-      [yMin]="0"
-      [yMax]="100"></app-chart-dashboard>
+      <app-chart-dashboard
+        title="{{ 'shared.dashboard.calendar.title.temperature' | translate }}"
+        [data]="tempData"
+        [range]="selectedRange"
+        unit="°C"
+        [yMin]="0"
+        [yMax]="50"></app-chart-dashboard>
 
-    <app-chart-dashboard
-      title="{{ 'shared.dashboard.calendar.title.air-pressure' | translate }}"
-      [data]="pressureData"
-      [range]="selectedRange"
-      unit="hPa"
-      [yMin]="950"
-      [yMax]="1050"></app-chart-dashboard>
+      <app-chart-dashboard
+        title="{{ 'shared.dashboard.calendar.title.humidity' | translate }}"
+        [data]="humidityData"
+        [range]="selectedRange"
+        unit="%"
+        [yMin]="0"
+        [yMax]="100"></app-chart-dashboard>
+
+      <app-chart-dashboard
+        title="{{ 'shared.dashboard.calendar.title.air-pressure' | translate }}"
+        [data]="pressureData"
+        [range]="selectedRange"
+        unit="hPa"
+        [yMin]="950"
+        [yMax]="1050"></app-chart-dashboard>
+    </div>
   </div>
 </div>
