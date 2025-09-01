@@ -1,6 +1,8 @@
+using Agribus.Core.Ports.Spi.AlertContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using Agribus.Core.Ports.Spi.SensorContext;
 using Agribus.Postgres.Persistence;
+using Agribus.Postgres.Persistence.AlertContext;
 using Agribus.Postgres.Persistence.GreenhouseContext;
 using Agribus.Postgres.Persistence.SensorContext;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,7 @@ public static class PostgresModule
     {
         services.AddScoped<IGreenhouseRepository, GreenhouseRepository>();
         services.AddScoped<ISensorRepository, SensorRepository>();
+        services.AddScoped<IAlertRepository, AlertRepository>();
 
         return services;
     }

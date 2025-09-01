@@ -3,6 +3,7 @@ using System;
 using Agribus.Postgres.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Agribus.Postgres.Migrations
 {
     [DbContext(typeof(AgribusDbContext))]
-    partial class AgribusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250831200812_AddAlertTableAndFixGreenhouseSensorFK")]
+    partial class AddAlertTableAndFixGreenhouseSensorFK
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,56 +94,6 @@ namespace Agribus.Postgres.Migrations
 
                             t.HasCheckConstraint("CK_RuleType_IsValid", "rule_type IN ('above', 'below', 'outside', 'inside')");
                         });
-                });
-
-            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.AlertAggregates.AlertEvents", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<Guid>("AlertId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("alert_id");
-
-                    b.Property<DateTimeOffset>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("last_modified")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<double>("MeasureValue")
-                        .HasColumnType("double precision")
-                        .HasColumnName("measure_value");
-
-                    b.Property<DateTimeOffset>("OccuredAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamptz")
-                        .HasColumnName("occured_at")
-                        .HasDefaultValueSql("NOW()");
-
-                    b.Property<Guid?>("SensorId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("sensor_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_alert_events");
-
-                    b.HasIndex("AlertId")
-                        .HasDatabaseName("ix_alert_events_alert_id");
-
-                    b.HasIndex("SensorId")
-                        .HasDatabaseName("ix_alert_events_sensor_id");
-
-                    b.ToTable("alert_events", (string)null);
                 });
 
             modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", b =>
@@ -279,26 +232,6 @@ namespace Agribus.Postgres.Migrations
                     b.Navigation("Greenhouse");
                 });
 
-            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.AlertAggregates.AlertEvents", b =>
-                {
-                    b.HasOne("Agribus.Core.Domain.AggregatesModels.AlertAggregates.Alert", "Alert")
-                        .WithMany("AlertEvents")
-                        .HasForeignKey("AlertId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_alert_events_alert_alert_id");
-
-                    b.HasOne("Agribus.Core.Domain.AggregatesModels.SensorAggregates.Sensor", "Sensor")
-                        .WithMany("AlertEvents")
-                        .HasForeignKey("SensorId")
-                        .OnDelete(DeleteBehavior.SetNull)
-                        .HasConstraintName("fk_alert_events_sensor_sensor_id");
-
-                    b.Navigation("Alert");
-
-                    b.Navigation("Sensor");
-                });
-
             modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.SensorAggregates.Sensor", b =>
                 {
                     b.HasOne("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", "Greenhouse")
@@ -311,21 +244,11 @@ namespace Agribus.Postgres.Migrations
                     b.Navigation("Greenhouse");
                 });
 
-            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.AlertAggregates.Alert", b =>
-                {
-                    b.Navigation("AlertEvents");
-                });
-
             modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates.Greenhouse", b =>
                 {
                     b.Navigation("Alerts");
 
                     b.Navigation("Sensors");
-                });
-
-            modelBuilder.Entity("Agribus.Core.Domain.AggregatesModels.SensorAggregates.Sensor", b =>
-                {
-                    b.Navigation("AlertEvents");
                 });
 #pragma warning restore 612, 618
         }
