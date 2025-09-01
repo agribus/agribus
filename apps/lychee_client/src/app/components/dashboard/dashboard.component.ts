@@ -18,6 +18,7 @@ import { tuiControlValue, TuiDay, TuiDayRange } from "@taiga-ui/cdk";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { ChartDashboard } from "../../chart-dashboard/chart-dashboard";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
+import { Sensor } from "@interfaces/sensor.interface";
 
 type MetricType = "temperature" | "humidity" | "air_pressure";
 
@@ -27,15 +28,6 @@ interface Metric {
   label: string;
   value: number;
   last_update: string;
-}
-
-interface Sensor {
-  id: number;
-  name: string;
-  last_update: string;
-  temperature: number;
-  humidity: number;
-  air_pressure: number;
 }
 
 type AlertType = "success" | "warning" | "error" | "info";
