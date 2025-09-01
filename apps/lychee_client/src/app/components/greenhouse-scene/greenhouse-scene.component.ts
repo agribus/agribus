@@ -42,7 +42,7 @@ export class GreenhouseSceneComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.threeSceneService.createScene(this.greenhouseCanva);
-    await this.threeSceneService.plantVegetablesFromGreenhouse(this.greenhouse);
+    await this.threeSceneService.plantCropsFromGreenhouse(this.greenhouse);
   }
 
   get isInsideView(): boolean {

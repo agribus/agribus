@@ -4,11 +4,11 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { Font, FontLoader } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
-import { VEGETABLES } from "@utils/vegetables-config/vegetables.config";
+import { CROPS } from "@utils/vegetables-config/vegetables.config";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { Crop } from "@interfaces/crop.interface";
 
-interface PlantedVegetable {
+interface PlantedCrop {
   crop: Crop;
   mesh: THREE.Object3D;
   spawnPointIndex: number;
@@ -51,7 +51,7 @@ export class GreenhouseSceneService {
   };
 
   private spawnPoints: THREE.Object3D[] = [];
-  private plantedVegetables: PlantedVegetable[] = [];
+  private plantedCrops: PlantedCrop[] = [];
   private textContainers: THREE.Group[] = [];
   private font!: Font;
 
@@ -71,17 +71,17 @@ export class GreenhouseSceneService {
     this.animate();
   }
 
-  async plantVegetablesFromGreenhouse(greenhouse: Greenhouse): Promise<void> {
-    this.plantedVegetables = [];
+  async plantCropsFromGreenhouse(greenhouse: Greenhouse): Promise<void> {
+    this.plantedCrops = [];
     greenhouse.crops.forEach(crop => {
-      this.plantVegetable(crop, crop.quantity ?? 1);
+      this.plantCrop(crop, crop.quantity ?? 1);
     });
   }
 
-  plantVegetable(crop: Crop, quantity: number): void {
-    const config = VEGETABLES[crop.commonName.toLowerCase()];
+  plantCrop(crop: Crop, quantity: number): void {
+    const config = CROPS[crop.commonName.toLowerCase()];
     if (!config) {
-      console.error(`Vegetable "${crop.commonName}" not found in VEGETABLES.`);
+      console.error(`Crop "${crop.commonName}" not found in CROPS.`);
       return;
     }
 
@@ -220,18 +220,18 @@ export class GreenhouseSceneService {
   }
 
   private processPlantPlacement(crop: Crop, baseModel: THREE.Object3D): void {
-    if (this.plantedVegetables.length < this.MAX_PLANTS) {
-      this.addVegetableToScene(crop, baseModel);
+    if (this.plantedCrops.length < this.MAX_PLANTS) {
+      this.addCropToScene(crop, baseModel);
     } else {
       const plantToRemove = this.findPlantToRemove(crop);
       if (plantToRemove) {
         this.removePlant(plantToRemove);
-        this.addVegetableToScene(crop, baseModel);
+        this.addCropToScene(crop, baseModel);
       }
     }
   }
 
-  private addVegetableToScene(crop: Crop, baseModel: THREE.Object3D): void {
+  private addCropToScene(crop: Crop, baseModel: THREE.Object3D): void {
     const availableSpawnIndex = this.findAvailableSpawnPoint();
     const point = this.spawnPoints[availableSpawnIndex];
     const vegClone = baseModel.clone(true);
@@ -242,7 +242,7 @@ export class GreenhouseSceneService {
     vegClone.name = `greenhouse_pot_${availableSpawnIndex + 1}`;
 
     this.scene.add(vegClone);
-    this.plantedVegetables.push({
+    this.plantedCrops.push({
       crop: crop,
       mesh: vegClone,
       spawnPointIndex: availableSpawnIndex,
@@ -250,7 +250,7 @@ export class GreenhouseSceneService {
   }
 
   private findAvailableSpawnPoint(): number {
-    const usedSpawnPoints = this.plantedVegetables.map(v => v.spawnPointIndex);
+    const usedSpawnPoints = this.plantedCrops.map(v => v.spawnPointIndex);
     for (let i = 0; i < this.spawnPoints.length; i++) {
       if (!usedSpawnPoints.includes(i)) {
         return i;
@@ -259,24 +259,24 @@ export class GreenhouseSceneService {
     return this.spawnPoints.length - 1;
   }
 
-  private findPlantToRemove(newCrop: Crop): PlantedVegetable | undefined {
-    if (this.plantedVegetables.some(plant => plant.crop.commonName === newCrop.commonName)) {
+  private findPlantToRemove(newCrop: Crop): PlantedCrop | undefined {
+    if (this.plantedCrops.some(plant => plant.crop.commonName === newCrop.commonName)) {
       return undefined;
     }
 
-    const vegetablesCounts = this.getVegetableCounts();
-    const typeToRemove = this.findMostFrequentType(vegetablesCounts, newCrop.commonName);
+    const cropsCounts = this.getCropCounts();
+    const typeToRemove = this.findMostFrequentType(cropsCounts, newCrop.commonName);
 
-    if (!typeToRemove || vegetablesCounts.get(typeToRemove)! <= 1) {
+    if (!typeToRemove || cropsCounts.get(typeToRemove)! <= 1) {
       return undefined;
     }
 
-    return this.plantedVegetables.reverse().find(plant => plant.crop.commonName === typeToRemove);
+    return this.plantedCrops.reverse().find(plant => plant.crop.commonName === typeToRemove);
   }
 
-  private getVegetableCounts(): Map<string, number> {
+  private getCropCounts(): Map<string, number> {
     const counts = new Map<string, number>();
-    this.plantedVegetables.forEach(plant => {
+    this.plantedCrops.forEach(plant => {
       counts.set(plant.crop.commonName, (counts.get(plant.crop.commonName) || 0) + 1);
     });
     return counts;
@@ -299,11 +299,11 @@ export class GreenhouseSceneService {
     return typeToRemove;
   }
 
-  private removePlant(plant: PlantedVegetable): void {
+  private removePlant(plant: PlantedCrop): void {
     this.scene.remove(plant.mesh);
-    const index = this.plantedVegetables.findIndex(p => p === plant);
+    const index = this.plantedCrops.findIndex(p => p === plant);
     if (index >= 0) {
-      this.plantedVegetables.splice(index, 1);
+      this.plantedCrops.splice(index, 1);
     }
   }
 
@@ -390,18 +390,18 @@ export class GreenhouseSceneService {
   }
 
   showCropIdealConditions(index: number): void {
-    const plantedVegetable = this.plantedVegetables.find(plant => plant.spawnPointIndex === index);
-    if (!plantedVegetable) {
-      console.error("No planted vegetable found at index:", index);
+    const plantedCrop = this.plantedCrops.find(plant => plant.spawnPointIndex === index);
+    if (!plantedCrop) {
+      console.error("No planted crop found at index:", index);
       return;
     }
 
-    const infoText = `${plantedVegetable.crop.commonName}\n${plantedVegetable.crop.cropGrowthConditions?.atmosphericHumidity} %RH\n${plantedVegetable.crop.cropGrowthConditions?.miniumTemperature}° - ${plantedVegetable.crop.cropGrowthConditions?.maximumTemperature}°C\n`;
+    const infoText = `${plantedCrop.crop.commonName}\n${plantedCrop.crop.cropGrowthConditions?.atmosphericHumidity} %RH\n${plantedCrop.crop.cropGrowthConditions?.miniumTemperature}° - ${plantedCrop.crop.cropGrowthConditions?.maximumTemperature}°C\n`;
 
     const textPosition = new THREE.Vector3(
-      plantedVegetable.mesh.position.x,
-      plantedVegetable.mesh.position.y + 0.5,
-      plantedVegetable.mesh.position.z
+      plantedCrop.mesh.position.x,
+      plantedCrop.mesh.position.y + 0.5,
+      plantedCrop.mesh.position.z
     );
 
     const textContainer = this.create3DTextContainer(infoText, textPosition);
