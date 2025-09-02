@@ -116,7 +116,6 @@ export class CropFormComponent implements OnInit {
       );
       this.form.value.plantingDate = plantingDate.toISOString();
 
-      console.log(this.form.value);
       this.cropSubmitted.emit(this.form.value);
       this.openSheet = false;
     }

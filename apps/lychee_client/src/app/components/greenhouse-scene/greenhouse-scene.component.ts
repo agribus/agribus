@@ -23,7 +23,7 @@ export class GreenhouseSceneComponent implements OnInit {
     scientificName: "Daucus carota subsp. sativus",
     score: 85,
     quantity: 7,
-    date_plantation: new Date("2025-03-01"),
+    plantingDate: new Date("2025-03-01"),
     cropGrowthConditions: {
       atmosphericHumidity: 23.4,
       miniumTemperature: 15.6,
