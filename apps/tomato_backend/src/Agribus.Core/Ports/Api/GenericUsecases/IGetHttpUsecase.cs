@@ -1,6 +1,6 @@
-namespace Agribus.Core.Ports.Spi.OpenMeteoContext
+namespace Agribus.Core.Ports.Api.GenericUsecases
 {
-    public interface IHttpService
+    public interface IGetHttpUsecase
     {
         Task<string> GetAsync(string url, Dictionary<string, string>? parameters);
     }

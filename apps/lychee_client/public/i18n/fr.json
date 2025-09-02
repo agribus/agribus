@@ -115,6 +115,21 @@
         "sensors": "Capteurs"
       }
     },
+    "dashboard": {
+      "title-section": {
+        "latest-measures": "Dernières mesures",
+        "latest-alerts": "Dernières alertes",
+        "charts": "Graphiques"
+      },
+      "calendar": {
+        "title": {
+          "temperature": "Température",
+          "humidity": "Humidité",
+          "air-pressure": "Pression atmosphérique"
+        },
+        "no-selection": "Choisir une période"
+      }
+    },
     "nickname": {
       "label": "Pseudo",
       "placeholder": "Entrer votre pseudo"

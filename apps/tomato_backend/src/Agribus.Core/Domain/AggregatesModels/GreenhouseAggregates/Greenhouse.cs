@@ -1,3 +1,4 @@
+using Agribus.Core.Domain.AggregatesModels.AlertAggregates;
 using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 
@@ -13,6 +14,9 @@ public class Greenhouse : BaseEntity
     public required string UserId { get; set; }
     public List<Crop> Crops { get; set; } = new();
     public List<Sensor> Sensors { get; set; } = new();
+
+    public IReadOnlyCollection<Alert> Alerts => _alerts.AsReadOnly();
+    private readonly List<Alert> _alerts = [];
 
     public void AddSensors(IEnumerable<Sensor> sensors)
     {

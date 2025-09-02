@@ -1,0 +1,27 @@
+<div class="metric-chart">
+  @if (title) {
+    <h3 class="chart-title">{{ title }}</h3>
+  }
+
+  @if (labels$ | async; as labels) {
+    <tui-axes
+      class="axes"
+      [axisXLabels]="labels"
+      [axisYLabels]="labelsY"
+      [horizontalLines]="4"
+      [verticalLines]="labels.length - 1">
+      <tui-line-days-chart
+        [value]="(chartData$ | async)!"
+        [y]="y"
+        [height]="height"
+        [xStringify]="dayToLabel"
+        [yStringify]="yToLabel"
+        [hintContent]="hintTpl" />
+    </tui-axes>
+  }
+
+  <ng-template #hintTpl let-point>
+    <b>{{ toDate(point[0]) | date: "dd/MM/yyyy" }}</b>
+    — {{ point[1] }} {{ unit }}
+  </ng-template>
+</div>

@@ -1,5 +1,5 @@
-using System.Net;
 using Agribus.Application.SensorUsecases;
+using Agribus.Core.Domain.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -22,6 +22,10 @@ public class MappingMiddleware(RequestDelegate next)
         catch (UnregisteredSensorException exception)
         {
             await SensorsExceptionHandler.HandleExceptionAsync(context, exception);
+        }
+        catch (NotFoundEntityException exception)
+        {
+            await NotFoundExceptionHandler.HandleExceptionAsync(context, exception);
         }
         catch (Exception exception)
         {

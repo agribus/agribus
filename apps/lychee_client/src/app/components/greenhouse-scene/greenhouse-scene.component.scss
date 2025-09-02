@@ -4,3 +4,11 @@
   overflow: hidden;
   position: relative;
 }
+
+button {
+  position: absolute;
+  top: 70px; // hauteur du header 56 + marge 14
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+}

@@ -1,4 +1,5 @@
 using Agribus.Core.Domain.AggregatesModels;
+using Agribus.Core.Domain.AggregatesModels.AlertAggregates;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 
@@ -8,6 +9,8 @@ public class AgribusDbContext(DbContextOptions<AgribusDbContext> options) : DbCo
 {
     public DbSet<Sensor> Sensor { get; set; }
     public DbSet<Greenhouse> Greenhouse { get; set; }
+    public DbSet<Alert> Alert { get; set; }
+    public DbSet<AlertEvents> AlertEvents { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

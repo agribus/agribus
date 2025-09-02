@@ -17,13 +17,20 @@ export class NavbarComponent implements OnInit {
   protected activeIndex = 0;
 
   protected readonly greenhouseSettingsIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M11.3122 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V9.99997C2.99993 9.70904 3.06333 9.42159 3.18579 9.15768C3.30824 8.89378 3.4868 8.65976 3.709 8.47197L10.709 2.47297C11.07 2.16788 11.5274 2.00049 12 2.00049C12.4726 2.00049 12.93 2.16788 13.291 2.47297L20.291 8.47197C20.5132 8.65976 20.6918 8.89378 20.8142 9.15768C20.9367 9.42159 21.0001 9.70904 21 9.99997V11.5"/>
-    <path d="M14.5987 12.1991C14.4258 12.0699 14.2158 12 14 12H10C9.73478 12 9.48043 12.1054 9.29289 12.2929C9.10536 12.4804 9 12.7348 9 13V21"/>
-    <path d="M15 20.225L15.923 19.843"/>
-    <path d="M15.923 17.5471L15 17.1641"/>
-    <path d="M17.547 15.923L17.164 15"/>
-  </svg>`
+    `<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.8122 21H5.5C4.96957 21 4.46086 20.7893 4.08579 20.4142C3.71071 20.0392 3.5 19.5305 3.5 19V10C3.49993 9.7091 3.56333 9.42165 3.68579 9.15775C3.80824 8.89384 3.9868 8.65983 4.209 8.47203L11.209 2.47303C11.57 2.16794 12.0274 2.00055 12.5 2.00055C12.9726 2.00055 13.43 2.16794 13.791 2.47303L20.791 8.47203C21.0132 8.65983 21.1918 8.89384 21.3142 9.15775C21.4367 9.42165 21.5001 9.7091 21.5 10V11.5001" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.0987 12.1991C14.9258 12.0699 14.7158 12 14.5 12H10.5C10.2348 12 9.98043 12.1054 9.79289 12.2929C9.60536 12.4804 9.5 12.7348 9.5 13V21" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M15.5 20.225L16.423 19.843" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16.423 17.5471L15.5 17.1641" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18.047 15.923L17.664 15" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18.047 21.467L17.664 22.391" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20.343 15.923L20.726 15" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M20.725 22.391L20.343 21.467" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M21.967 17.5471L22.891 17.1641" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M21.967 19.843L22.891 20.226" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M19.195 21.6951C20.8519 21.6951 22.195 20.3519 22.195 18.6951C22.195 17.0382 20.8519 15.6951 19.195 15.6951C17.5382 15.6951 16.195 17.0382 16.195 18.6951C16.195 20.3519 17.5382 21.6951 19.195 21.6951Z" stroke="#374141" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+`
   )}`;
 
   ngOnInit() {

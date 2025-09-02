@@ -6,6 +6,7 @@ using Agribus.Core.Ports.Api.SensorUsecases.DTOs;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using Agribus.Core.Ports.Spi.SensorContext;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
+using Agribus.Core.Ports.Spi.TrefleContext;
 
 namespace Agribus.Application.GreenhouseUsecases;
 
@@ -13,7 +14,8 @@ public class UpdateGreenhouseUsecase(
     IGreenhouseRepository greenhouseRepository,
     IUpdateSensorUsecase updateSensorUsecase,
     ISensorRepository sensorRepository,
-    IGeocodingApiService geocodingApiService
+    IGeocodingApiService geocodingApiService,
+    ITrefleService trefleService
 ) : IUpdateGreenhouseUsecase
 {
     public async Task<bool> Handle(
@@ -29,6 +31,13 @@ public class UpdateGreenhouseUsecase(
             
         var (lat, lon) = await geocodingApiService.GetCoordinatesAsync(dto.City, dto.Country);
         greenhouse.AddCoordinate(lat, lon);
+        foreach (var crop in greenhouse.Crops)
+        {
+            var cropGrowthConditions = await trefleService.GetCropIdealConditions(
+                crop.ScientificName
+            );
+            crop.AddCropGrowthConditions(cropGrowthConditions);
+        }
         await greenhouseRepository.UpdateAsync(greenhouse, dto, cancellationToken);
         
         await SyncSensorsAsync(greenhouse, dto.Sensors, userId, cancellationToken);

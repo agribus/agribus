@@ -1,8 +1,8 @@
 import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
-import { TuiButton, TuiError, TuiTextfield } from "@taiga-ui/core";
-import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
+import { TuiButton, TuiError, TuiIcon, TuiTextfield } from "@taiga-ui/core";
+import { TuiFieldErrorPipe, TuiPassword, tuiValidationErrorsProvider } from "@taiga-ui/kit";
 import { AuthRegister } from "@interfaces/auth.interface";
 import { AuthService } from "@services/auth/auth.service";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
@@ -19,6 +19,8 @@ import { Router } from "@angular/router";
     TuiFieldErrorPipe,
     TuiTextfield,
     TranslatePipe,
+    TuiIcon,
+    TuiPassword,
   ],
   templateUrl: "./register-form.component.html",
   styleUrl: "./register-form.component.scss",

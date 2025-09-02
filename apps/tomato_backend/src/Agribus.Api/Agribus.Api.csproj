@@ -16,5 +16,6 @@
     <ProjectReference Include="..\Agribus.Application\Agribus.Application.csproj" />
     <ProjectReference Include="..\Agribus.OpenMeteo\Agribus.OpenMeteo.csproj" />
     <ProjectReference Include="..\Agribus.Postgres\Agribus.Postgres.csproj" />
+    <ProjectReference Include="..\Agribus.Trefle\Agribus.Trefle.csproj" />
   </ItemGroup>
 </Project>
