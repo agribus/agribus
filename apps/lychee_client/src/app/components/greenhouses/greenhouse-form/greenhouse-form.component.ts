@@ -121,6 +121,9 @@ export class GreenhouseFormComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes["greenhouse"] && this.greenhouse) {
+      this.sensors = this.greenhouse.sensors || [];
+      this.crops = this.greenhouse.crops || [];
+
       this.greenhouseForm.patchValue({
         step0: {
           name: this.greenhouse.name,
