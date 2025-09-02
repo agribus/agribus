@@ -12,13 +12,11 @@ public class Greenhouse : BaseEntity
     public string? Longitude { get; set; }
     public required string UserId { get; set; }
     public List<Crop> Crops { get; set; } = new();
-
-    public IReadOnlyCollection<Sensor> Sensors => _sensors.AsReadOnly();
-    private readonly List<Sensor> _sensors = [];
+    public List<Sensor> Sensors { get; set; } = new();
 
     public void AddSensors(IEnumerable<Sensor> sensors)
     {
-        _sensors.AddRange(
+        Sensors.AddRange(
             sensors.Select(s =>
             {
                 s.Greenhouse = this;
