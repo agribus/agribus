@@ -84,7 +84,7 @@ export class CropFormComponent implements OnInit {
     this.form.patchValue({
       commonName: this.crop?.commonName ?? "",
       scientificName: this.crop?.scientificName ?? "",
-      plantingDate: this.crop?.date_plantation ?? null,
+      plantingDate: this.crop?.plantingDate ?? null,
       quantity: this.crop?.quantity ?? 1,
       image: null,
     });
@@ -109,6 +109,13 @@ export class CropFormComponent implements OnInit {
 
   public submit(): void {
     if (this.form.valid) {
+      const plantingDate = new Date(
+        this.form.value.plantingDate.year,
+        this.form.value.plantingDate.month - 1,
+        this.form.value.plantingDate.day
+      );
+      this.form.value.plantingDate = plantingDate.toISOString();
+
       this.cropSubmitted.emit(this.form.value);
       this.openSheet = false;
     }

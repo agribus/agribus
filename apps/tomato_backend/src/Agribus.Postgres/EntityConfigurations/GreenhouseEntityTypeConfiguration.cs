@@ -3,6 +3,8 @@ using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+namespace Agribus.Postgres.EntityConfigurations;
+
 public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenhouse>
 {
     public void Configure(EntityTypeBuilder<Greenhouse> greenhouseConfiguration)
@@ -30,12 +32,6 @@ public class GreenhouseEntityTypeConfiguration : IEntityTypeConfiguration<Greenh
             .HasColumnType("varchar(32)")
             .IsRequired()
             .HasComment("user table is currently stored in an external database (Clerk)");
-
-        greenhouseConfiguration
-            .HasMany(g => g.Sensors)
-            .WithOne()
-            .HasForeignKey(s => s.GreenhouseId)
-            .OnDelete(DeleteBehavior.Cascade);
 
         greenhouseConfiguration
             .Property(g => g.Crops)

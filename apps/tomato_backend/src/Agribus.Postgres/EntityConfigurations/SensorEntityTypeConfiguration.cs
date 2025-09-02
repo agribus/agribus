@@ -2,6 +2,8 @@ using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
+namespace Agribus.Postgres.EntityConfigurations;
+
 public class SensorEntityTypeConfiguration : IEntityTypeConfiguration<Sensor>
 {
     public void Configure(EntityTypeBuilder<Sensor> sensorConfiguration)
@@ -28,9 +30,12 @@ public class SensorEntityTypeConfiguration : IEntityTypeConfiguration<Sensor>
             .IsRequired()
             .HasColumnType("varchar(50)");
         sensorConfiguration.Property(sensor => sensor.IsActive).IsRequired().HasDefaultValue(true);
+
+        sensorConfiguration.Property(sensor => sensor.GreenhouseId).IsRequired();
         sensorConfiguration
             .HasOne(sensor => sensor.Greenhouse)
             .WithMany(g => g.Sensors)
-            .HasForeignKey(sensor => sensor.GreenhouseId);
+            .HasForeignKey(sensor => sensor.GreenhouseId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
