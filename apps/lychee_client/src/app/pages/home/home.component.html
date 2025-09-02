@@ -1,0 +1,10 @@
+@if (userHaveGreenhouse) {
+  <app-greenhouse-scene />
+} @else {
+  <button
+    tuiButton
+    appearance="secondary"
+    (click)="navigateToGreenhouseForm()"
+    class="add-button"
+    iconStart="@tui.plus"></button>
+}
