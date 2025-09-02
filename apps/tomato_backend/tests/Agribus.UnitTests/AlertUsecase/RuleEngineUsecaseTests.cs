@@ -1,6 +1,3 @@
 namespace Agribus.UnitTests.AlertUsecase;
 
-public class RuleEngineUsecaseTests
-{
-    
-}
+public class RuleEngineUsecaseTests { }
