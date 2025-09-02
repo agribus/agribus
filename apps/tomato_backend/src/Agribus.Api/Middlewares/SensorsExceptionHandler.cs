@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Agribus.Api.Middlewares;
 
-public class SensorsExceptionHandler
+public static class SensorsExceptionHandler
 {
     public static async Task HandleExceptionAsync(
         HttpContext context,

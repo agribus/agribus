@@ -7,10 +7,11 @@ import {
   TuiAlertService,
   TuiButton,
   TuiError,
+  TuiIcon,
   TuiNotification,
   TuiTextfield,
 } from "@taiga-ui/core";
-import { TuiFieldErrorPipe, tuiValidationErrorsProvider } from "@taiga-ui/kit";
+import { TuiFieldErrorPipe, TuiPassword, tuiValidationErrorsProvider } from "@taiga-ui/kit";
 import { AuthLogin, AuthResponse } from "@interfaces/auth.interface";
 import { AuthService } from "@services/auth/auth.service";
 
@@ -25,6 +26,8 @@ import { AuthService } from "@services/auth/auth.service";
     TuiTextfield,
     TranslatePipe,
     TuiNotification,
+    TuiIcon,
+    TuiPassword,
   ],
   templateUrl: "./login-form.component.html",
   styleUrl: "./login-form.component.scss",

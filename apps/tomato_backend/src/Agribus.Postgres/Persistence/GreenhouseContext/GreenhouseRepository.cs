@@ -65,9 +65,10 @@ public class GreenhouseRepository(AgribusDbContext context) : IGreenhouseReposit
         CancellationToken cancellationToken
     )
     {
-        return await context.Greenhouse.FirstOrDefaultAsync(
-            g => g.Id == greenhouseId,
-            cancellationToken
-        );
+        var result = await context
+            .Greenhouse.Include(g => g.Sensors)
+            .FirstOrDefaultAsync(g => g.Id == greenhouseId, cancellationToken);
+
+        return result;
     }
 }

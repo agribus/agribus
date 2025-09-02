@@ -1,9 +1,12 @@
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
+using Agribus.Core.Ports.Api.SensorUsecases;
 using Agribus.Core.Ports.Spi.AuthContext;
 using Agribus.Core.Ports.Spi.GreenhouseContext;
 using Agribus.Core.Ports.Spi.OpenMeteoContext;
+using Agribus.Core.Ports.Spi.SensorContext;
+using Agribus.Core.Ports.Spi.TrefleContext;
 using NSubstitute;
 
 namespace Agribus.UnitTests.GreenhouseUsecase;
@@ -103,8 +106,8 @@ public class GreenhouseUsecaseTests
         authContext.GetCurrentUserId().Returns(fakeUserId);
 
         var geocodingApiService = Substitute.For<IGeocodingApiService>();
-
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        var trefleService = Substitute.For<ITrefleService>();
 
         var dto = new CreateGreenhouseDto
         {
@@ -140,7 +143,26 @@ public class GreenhouseUsecaseTests
             .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
             .Returns(("45.74846", "4.84671"));
 
-        var usecase = new CreateGreenhouseUsecase(greenhouseRepository, geocodingApiService);
+        var cropXGrowthConditions = new CropGrowthConditions
+        {
+            AtmosphericHumidity = 70.0f,
+            MinimumTemperature = 18.0f,
+            MaximumTemperature = 28.0f,
+        };
+        trefleService.GetCropIdealConditions("X").Returns(cropXGrowthConditions);
+        var cropYGrowthConditions = new CropGrowthConditions
+        {
+            AtmosphericHumidity = 65.0f,
+            MinimumTemperature = 15.0f,
+            MaximumTemperature = 25.0f,
+        };
+        trefleService.GetCropIdealConditions("Y").Returns(cropYGrowthConditions);
+
+        var usecase = new CreateGreenhouseUsecase(
+            greenhouseRepository,
+            geocodingApiService,
+            trefleService
+        );
 
         // When
         var result = await usecase.Handle(dto, fakeUserId, CancellationToken.None);
@@ -152,6 +174,14 @@ public class GreenhouseUsecaseTests
         Assert.Equal(dto.Country, result.Country);
         Assert.Equal(dto.Crops.Count, result.Crops.Count);
         Assert.Equal(dto.Sensors.Count, result.Sensors.Count);
+        Assert.Equivalent(
+            result.Crops.FirstOrDefault(c => c.ScientificName == "X")!.IdealConditions,
+            cropXGrowthConditions
+        );
+        Assert.Equivalent(
+            result.Crops.FirstOrDefault(c => c.ScientificName == "Y")!.IdealConditions,
+            cropYGrowthConditions
+        );
     }
 
     [Fact]
@@ -198,16 +228,18 @@ public class GreenhouseUsecaseTests
         var dto = new UpdateGreenhouseDto
         {
             Name = "New Name",
-            City = "New City",
-            Country = "New Country",
+            City = "Paris",
+            Country = "France",
             Crops = [],
         };
-
+        var geocodingApiService = Substitute.For<IGeocodingApiService>();
         var greenhouseRepository = Substitute.For<IGreenhouseRepository>();
+        var sensorRepository = Substitute.For<ISensorRepository>();
+        var updateSensorUsecase = Substitute.For<IUpdateSensorUsecase>();
+        var trefleService = Substitute.For<ITrefleService>();
         greenhouseRepository
             .Exists(originalGreenhouse.Id, userId, CancellationToken.None)
             .Returns(originalGreenhouse);
-
         greenhouseRepository
             .UpdateAsync(
                 Arg.Any<Greenhouse>(),
@@ -215,8 +247,17 @@ public class GreenhouseUsecaseTests
                 Arg.Any<CancellationToken>()
             )
             .Returns(true);
+        geocodingApiService
+            .GetCoordinatesAsync(Arg.Any<String>(), Arg.Any<String>())
+            .Returns(("48.85341", "2.3488"));
 
-        var usecase = new UpdateGreenhouseUsecase(greenhouseRepository);
+        var usecase = new UpdateGreenhouseUsecase(
+            greenhouseRepository,
+            updateSensorUsecase,
+            sensorRepository,
+            geocodingApiService,
+            trefleService
+        );
 
         // When
         var result = await usecase.Handle(

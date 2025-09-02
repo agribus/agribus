@@ -11,6 +11,7 @@
       <tui-textfield>
         <input
           class="form-input"
+          autocapitalize="off"
           formControlName="email"
           placeholder="{{ 'shared.email.placeholder' | translate }}"
           type="text"
@@ -31,10 +32,12 @@
       <tui-textfield>
         <input
           class="form-input"
+          autocapitalize="off"
           formControlName="password"
           placeholder="********"
           type="password"
           tuiTextfield />
+        <tui-icon tuiPassword />
       </tui-textfield>
 
       <tui-error formControlName="password" [error]="[] | tuiFieldError | async" />

@@ -1,8 +1,8 @@
-export interface VegetableConfig {
+export interface CropConfig {
   name: string;
   modelPath: string;
 }
 
-export const VEGETABLES: Record<string, VegetableConfig> = {
+export const CROPS: Record<string, CropConfig> = {
   carrot: { name: "carrot", modelPath: "./models/carrot.glb" },
 };

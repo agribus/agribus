@@ -121,6 +121,9 @@ export class GreenhouseFormComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes["greenhouse"] && this.greenhouse) {
+      this.sensors = this.greenhouse.sensors || [];
+      this.crops = this.greenhouse.crops || [];
+
       this.greenhouseForm.patchValue({
         step0: {
           name: this.greenhouse.name,
@@ -191,12 +194,16 @@ export class GreenhouseFormComponent implements OnChanges {
       const crops = step1.crops.map((crop: Crop) => ({
         commonName: crop.commonName,
         scientificName: crop.scientificName,
-        date_plantation: crop.date_plantation,
+        plantingDate: crop.plantingDate,
         quantity: crop.quantity,
-        imageUrl: crop.imageUrl,
+        imageUrl: "",
       }));
-      const sensors = step2.sensor;
-
+      const sensors = step2.sensor.map((sensor: Sensor) => ({
+        name: sensor.name,
+        sourceAddress: sensor.sourceAddress,
+        isActive: sensor.isActive,
+        sensorModel: sensor.sensorModel,
+      }));
       if (this.isEditMode && this.greenhouse?.id) {
         this.greenhouseService
           .updateGreenhouse(this.greenhouse.id, name, city, country, crops, sensors)
@@ -371,6 +378,8 @@ export class GreenhouseFormComponent implements OnChanges {
         id: this.generateSensorId(),
         name: sensor.name || this.getDefaultSensorName(),
         sourceAddress: sensor.sourceAddress,
+        isActive: true,
+        sensorModel: "RuuviTag",
       };
       this.sensors.push(newSensor);
     }

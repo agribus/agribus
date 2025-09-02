@@ -22,6 +22,7 @@ export class CropsService {
           map((crops: Crop[]) =>
             crops.map(crop => ({
               ...crop,
+              plantingDate: new Date(),
               imageUrl: `data:image/jpeg;base64,${base64}`,
             }))
           )
@@ -76,7 +77,7 @@ export class CropsService {
         scientificName: result.species.scientificNameWithoutAuthor,
         score: Math.round(result.score * 100) / 100,
         quantity: 0,
-        date_plantation: new Date(),
+        plantingDate: new Date(),
       }));
   }
 

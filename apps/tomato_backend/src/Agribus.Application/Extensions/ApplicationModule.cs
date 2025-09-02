@@ -1,5 +1,7 @@
+using Agribus.Application.GenericUsecases;
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Application.SensorUsecases;
+using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.SensorUsecases;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,9 @@ public static class ApplicationModule
 
         services.AddScoped<IUpdateSensorUsecase, UpdateSensorUsecase>();
         services.AddScoped<IDeleteSensorUsecase, DeleteSensorUsecase>();
+
+        services.AddHttpClient();
+        services.AddScoped<IGetHttpUsecase, GetHttpUsecase>();
 
         return services;
     }

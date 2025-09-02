@@ -10,4 +10,9 @@ public interface IUpdateSensorUsecase
         UpdateSensorDto dto,
         CancellationToken cancellationToken
     );
+    Task<bool?> HandleFromGreenhouse(
+        string userId,
+        UpdateSensorFromGreenhouseDto dto,
+        CancellationToken cancellationToken
+    );
 }

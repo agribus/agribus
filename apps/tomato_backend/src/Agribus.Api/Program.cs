@@ -6,6 +6,7 @@ using Agribus.Core.Extensions;
 using Agribus.InfluxDB.Extensions;
 using Agribus.OpenMeteo.Extensions;
 using Agribus.Postgres.Extensions;
+using Agribus.Trefle.Extensions;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,7 +19,8 @@ builder
     .AddClerk(config)
     .AddApplication()
     .ConfigurePostgres(config)
-    .ConfigureOpenMeteo();
+    .ConfigureOpenMeteo()
+    .ConfigureTrefle();
 
 var app = builder.Build();
 
@@ -35,6 +37,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 app.UseCors("AllowAll");
+app.UseCookiePolicy();
 app.UseMiddleware<ClerkAuthenticationMiddleware>();
 app.UseAuthorization();
 app.MapControllers();
