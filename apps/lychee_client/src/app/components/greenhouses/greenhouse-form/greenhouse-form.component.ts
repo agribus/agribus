@@ -191,7 +191,7 @@ export class GreenhouseFormComponent implements OnChanges {
       const crops = step1.crops.map((crop: Crop) => ({
         commonName: crop.commonName,
         scientificName: crop.scientificName,
-        date_plantation: crop.date_plantation,
+        plantingDate: crop.plantingDate,
         quantity: crop.quantity,
         imageUrl: "",
       }));
