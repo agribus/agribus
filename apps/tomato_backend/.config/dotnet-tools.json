@@ -6,6 +6,10 @@
       "version": "1.0.2",
       "commands": ["csharpier"],
       "rollForward": false
+    },
+    "dotnet-ef": {
+      "version": "8.0.8",
+      "commands": ["dotnet-ef"]
     }
   }
 }

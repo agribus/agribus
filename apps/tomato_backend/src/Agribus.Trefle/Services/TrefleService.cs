@@ -31,21 +31,19 @@ public class TrefleService : ITrefleService
     {
         var searchParameters = new Dictionary<string, string>(_parameters)
         {
-            ["q"] = scientificName,
+            ["filter[scientific_name]"] = scientificName,
         };
 
-        var jsonResponse = await _getHttpUsecase.GetAsync(
-            $"{_baseUrl}/species/search",
-            searchParameters
-        );
+        var jsonResponse = await _getHttpUsecase.GetAsync($"{_baseUrl}/species", searchParameters);
         var jsonElement = JsonDocument.Parse(jsonResponse).RootElement;
-        if (!jsonElement.TryGetProperty("data", out var dataElement))
+        jsonElement.TryGetProperty("data", out var dataElement);
+        if (dataElement.GetArrayLength() == 0)
         {
             throw new InvalidOperationException(
                 $"No species found for scientific name: {scientificName}"
             );
         }
-        return jsonElement.GetProperty("data").GetProperty("id").GetInt32();
+        return dataElement[0].GetProperty("id").GetInt32();
     }
 
     private async Task<CropGrowthConditions> GetSpeciesGrowthConditions(int cropId)
@@ -56,25 +54,46 @@ public class TrefleService : ITrefleService
         );
         var jsonElement = JsonDocument.Parse(jsonResponse).RootElement;
 
+        var dataElement = jsonElement.GetProperty("data");
+        var growthElement = dataElement.GetProperty("growth");
+
         return new CropGrowthConditions
         {
-            AtmosphericHumidity = jsonElement
-                .GetProperty("data")
-                .GetProperty("growth")
-                .GetProperty("atmospheric_humidity")
-                .GetSingle(),
-            MinimumTemperature = jsonElement
-                .GetProperty("data")
-                .GetProperty("growth")
-                .GetProperty("minimum_temperature")
-                .GetProperty("deg_c")
-                .GetSingle(),
-            MaximumTemperature = jsonElement
-                .GetProperty("data")
-                .GetProperty("growth")
-                .GetProperty("maximum_temperature")
-                .GetProperty("deg_c")
-                .GetSingle(),
+            AtmosphericHumidity = GetNullableFloat(growthElement, "atmospheric_humidity"),
+            MinimumTemperature = GetNullableTemperature(growthElement, "minimum_temperature"),
+            MaximumTemperature = GetNullableTemperature(growthElement, "maximum_temperature"),
         };
+    }
+
+    private float? GetNullableFloat(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var property))
+            return null;
+        return property.ValueKind switch
+        {
+            JsonValueKind.Number => property.GetSingle(),
+            _ => null,
+        };
+    }
+
+    private float? GetNullableTemperature(JsonElement element, string propertyName)
+    {
+        if (!element.TryGetProperty(propertyName, out var tempProperty))
+            return null;
+        if (
+            tempProperty.ValueKind == JsonValueKind.Object
+            && tempProperty.TryGetProperty("deg_c", out var degCProperty)
+        )
+        {
+            switch (degCProperty.ValueKind)
+            {
+                case JsonValueKind.Number:
+                    return degCProperty.GetSingle();
+                case JsonValueKind.Null:
+                    return null;
+            }
+        }
+
+        return null;
     }
 }
