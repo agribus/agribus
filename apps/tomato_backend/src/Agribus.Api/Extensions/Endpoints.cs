@@ -38,4 +38,10 @@ public static class Endpoints
         public const string Logout = $"{BasePath}/logout";
         public const string Me = $"{BasePath}/me";
     }
+
+    public static class Alerts
+    {
+        public const string CreateAlert = $"{ApiBasePath}/alerts";
+        public const string DeleteAlert = $"{ApiBasePath}/alerts/{{id:guid}}";
+    }
 }

@@ -29,7 +29,10 @@ public class AlertRepository(AgribusDbContext context) : IAlertRepository
         CancellationToken cancellationToken
     )
     {
-        throw new NotImplementedException();
+        var alert = await context
+            .Alert.Where(x => x.Id == alertId && x.Greenhouse.UserId == userId)
+            .FirstOrDefaultAsync(cancellationToken);
+        return alert;
     }
 
     public async Task<bool> DeleteAsync(Guid alertId, CancellationToken cancellationToken)

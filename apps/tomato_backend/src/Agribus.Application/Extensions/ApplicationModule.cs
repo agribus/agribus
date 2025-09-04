@@ -25,6 +25,9 @@ public static class ApplicationModule
         services.AddScoped<IUpdateSensorUsecase, UpdateSensorUsecase>();
         services.AddScoped<IDeleteSensorUsecase, DeleteSensorUsecase>();
 
+        services.AddScoped<ICreateAlertUsecase, CreateAlertUsecase>();
+        services.AddScoped<IDeleteAlertUsecase, DeleteAlertUsecase>();
+
         services.AddHttpClient();
         services.AddScoped<IGetHttpUsecase, GetHttpUsecase>();
 
