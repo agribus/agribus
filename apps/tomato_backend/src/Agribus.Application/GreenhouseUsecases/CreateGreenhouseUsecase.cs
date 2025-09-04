@@ -22,13 +22,13 @@ public class CreateGreenhouseUsecase(
         var entityToAdd = dto.MapToGreenhouse(userId);
         var (lat, lon) = await geocodingApiService.GetCoordinatesAsync(dto.City, dto.Country);
         entityToAdd.AddCoordinate(lat, lon);
-        // foreach (var crop in entityToAdd.Crops)
-        // {
-        //     var cropGrowthConditions = await trefleService.GetCropIdealConditions(
-        //         crop.ScientificName
-        //     );
-        //     crop.AddCropGrowthConditions(cropGrowthConditions);
-        // }
+        foreach (var crop in entityToAdd.Crops)
+        {
+            var cropGrowthConditions = await trefleService.GetCropIdealConditions(
+                crop.ScientificName
+            );
+            crop.AddCropGrowthConditions(cropGrowthConditions);
+        }
         var result = await greenhouseRepository.AddAsync(entityToAdd, cancellationToken);
         return result;
     }
