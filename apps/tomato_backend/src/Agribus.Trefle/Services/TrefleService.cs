@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Agribus.Core.Domain.AggregatesModels.GreenhouseAggregates;
+using Agribus.Core.Domain.Exceptions;
 using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.Core.Ports.Spi.TrefleContext;
 using Microsoft.Extensions.Configuration;
@@ -38,10 +39,10 @@ public class TrefleService : ITrefleService
         var jsonElement = JsonDocument.Parse(jsonResponse).RootElement;
         jsonElement.TryGetProperty("data", out var dataElement);
         if (dataElement.GetArrayLength() == 0)
-            throw new InvalidOperationException($"No species found for common name: {commonName}");
+            throw new NotFoundEntityException($"No species found for common name: {commonName}");
         dataElement[0].TryGetProperty("common_name", out var responseCommonName);
         return responseCommonName.GetString() != commonName
-            ? throw new InvalidOperationException("No species found for common name")
+            ? throw new NotFoundEntityException("No species found for common name")
             : dataElement[0].GetProperty("id").GetInt32();
     }
 
