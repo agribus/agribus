@@ -20,30 +20,29 @@ public class TrefleService : ITrefleService
         _parameters.Add("token", _configuration["Trefle:Token"]);
     }
 
-    public async Task<CropGrowthConditions> GetCropIdealConditions(string scientificName)
+    public async Task<CropGrowthConditions> GetCropIdealConditions(string commonName)
     {
-        var cropId = await GetCropSpeciesId(scientificName);
+        var cropId = await GetCropSpeciesId(commonName);
 
         return await GetSpeciesGrowthConditions(cropId);
     }
 
-    private async Task<int> GetCropSpeciesId(string scientificName)
+    private async Task<int> GetCropSpeciesId(string commonName)
     {
         var searchParameters = new Dictionary<string, string>(_parameters)
         {
-            ["filter[scientific_name]"] = scientificName,
+            ["filter[common_name]"] = commonName,
         };
 
         var jsonResponse = await _getHttpUsecase.GetAsync($"{_baseUrl}/species", searchParameters);
         var jsonElement = JsonDocument.Parse(jsonResponse).RootElement;
         jsonElement.TryGetProperty("data", out var dataElement);
         if (dataElement.GetArrayLength() == 0)
-        {
-            throw new InvalidOperationException(
-                $"No species found for scientific name: {scientificName}"
-            );
-        }
-        return dataElement[0].GetProperty("id").GetInt32();
+            throw new InvalidOperationException($"No species found for common name: {commonName}");
+        dataElement[0].TryGetProperty("common_name", out var responseCommonName);
+        return responseCommonName.GetString() != commonName
+            ? throw new InvalidOperationException("No species found for common name")
+            : dataElement[0].GetProperty("id").GetInt32();
     }
 
     private async Task<CropGrowthConditions> GetSpeciesGrowthConditions(int cropId)

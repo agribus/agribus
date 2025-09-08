@@ -4,5 +4,5 @@ namespace Agribus.Core.Ports.Spi.TrefleContext;
 
 public interface ITrefleService
 {
-    Task<CropGrowthConditions> GetCropIdealConditions(string scientificName);
+    Task<CropGrowthConditions> GetCropIdealConditions(string commonName);
 }
