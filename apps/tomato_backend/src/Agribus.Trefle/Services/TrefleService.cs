@@ -23,9 +23,20 @@ public class TrefleService : ITrefleService
 
     public async Task<CropGrowthConditions> GetCropIdealConditions(string commonName)
     {
-        var cropId = await GetCropSpeciesId(commonName);
-
-        return await GetSpeciesGrowthConditions(cropId);
+        try
+        {
+            var cropId = await GetCropSpeciesId(commonName);
+            return await GetSpeciesGrowthConditions(cropId);
+        }
+        catch (NotFoundEntityException)
+        {
+            return new CropGrowthConditions
+            {
+                AtmosphericHumidity = null,
+                MinimumTemperature = null,
+                MaximumTemperature = null,
+            };
+        }
     }
 
     private async Task<int> GetCropSpeciesId(string commonName)
@@ -42,7 +53,7 @@ public class TrefleService : ITrefleService
             throw new NotFoundEntityException($"No species found for common name: {commonName}");
         dataElement[0].TryGetProperty("common_name", out var responseCommonName);
         return responseCommonName.GetString() != commonName
-            ? throw new NotFoundEntityException("No species found for common name")
+            ? throw new NotFoundEntityException($"No species found for common name: {commonName}")
             : dataElement[0].GetProperty("id").GetInt32();
     }
 
