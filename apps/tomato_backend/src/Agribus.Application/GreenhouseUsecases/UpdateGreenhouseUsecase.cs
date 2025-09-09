@@ -33,9 +33,7 @@ public class UpdateGreenhouseUsecase(
         greenhouse.AddCoordinate(lat, lon);
         foreach (var crop in greenhouse.Crops)
         {
-            var cropGrowthConditions = await trefleService.GetCropIdealConditions(
-                crop.ScientificName
-            );
+            var cropGrowthConditions = await trefleService.GetCropIdealConditions(crop.CommonName);
             crop.AddCropGrowthConditions(cropGrowthConditions);
         }
         await greenhouseRepository.UpdateAsync(greenhouse, dto, cancellationToken);

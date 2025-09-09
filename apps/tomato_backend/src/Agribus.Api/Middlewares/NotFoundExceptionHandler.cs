@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Agribus.Api.Middlewares;
 
-public static class NotFoundExceptionHandler
+public class NotFoundExceptionHandler
 {
     public static async Task HandleExceptionAsync(
         HttpContext context,
