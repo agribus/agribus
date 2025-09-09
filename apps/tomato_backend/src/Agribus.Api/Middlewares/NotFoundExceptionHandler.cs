@@ -25,9 +25,7 @@ public class NotFoundExceptionHandler
 
         problemDetails.Extensions["traceId"] = context.TraceIdentifier;
 
-        var logger = context.RequestServices.GetRequiredService<
-            ILogger<NotFoundExceptionHandler>
-        >();
+        var logger = context.RequestServices.GetRequiredService<ILogger<NotFoundEntityException>>();
         logger.LogWarning(exception, "Resource not found: {Message}", exception.Message);
 
         context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status404NotFound;

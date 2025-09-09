@@ -34,12 +34,12 @@ public class AlertEntityTypeConfiguration : IEntityTypeConfiguration<Alert>
         {
             t.HasCheckConstraint(
                 "CK_RuleType_IsValid",
-                sql: $"rule_type IN ({EnumToSqlHelper.GetEnumValuesSql<AlertRuleType>()})"
+                sql: $"LOWER(rule_type) IN ({EnumToSqlHelper.GetEnumValuesSql<AlertRuleType>()})"
             );
 
             t.HasCheckConstraint(
                 "CK_MeasureType_IsValid",
-                sql: $"measure_type IN ({EnumToSqlHelper.GetEnumValuesSql<SensorType>()})"
+                sql: $"LOWER(measure_type) IN ({EnumToSqlHelper.GetEnumValuesSql<SensorType>()})"
             );
         });
     }

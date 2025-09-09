@@ -1,11 +1,4 @@
 {
-  "components": {
-    "ui": {
-      "header": {
-        "new-greenhouse": "➕ Gewächshaus hinzufügen"
-      }
-    }
-  },
   "pages": {
     "forgot-password": {
       "connection-page": "Anmeldeseite",
@@ -17,6 +10,9 @@
     },
     "greenhouse-settings": {
       "title": "Parameter des Gewächshauses"
+    },
+    "home": {
+      "create-first-greenhouse": "Fügen Sie Ihr erstes Gewächshaus hinzu"
     },
     "login": {
       "no-account": "Noch kein Konto?",
