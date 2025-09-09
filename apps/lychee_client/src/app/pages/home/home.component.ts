@@ -1,12 +1,13 @@
 import { Component, inject } from "@angular/core";
 import { GreenhouseSceneComponent } from "@components/greenhouse-scene/greenhouse-scene.component";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
-import { TuiButton } from "@taiga-ui/core";
+import { TuiButton, TuiIcon } from "@taiga-ui/core";
 import { Router } from "@angular/router";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
   selector: "app-home",
-  imports: [GreenhouseSceneComponent, TuiButton],
+  imports: [GreenhouseSceneComponent, TuiButton, TranslatePipe, TuiIcon],
   templateUrl: "./home.component.html",
   styleUrl: "./home.component.scss",
 })

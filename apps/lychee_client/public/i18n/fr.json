@@ -11,6 +11,9 @@
     "greenhouse-settings": {
       "title": "Paramètres de la serre"
     },
+    "home": {
+      "create-first-greenhouse": "Ajoutez votre première serre"
+    },
     "login": {
       "no-account": "Pas de compte ?",
       "register": "Inscrivez vous",
