@@ -21,6 +21,7 @@ import { environment } from "@environment/environment";
 import { HeaderType } from "@enums/header-type";
 import { NgOptimizedImage } from "@angular/common";
 import { AuthService } from "@services/auth/auth.service";
+import { GreenhouseSceneComponent } from "@components/greenhouse-scene/greenhouse-scene.component";
 
 @Component({
   selector: "app-header",
@@ -35,6 +36,7 @@ import { AuthService } from "@services/auth/auth.service";
     TranslatePipe,
     TuiDropdown,
     NgOptimizedImage,
+    GreenhouseSceneComponent,
   ],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.scss",
@@ -109,6 +111,10 @@ export class HeaderComponent implements OnInit {
 
   public openDevTools() {
     this.devToolsService.toggle();
+  }
+
+  get userHaveGreenhouse(): boolean {
+    return this.greenhouseService.greenhouses().length > 0;
   }
 
   public onGreenhouseChange(greenhouse: Greenhouse) {
