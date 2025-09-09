@@ -40,8 +40,9 @@ public class SensorsController(
         CancellationToken cancellationToken = default
     )
     {
-        if (dto is null) return BadRequest();
-        
+        if (dto is null)
+            return BadRequest();
+
         var userId = authService.GetCurrentUserId();
         var updated = await updateSensorUsecase.Handle(id, userId, dto, cancellationToken);
 

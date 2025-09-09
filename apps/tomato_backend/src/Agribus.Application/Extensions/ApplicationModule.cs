@@ -1,6 +1,8 @@
+using Agribus.Application.AlertUsecases;
 using Agribus.Application.GenericUsecases;
 using Agribus.Application.GreenhouseUsecases;
 using Agribus.Application.SensorUsecases;
+using Agribus.Core.Ports.Api.AlertUsecases;
 using Agribus.Core.Ports.Api.GenericUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.SensorUsecases;
@@ -18,9 +20,13 @@ public static class ApplicationModule
         services.AddScoped<IUpdateGreenhouseUsecase, UpdateGreenhouseUsecase>();
         services.AddScoped<IGetUserGreenhousesUsecase, GetUserGreenhousesUsecase>();
         services.AddScoped<IGetGreenhouseByIdUsecase, GetGreenhouseByIdUsecase>();
+        services.AddScoped<IGetAlertsByGreenhouseUsecase, GetAlertsByGreenhouseUsecase>();
 
         services.AddScoped<IUpdateSensorUsecase, UpdateSensorUsecase>();
         services.AddScoped<IDeleteSensorUsecase, DeleteSensorUsecase>();
+
+        services.AddScoped<ICreateAlertUsecase, CreateAlertUsecase>();
+        services.AddScoped<IDeleteAlertUsecase, DeleteAlertUsecase>();
 
         services.AddHttpClient();
         services.AddScoped<IGetHttpUsecase, GetHttpUsecase>();

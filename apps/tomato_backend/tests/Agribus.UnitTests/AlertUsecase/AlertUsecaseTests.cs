@@ -118,9 +118,9 @@ public class AlertUsecaseTests
         var mockGreenhouse = new Greenhouse
         {
             UserId = userId,
-            Name = null,
-            Country = null,
-            City = null,
+            Name = "GH",
+            Country = "France",
+            City = "Paris",
         };
         ghRepo.Exists(greenhouseId, userId, ct).Returns(mockGreenhouse);
 
@@ -157,6 +157,51 @@ public class AlertUsecaseTests
         await repo.DidNotReceiveWithAnyArgs()
             .GetByGreenhouseAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>());
         await ghRepo.Received(1).Exists(greenhouseId, userId, ct);
+    }
+
+    [Fact]
+    public async Task ShouldDeleteAlert_GivenValidId()
+    {
+        // Given
+        var userId = "user_id123";
+        var ct = CancellationToken.None;
+        var alertId = Guid.NewGuid();
+
+        var repo = Substitute.For<IAlertRepository>();
+        repo.Exists(alertId, userId, ct).Returns(CreateAlert(AlertRuleType.Above, 10.0));
+        repo.DeleteAsync(alertId, ct).Returns(true);
+
+        var usecase = new DeleteAlertUsecase(repo);
+
+        // When
+        var result = await usecase.Handle(alertId, userId, ct);
+
+        // Then
+        await repo.Received(1).Exists(alertId, userId, ct);
+        await repo.Received(1).DeleteAsync(alertId, ct);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task ShouldThrowNotFound_WhenAlertNotFound()
+    {
+        // Given
+        var userId = "user_id123";
+        var ct = CancellationToken.None;
+        var alertId = Guid.NewGuid();
+
+        var repo = Substitute.For<IAlertRepository>();
+        repo.Exists(alertId, userId, ct).Returns((Alert?)null);
+
+        var usecase = new DeleteAlertUsecase(repo);
+
+        // When
+        var result = async () => await usecase.Handle(alertId, userId, ct);
+
+        // Then
+        await Assert.ThrowsAsync<NotFoundEntityException>(result);
+        await repo.Received(1).Exists(alertId, userId, ct);
+        await repo.DidNotReceive().DeleteAsync(Arg.Any<Guid>(), ct);
     }
 
     private Alert CreateAlert(
