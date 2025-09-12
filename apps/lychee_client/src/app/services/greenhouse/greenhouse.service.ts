@@ -5,12 +5,14 @@ import { Crop } from "@interfaces/crop.interface";
 import { Sensor } from "@interfaces/sensor.interface";
 import { HttpClient } from "@angular/common/http";
 import { tap } from "rxjs";
+import { AuthService } from "@services/auth/auth.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class GreenhouseService {
   private readonly http = inject(HttpClient);
+  private readonly authService = inject(AuthService);
 
   public greenhouses = signal<Greenhouse[]>([]);
   public selectedSerre = signal<Greenhouse | null>(null);
@@ -18,7 +20,9 @@ export class GreenhouseService {
   public loadUserGreenhouses() {
     return this.http
       .get<Greenhouse[]>(`${environment.apiUrl}/greenhouses`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${this.authService.token()}`,
+        },
       })
       .pipe(
         tap(greenhouses => {
@@ -33,7 +37,9 @@ export class GreenhouseService {
   public loadGreenhouseById(id: string) {
     return this.http
       .get<Greenhouse>(`${environment.apiUrl}/greenhouses/${id}`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${this.authService.token()}`,
+        },
       })
       .pipe(tap(serre => this.selectedSerre.set(serre)));
   }
@@ -56,7 +62,9 @@ export class GreenhouseService {
           sensors: sensors,
         },
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${this.authService.token()}`,
+          },
         }
       )
       .pipe(
@@ -86,7 +94,9 @@ export class GreenhouseService {
           sensors: sensors,
         },
         {
-          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${this.authService.token()}`,
+          },
         }
       )
       .pipe(
@@ -102,7 +112,9 @@ export class GreenhouseService {
   public deleteGreenhouse(id: string) {
     return this.http
       .delete(`${environment.apiUrl}/greenhouses/${id}`, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${this.authService.token()}`,
+        },
       })
       .pipe(
         tap(() => {

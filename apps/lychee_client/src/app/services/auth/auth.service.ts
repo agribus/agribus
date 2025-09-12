@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { AuthLogin, AuthRegister, AuthResponse } from "@interfaces/auth.interface";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, filter, map, Observable, of, shareReplay, take, tap } from "rxjs";
@@ -13,15 +13,20 @@ export class AuthService {
   private isLoggedIn$ = new BehaviorSubject<boolean | null>(null);
   private authCheckInProgress = false;
 
+  public token = signal<string | null>(localStorage.getItem("access_token"));
+
   public sendLoginRequest(credentials: AuthLogin): Observable<AuthResponse> {
     return this.http
       .post<AuthResponse>(`${environment.apiUrl}/users/login`, credentials, {
-        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${this.token()}`,
+        },
       })
       .pipe(
         tap(response => {
           if (response.success) {
             this.isLoggedIn$.next(true);
+            this.token.set(response.message);
           }
         })
       );
@@ -33,10 +38,15 @@ export class AuthService {
 
   public sendLogoutRequest(): Observable<AuthResponse> {
     return this.http
-      .post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, { withCredentials: true })
+      .post<AuthResponse>(`${environment.apiUrl}/users/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${this.token()}`,
+        },
+      })
       .pipe(
         tap(() => {
           this.isLoggedIn$.next(false);
+          this.token.set(null);
         })
       );
   }
@@ -56,7 +66,11 @@ export class AuthService {
     this.authCheckInProgress = true;
 
     return this.http
-      .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, { withCredentials: true })
+      .get<{ message: boolean }>(`${environment.apiUrl}/users/me`, {
+        headers: {
+          Authorization: `Bearer ${this.token()}`,
+        },
+      })
       .pipe(
         tap(response => {
           this.isLoggedIn$.next(response.message);
