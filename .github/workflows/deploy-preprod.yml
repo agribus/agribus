@@ -66,6 +66,7 @@ jobs:
             cd /srv/docker/agribus
             
             echo "==> Pull Preprod stack"
+            git pull
             docker pull agribus/lychee:preprod
             docker pull agribus/tomato:preprod
             

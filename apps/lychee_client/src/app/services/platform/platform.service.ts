@@ -3,30 +3,18 @@ import { Capacitor } from "@capacitor/core";
 
 @Injectable({ providedIn: "root" })
 export class PlatformService {
-  /**
-   * Detects if running on a native platform (iOS/Android)
-   */
-  isNativePlatform(): boolean {
+  public isNativePlatform(): boolean {
     return Capacitor.isNativePlatform();
   }
 
-  /**
-   * Detects if running on a web browser
-   */
-  isBrowser(): boolean {
+  public isBrowser(): boolean {
     return !Capacitor.isNativePlatform();
   }
 
-  /**
-   * Detects if device is mobile (native OR mobile web)
-   */
-  isMobile(): boolean {
+  public isMobile(): boolean {
     return Capacitor.isNativePlatform() || this.isMobileWeb();
   }
 
-  /**
-   * Detects specifically if running on a mobile web browser
-   */
   private isMobileWeb(): boolean {
     if (typeof window === "undefined") return false;
 
@@ -44,10 +32,7 @@ export class PlatformService {
     return minDimension <= 768 && hasTouch && maxDimension <= 1024;
   }
 
-  /**
-   * Detects if device is a tablet
-   */
-  isTablet(): boolean {
+  public isTablet(): boolean {
     if (Capacitor.isNativePlatform()) {
       return window.screen.width >= 768;
     }
@@ -67,17 +52,14 @@ export class PlatformService {
     return minDimension >= 768 && maxDimension >= 1024 && hasTouch;
   }
 
-  /**
-   * Detects if device is desktop
-   */
-  isDesktop(): boolean {
+  public isDesktop(): boolean {
     return this.isBrowser() && !this.isMobile() && !this.isTablet();
   }
 
   /**
    * [DEBUG] Get Device Info
    */
-  getDeviceInfo(): any {
+  public getDeviceInfo(): any {
     return {
       isNativePlatform: this.isNativePlatform(),
       isBrowser: this.isBrowser(),
