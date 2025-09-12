@@ -16,7 +16,7 @@ import { TUI_CALENDAR_DATE_STREAM, TuiBadge, TuiStatus } from "@taiga-ui/kit";
 import { TuiMobileCalendarDropdown } from "@taiga-ui/addon-mobile";
 import { tuiControlValue, TuiDay, TuiDayRange } from "@taiga-ui/cdk";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
-import { ChartDashboard } from "../../chart-dashboard/chart-dashboard";
+import { ChartDashboard } from "@components/chart-dashboard/chart-dashboard";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { Sensor } from "@interfaces/sensor.interface";
 
