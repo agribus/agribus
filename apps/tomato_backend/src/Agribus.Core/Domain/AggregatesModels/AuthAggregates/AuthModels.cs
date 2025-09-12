@@ -17,16 +17,19 @@ namespace Agribus.Core.Domain.AggregatesModels.AuthAggregates
     public sealed class AuthResponse
     {
         public bool Success { get; set; } = false;
+
+        public string? Token { get; set; }
         public string? Message { get; set; }
         public Dictionary<string, string[]>? Errors { get; set; } = new();
 
-        public static AuthResponse CreateSuccess(
-            string? token = null,
-            string? userId = null,
-            string? message = null
-        )
+        public static AuthResponse CreateSuccess(string? token = null, string? message = null)
         {
-            return new AuthResponse { Success = true, Message = message ?? "Successful operation" };
+            return new AuthResponse
+            {
+                Success = true,
+                Token = token,
+                Message = message ?? "Successful operation",
+            };
         }
 
         public static AuthResponse CreateError(
