@@ -27,4 +27,34 @@ public class InfluxMeasurementStore : IStoreMeasurement
             .GetWriteApiAsync()
             .WritePointAsync(pointData, _options.Bucket, _options.Org, cancellationToken);
     }
+
+    public async Task<List<SensorMeasurement>> GetMeasurementsAsync(
+        List<string> sourceAddresses,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (sourceAddresses.Count == 0)
+        {
+            return [];
+        }
+
+        var query = $@"from(bucket: ""{_options.Bucket}"")";
+        query += " |> range(start: -90d, stop: now())";
+
+        var sourceAddressConditions = sourceAddresses.Select(addr =>
+            $@"r.source_address == ""{addr}"""
+        );
+        query += " |> filter(fn: (r) => " + string.Join(" or ", sourceAddressConditions) + ")";
+
+        query += " |> filter(fn: (r) => r._field == \"value\")";
+        query += " |> sort(columns: [\"_time\"], desc: false)";
+
+        var tables = await _client.GetQueryApi().QueryAsync(query, _options.Org, cancellationToken);
+
+        return (
+            from table in tables
+            from record in table.Records
+            select record.ToSensorMeasurement()
+        ).ToList();
+    }
 }

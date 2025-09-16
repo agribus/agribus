@@ -1,5 +1,6 @@
 using Agribus.Api.Extensions;
 using Agribus.Application.GreenhouseUsecases;
+using Agribus.Application.SensorUsecases;
 using Agribus.Core.Ports.Api.AlertUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
@@ -16,6 +17,7 @@ public class GreenhousesController(
     IUpdateGreenhouseUsecase updateGreenhouseUsecase,
     IGetUserGreenhousesUsecase getUserGreenhousesUsecase,
     IGetGreenhouseByIdUsecase getGreenhouseByIdUsecase,
+    SensorDataProcessor dataProcessor,
     IForecastService forecastService,
     IAuthService authService,
     IGetAlertsByGreenhouseUsecase getAlertsByGreenhouseUsecase
@@ -54,6 +56,27 @@ public class GreenhousesController(
         );
 
         return Ok(forecast);
+    }
+
+    [HttpGet(Endpoints.Greenhouses.GetGreenhouseMeasurementsById)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGreenhouseMeasurementsById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var userId = authService.GetCurrentUserId();
+        var greenhouse = await getGreenhouseByIdUsecase.Handle(id, userId, cancellationToken);
+        if (greenhouse is null)
+            return NotFound();
+
+        var sourceAdresses = greenhouse.Sensors.Select(sensor => sensor.SourceAddress).ToList();
+        var measurements = await dataProcessor.GetMeasurementsAsync(
+            sourceAdresses,
+            cancellationToken
+        );
+        return Ok(measurements);
     }
 
     [HttpGet(Endpoints.Greenhouses.GetUserGreenhouses)]
