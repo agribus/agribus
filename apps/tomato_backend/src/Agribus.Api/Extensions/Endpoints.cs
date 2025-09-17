@@ -35,7 +35,6 @@ public static class Endpoints
         private const string BasePath = $"{ApiBasePath}/users";
         public const string Login = $"{BasePath}/login";
         public const string Signup = $"{BasePath}/signup";
-        public const string Logout = $"{BasePath}/logout";
         public const string Me = $"{BasePath}/me";
     }
 

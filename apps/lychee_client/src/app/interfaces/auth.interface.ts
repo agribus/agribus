@@ -17,6 +17,7 @@ export interface ForgotPassword {
 export interface AuthResponse {
   success: boolean;
   message: string;
+  token: string;
   errors: {
     [key: string]: string[] | undefined;
   };

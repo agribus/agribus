@@ -58,15 +58,6 @@ namespace Agribus.Api.Controllers
             return BadRequest(response);
         }
 
-        [HttpPost(Endpoints.User.Logout)]
-        public ActionResult Logout()
-        {
-            _logger.LogInformation("Demande de déconnexion reçue");
-            _authService.LogoutAsync();
-
-            return Ok(new { message = "Logout successful" });
-        }
-
         [HttpGet(Endpoints.User.Me)]
         public async Task<IActionResult> Me()
         {

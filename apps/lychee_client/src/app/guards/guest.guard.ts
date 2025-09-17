@@ -7,10 +7,7 @@ export const guestGuard: CanActivateFn & CanMatchFn = () => {
   const router = inject(Router);
   const authService = inject(AuthService);
 
-  return authService.isUserAuthenticated().pipe(
-    map(isAuth => {
-      console.log("GuestGuard - User authenticated:", isAuth);
-      return !isAuth ? true : router.createUrlTree(["/home"]);
-    })
-  );
+  return authService
+    .isUserAuthenticated()
+    .pipe(map(isAuth => (!isAuth ? true : router.createUrlTree(["/home"]))));
 };
