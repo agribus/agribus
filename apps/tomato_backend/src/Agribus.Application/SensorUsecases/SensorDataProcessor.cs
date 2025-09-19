@@ -25,12 +25,12 @@ public class SensorDataProcessor(
         await store.StoreAsync(parsed, cancellationToken);
     }
 
-    public async Task<List<SensorMeasurement>> GetMeasurementsAsync(
-        List<string> sourceAddresses,
+    public async Task<LatestMeasurementsResponseDto> GetMeasurementsAsync(
+        List<Sensor> sensors,
         CancellationToken cancellationToken
     )
     {
-        return await store.GetMeasurementsAsync(sourceAddresses, cancellationToken);
+        return await store.GetMeasurementsAsync(sensors, cancellationToken);
     }
 }
 

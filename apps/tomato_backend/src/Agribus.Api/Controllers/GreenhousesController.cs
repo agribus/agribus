@@ -71,7 +71,7 @@ public class GreenhousesController(
         if (greenhouse is null)
             return NotFound();
 
-        var sourceAdresses = greenhouse.Sensors.Select(sensor => sensor.SourceAddress).ToList();
+        var sourceAdresses = greenhouse.Sensors.ToList();
         var measurements = await dataProcessor.GetMeasurementsAsync(
             sourceAdresses,
             cancellationToken
