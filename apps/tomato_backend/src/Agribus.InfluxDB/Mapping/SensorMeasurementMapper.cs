@@ -12,7 +12,7 @@ public static class SensorMeasurementMapper
             .Measurement(measurement.Type.ToString())
             .SetTag("source_address", measurement.SourceAddress)
             .SetField("value", measurement.Value)
-            .SetTimestamp(measurement.Date, WritePrecision.Ns);
+            .SetTimestamp(measurement.Date, WritePrecision.Ms);
     }
 
     // public static SensorMeasurement ToSensorMeasurement(this FluxRecord record)

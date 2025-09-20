@@ -28,7 +28,7 @@ public class InfluxMeasurementStore : IStoreMeasurement
         await _client.WritePointAsync(
             pointData,
             _options.Bucket,
-            WritePrecision.S,
+            WritePrecision.Ms,
             cancellationToken: cancellationToken
         );
     }
@@ -153,6 +153,7 @@ public class InfluxMeasurementStore : IStoreMeasurement
                 .UtcDateTime, // ns -> ms
             long ms => DateTimeOffset.FromUnixTimeMilliseconds(ms).UtcDateTime,
             double dms => DateTimeOffset.FromUnixTimeMilliseconds((long)dms).UtcDateTime,
+            DateTimeOffset dto => dto.UtcDateTime,
             _ => throw new InvalidCastException(
                 $"Unsupported time type: {cell.GetType().FullName}"
             ),
