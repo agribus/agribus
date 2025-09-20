@@ -32,6 +32,16 @@ public class SensorDataProcessor(
     {
         return await store.GetMeasurementsAsync(sensors, cancellationToken);
     }
+
+    public async Task<ChartTimeseriesResponseDto> GetChartTimeseriesAsync(
+        List<Sensor> sensors,
+        DateOnly from,
+        DateOnly to,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return await store.GetChartTimeseriesAsync(sensors, from, to, cancellationToken);
+    }
 }
 
 public class UnregisteredSensorException(string message) : Exception(message);
