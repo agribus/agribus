@@ -77,6 +77,7 @@ services:
       - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - DOTNET_RUNNING_IN_CONTAINER=true
       - Clerk__SecretKey=${Clerk__SecretKey}
+      - Trefle__Token=${Trefle__Token}
     restart: unless-stopped
     depends_on:
       cold-potato:
