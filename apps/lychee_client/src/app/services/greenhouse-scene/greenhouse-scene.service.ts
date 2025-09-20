@@ -79,9 +79,7 @@ export class GreenhouseSceneService {
   }
 
   plantCrop(crop: Crop, quantity: number): void {
-    console.log(crop.scientificName);
     let config = CROPS[crop.scientificName.toLowerCase()];
-    console.log(CROPS[crop.scientificName.toLowerCase()]);
     if (!config) {
       console.error(`Crop "${crop.commonName}" not found in CROPS.`);
       config = CROPS["leaf"];
