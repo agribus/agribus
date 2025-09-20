@@ -35,11 +35,8 @@ public class ProcessSensorDataTests
         // Then
         Assert.Equal(expected, result.Type);
         Assert.Equal(value, result.Value);
-        Assert.Equal("abc123", result.SourceAdress);
-        Assert.Equal(
-            DateTimeOffset.FromUnixTimeMilliseconds(payload.Timestamp).UtcDateTime,
-            result.Date
-        );
+        Assert.Equal("abc123", result.SourceAddress);
+        Assert.Equal(payload.Timestamp, result.Date);
     }
 
     [Fact]
