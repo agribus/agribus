@@ -58,10 +58,65 @@ namespace Agribus.Api.Controllers
             return BadRequest(response);
         }
 
+        [HttpPut(Endpoints.User.PasswordChange)]
+        public async Task<ActionResult<AuthResponse>> PasswordChange(
+            [FromBody] PasswordChangeRequest request
+        )
+        {
+            var token = _authService.GetCurrentUserId();
+            var currentUserId = await _authService.GetUserIdFromTokenAsync(token);
+
+            _logger.LogInformation(
+                "Tentative de modification de mot de passe pour l'utilisateur: {idUser}",
+                currentUserId
+            );
+
+            var response = await _authService.PasswordChangeAsync(request);
+
+            if (response.Success)
+            {
+                _logger.LogInformation(
+                    "Mot de passe changé avec succès pour l'utilisateur: {idUser}",
+                    currentUserId
+                );
+                return Ok(response);
+            }
+            _logger.LogWarning(
+                "Échec de modification de mot de passe pour l'utilisateur: {idUser}",
+                currentUserId
+            );
+            return BadRequest(response);
+        }
+
+        [HttpDelete(Endpoints.User.Delete)]
+        public async Task<ActionResult> DeleteUser()
+        {
+            var userId = _authService.GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            var response = await _authService.DeleteUserAsync(userId);
+            if (!response.Success)
+            {
+                _logger.LogWarning(
+                    "Echec lors de la tentative de suppression de compte. {idUser}",
+                    userId
+                );
+                return BadRequest(response);
+            }
+
+            _logger.LogWarning("Compte : {idUser} supprimé.", userId);
+
+            return Ok(response);
+        }
+
         [HttpGet(Endpoints.User.Me)]
         public async Task<IActionResult> Me()
         {
-            var token = _authService.GetToken();
+            var userId = _authService.GetCurrentUserId();
+            var token = await _authService.GetUserIdFromTokenAsync(userId);
             var isValid = await _authService.ValidateTokenAsync(token);
 
             return Ok(new { message = isValid });

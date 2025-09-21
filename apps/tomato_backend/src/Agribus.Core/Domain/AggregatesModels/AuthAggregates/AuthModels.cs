@@ -14,6 +14,13 @@ namespace Agribus.Core.Domain.AggregatesModels.AuthAggregates
         public string ConfirmPassword { get; set; } = string.Empty;
     }
 
+    public class PasswordChangeRequest
+    {
+        public string CurrentPassword { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+        public string ConfirmNewPassword { get; set; } = string.Empty;
+    }
+
     public sealed class AuthResponse
     {
         public bool Success { get; set; } = false;

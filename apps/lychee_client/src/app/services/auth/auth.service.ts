@@ -1,5 +1,10 @@
 import { inject, Injectable, signal } from "@angular/core";
-import { AuthLogin, AuthRegister, AuthResponse } from "@interfaces/auth.interface";
+import {
+  AuthLogin,
+  AuthPasswordChange,
+  AuthRegister,
+  AuthResponse,
+} from "@interfaces/auth.interface";
 import { HttpClient } from "@angular/common/http";
 import { BehaviorSubject, Observable, of, tap } from "rxjs";
 import { environment } from "@environment/environment";
@@ -31,6 +36,14 @@ export class AuthService {
       );
   }
 
+  public sendPasswordChangeRequest(credentials: AuthPasswordChange): Observable<AuthResponse> {
+    return this.http.put<AuthResponse>(`${environment.apiUrl}/users/password-change`, credentials, {
+      headers: {
+        Authorization: `Bearer ${this.token()}`,
+      },
+    });
+  }
+
   public sendRegisterRequest(credentials: AuthRegister): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/users/signup`, credentials);
   }
@@ -39,6 +52,24 @@ export class AuthService {
     localStorage.removeItem("access_token");
     this.token.set(null);
     this.isLoggedIn$.next(false);
+  }
+
+  public sendDeleteAccountRequest(): Observable<AuthResponse> {
+    return this.http
+      .delete<AuthResponse>(`${environment.apiUrl}/users/delete`, {
+        headers: {
+          Authorization: `Bearer ${this.token()}`,
+        },
+      })
+      .pipe(
+        tap(response => {
+          if (response.success) {
+            localStorage.removeItem("access_token");
+            this.token.set(null);
+            this.isLoggedIn$.next(false);
+          }
+        })
+      );
   }
 
   isUserAuthenticated(): Observable<boolean> {

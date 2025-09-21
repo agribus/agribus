@@ -1,0 +1,15 @@
+@import "@taiga-ui/core/styles/taiga-ui-local.scss";
+
+.toggle-card-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0;
+}
+
+.toggle-card-content {
+  display: flex;
+  flex-direction: column;
+}
