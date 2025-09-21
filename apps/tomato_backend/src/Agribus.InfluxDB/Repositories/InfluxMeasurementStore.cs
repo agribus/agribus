@@ -212,7 +212,7 @@ public class InfluxMeasurementStore : IStoreMeasurement
                     Pressure = p?.Value is { } pv
                         ? new MeasureValueDto
                         {
-                            Value = pv,
+                            Value = pv / 100,
                             Unit = "hPa",
                             Timestamp = p!.Time,
                         }
@@ -384,7 +384,7 @@ public class InfluxMeasurementStore : IStoreMeasurement
                     new MetricPointDto
                     {
                         Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                        Value = sc.Sum / sc.Cnt,
+                        Value = table == "Pressure" ? (sc.Sum / sc.Cnt) / 100 : sc.Sum / sc.Cnt,
                     }
                 );
             else
@@ -577,7 +577,7 @@ public class InfluxMeasurementStore : IStoreMeasurement
 
         return new MeasureValueDto
         {
-            Value = v,
+            Value = (table == "Pressure" ? v / 100 : v),
             Unit = unit,
             Timestamp = hourStart,
         };
