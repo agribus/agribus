@@ -31,9 +31,11 @@ public class UpdateGreenhouseUsecase(
 
         var (lat, lon) = await geocodingApiService.GetCoordinatesAsync(dto.City, dto.Country);
         greenhouse.AddCoordinate(lat, lon);
-        foreach (var crop in greenhouse.Crops)
+        foreach (var crop in dto.Crops)
         {
-            var cropGrowthConditions = await trefleService.GetCropIdealConditions(crop.CommonName);
+            var cropGrowthConditions = await trefleService.GetCropIdealConditions(
+                crop.ScientificName
+            );
             crop.AddCropGrowthConditions(cropGrowthConditions);
         }
         await greenhouseRepository.UpdateAsync(greenhouse, dto, cancellationToken);
