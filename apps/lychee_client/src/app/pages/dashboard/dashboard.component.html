@@ -7,7 +7,9 @@
         <div class="card" tuiAppearance="neutral" tuiCardMedium>
           <tui-icon [icon]="getIcon(metric.key)" />
           <h2 tuiTitle>{{ "pages.dashboard.title.measurements." + metric.key | translate }}</h2>
-          <span class="data-text">{{ metric.value.value }} {{ metric.value.unit }}</span>
+          <span class="data-text">
+            {{ Math.round(metric.value.value) }} {{ metric.value.unit }}
+          </span>
           <span tuiSubtitle class="latest-update">
             {{ metric.value.timestamp | date: "dd/MM/yyyy HH:mm" }}
           </span>
