@@ -21,13 +21,16 @@ public class InfluxMeasurementStore : IStoreMeasurement
         _client = client;
     }
 
-    private const int ChartMaxWindowHours = 48;
+    private const int ChartMaxWindowHours = 24;
+
+    private static readonly TimeSpan MinSplitWindow = TimeSpan.FromMinutes(30);
 
     private static bool IsQueryFileLimit(Exception ex)
     {
         var s = ex.ToString();
         return s.IndexOf("file limit", StringComparison.OrdinalIgnoreCase) >= 0
-            || s.IndexOf("parquet files", StringComparison.OrdinalIgnoreCase) >= 0;
+            || s.IndexOf("parquet files", StringComparison.OrdinalIgnoreCase) >= 0
+            || s.IndexOf("Query would exceed file limit", StringComparison.OrdinalIgnoreCase) >= 0;
     }
 
     public async Task StoreAsync(
@@ -244,13 +247,28 @@ public class InfluxMeasurementStore : IStoreMeasurement
         // Accumulate per-day SUM and COUNT across windows, then compute final AVG
         var sums = new Dictionary<DateOnly, (double sum, long cnt)>();
 
+        // Start with smaller initial window
+        var initialWindow = TimeSpan.FromHours(ChartMaxWindowHours);
+        var totalSpan = toExclusiveUtc - fromUtc;
+
+        // If total span is large, start with even smaller windows
+        if (totalSpan > TimeSpan.FromDays(7))
+        {
+            initialWindow = TimeSpan.FromHours(12);
+        }
+
+        if (totalSpan > TimeSpan.FromDays(14))
+        {
+            initialWindow = TimeSpan.FromHours(6);
+        }
+
         await QueryDailyWindowOrSplitAsync(
                 table,
                 addrParams,
                 baseNamed,
                 fromUtc,
                 toExclusiveUtc,
-                TimeSpan.FromHours(ChartMaxWindowHours),
+                initialWindow,
                 sums,
                 ct
             )
@@ -276,6 +294,7 @@ public class InfluxMeasurementStore : IStoreMeasurement
                     }
                 );
         }
+
         return points;
     }
 
@@ -293,9 +312,12 @@ public class InfluxMeasurementStore : IStoreMeasurement
         if (winFromUtc >= winToUtc)
             return;
 
-        if ((winToUtc - winFromUtc) > maxWindow)
+        var currentSpan = winToUtc - winFromUtc;
+
+        // Split if window is too large
+        if (currentSpan > maxWindow)
         {
-            var mid = winFromUtc + TimeSpan.FromTicks((winToUtc - winFromUtc).Ticks / 2);
+            var mid = winFromUtc + TimeSpan.FromTicks(currentSpan.Ticks / 2);
             await QueryDailyWindowOrSplitAsync(
                 table,
                 addrParams,
@@ -357,11 +379,20 @@ public class InfluxMeasurementStore : IStoreMeasurement
         }
         catch (Exception ex) when (IsQueryFileLimit(ex))
         {
-            var span = winToUtc - winFromUtc;
-            if (span <= TimeSpan.FromHours(1))
-                throw; // pathological; let it surface
+            // If we hit file limit, split further but ensure we don't go below minimum
+            if (currentSpan <= MinSplitWindow)
+            {
+                // If we can't split further, try a different approach - skip this window
+                // or throw with more context
+                throw new InvalidOperationException(
+                    $"Cannot split query window further. Current span: {currentSpan}, "
+                        + $"minimum allowed: {MinSplitWindow}. Consider reducing the date range or "
+                        + $"increasing the InfluxDB file limit.",
+                    ex
+                );
+            }
 
-            var mid = winFromUtc + TimeSpan.FromTicks(span.Ticks / 2);
+            var mid = winFromUtc + TimeSpan.FromTicks(currentSpan.Ticks / 2);
             await QueryDailyWindowOrSplitAsync(
                 table,
                 addrParams,
@@ -407,18 +438,35 @@ public class InfluxMeasurementStore : IStoreMeasurement
 
         var byDay = new Dictionary<DateOnly, double>();
 
-        await foreach (
-            var row in _client
-                .Query(sql, database: _options.Bucket, namedParameters: named)
-                .WithCancellation(ct)
-        )
+        try
         {
-            if (row is [not null, not null, ..])
+            await foreach (
+                var row in _client
+                    .Query(sql, database: _options.Bucket, namedParameters: named)
+                    .WithCancellation(ct)
+            )
             {
-                var day = DateOnly.FromDateTime(ToUtcTime(row[0]));
-                var val = ToDouble(row[1]);
-                byDay[day] = val;
+                if (row is [not null, not null, ..])
+                {
+                    var day = DateOnly.FromDateTime(ToUtcTime(row[0]));
+                    var val = ToDouble(row[1]);
+                    byDay[day] = val;
+                }
             }
+        }
+        catch (Exception ex) when (IsQueryFileLimit(ex))
+        {
+            // Fall back to adaptive approach
+            return await QueryDailySeriesAdaptiveAsync(
+                table,
+                addrParams,
+                baseNamed,
+                from,
+                to,
+                DateTime.SpecifyKind(from.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
+                DateTime.SpecifyKind(to.AddDays(1).ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc),
+                ct
+            );
         }
 
         // Fill entire requested range; null when no data for that day
@@ -451,10 +499,13 @@ public class InfluxMeasurementStore : IStoreMeasurement
                 }
             );
         }
+
         return list;
     }
 
     // ---------------- Summaries anchored to the *latest* hour ----------------
+
+    private static readonly int[] LatestLookbackDays = { 7, 30, 90, 365, 730 };
 
     private async Task<MeasureValueDto> QueryLatestHourMeanAsync(
         string table,
@@ -464,44 +515,63 @@ public class InfluxMeasurementStore : IStoreMeasurement
         CancellationToken ct
     )
     {
-        // Hour bucket containing the most recent sample across selected sensors
+        var toUtc = DateTime.UtcNow;
+        var fromUtc = toUtc.AddYears(-2);
+
+        // 1) Find latest timestamp adaptively
+        var latestTs = await GetLatestTimestampAdaptiveAsync(
+                table,
+                addrParams,
+                named,
+                fromUtc,
+                toUtc,
+                ct
+            )
+            .ConfigureAwait(false);
+
+        if (latestTs is null)
+            return new MeasureValueDto
+            {
+                Value = null,
+                Unit = unit,
+                Timestamp = null,
+            };
+
+        // 2) Average within that hour only (tiny window => safe)
+        var hourStart = new DateTime(
+            latestTs.Value.Year,
+            latestTs.Value.Month,
+            latestTs.Value.Day,
+            latestTs.Value.Hour,
+            0,
+            0,
+            DateTimeKind.Utc
+        );
+        var hourEnd = hourStart.AddHours(1);
+
+        var np = new Dictionary<string, object>(named)
+        {
+            ["from"] = hourStart.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+            ["to"] = hourEnd.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+        };
+
         var sql =
             $@"
-            WITH last_ts AS (
-                SELECT MAX(time) AS t
-                FROM ""{table}""
-                WHERE source_address IN ({addrParams})
-            ),
-            bounds AS (
-                SELECT
-                    DATE_TRUNC('hour', t)                     AS start_ts,
-                    DATE_TRUNC('hour', t) + INTERVAL '1 hour' AS end_ts
-                FROM last_ts
-            )
-            SELECT
-                AVG(m.value) AS value,
-                b.start_ts   AS ts
-            FROM ""{table}"" AS m
-            CROSS JOIN bounds AS b
-            WHERE m.source_address IN ({addrParams})
-              AND m.time >= b.start_ts
-              AND m.time <  b.end_ts
-            GROUP BY b.start_ts";
+        SELECT AVG(value) AS v
+        FROM ""{table}""
+        WHERE time >= $from AND time < $to
+          AND source_address IN ({addrParams})";
 
         double? v = null;
-        DateTime? ts = null;
 
         await foreach (
             var row in _client
-                .Query(sql, database: _options.Bucket, namedParameters: named)
+                .Query(sql, database: _options.Bucket, namedParameters: np)
                 .WithCancellation(ct)
         )
         {
-            if (row is [not null, not null, ..])
-            {
+            if (row is [not null, ..])
                 v = ToDouble(row[0]);
-                ts = ToUtcTime(row[1]); // hour start (UTC) of the chosen bucket
-            }
             break;
         }
 
@@ -509,8 +579,121 @@ public class InfluxMeasurementStore : IStoreMeasurement
         {
             Value = v,
             Unit = unit,
-            Timestamp = ts,
+            Timestamp = hourStart,
         };
+    }
+
+    private async Task<DateTime?> GetLatestTimestampAdaptiveAsync(
+        string table,
+        string addrParams,
+        IReadOnlyDictionary<string, object> baseNamed,
+        DateTime fromUtc,
+        DateTime toUtc,
+        CancellationToken ct
+    )
+    {
+        return await LatestTsWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                fromUtc,
+                toUtc,
+                TimeSpan.FromHours(ChartMaxWindowHours),
+                ct
+            )
+            .ConfigureAwait(false);
+    }
+
+    private async Task<DateTime?> LatestTsWindowOrSplitAsync(
+        string table,
+        string addrParams,
+        IReadOnlyDictionary<string, object> baseNamed,
+        DateTime winFromUtc,
+        DateTime winToUtc,
+        TimeSpan maxWindow,
+        CancellationToken ct
+    )
+    {
+        if (winFromUtc >= winToUtc)
+            return null;
+
+        var span = winToUtc - winFromUtc;
+        if (span > maxWindow)
+        {
+            var mid = winFromUtc + TimeSpan.FromTicks(span.Ticks / 2);
+            var a = await LatestTsWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                winFromUtc,
+                mid,
+                maxWindow,
+                ct
+            );
+            var b = await LatestTsWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                mid,
+                winToUtc,
+                maxWindow,
+                ct
+            );
+            return new[] { a, b }.Max();
+        }
+
+        var named = new Dictionary<string, object>(baseNamed)
+        {
+            ["from"] = winFromUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+            ["to"] = winToUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+        };
+
+        var sql =
+            $@"
+        SELECT MAX(time) AS t
+        FROM ""{table}""
+        WHERE time >= $from AND time < $to
+          AND source_address IN ({addrParams})";
+
+        try
+        {
+            await foreach (
+                var row in _client
+                    .Query(sql, database: _options.Bucket, namedParameters: named)
+                    .WithCancellation(ct)
+            )
+            {
+                if (row is [not null, ..])
+                    return ToUtcTime(row[0]);
+                break;
+            }
+            return null;
+        }
+        catch (Exception ex) when (IsQueryFileLimit(ex))
+        {
+            if (span <= MinSplitWindow)
+                throw;
+            var mid = winFromUtc + TimeSpan.FromTicks(span.Ticks / 2);
+            var a = await LatestTsWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                winFromUtc,
+                mid,
+                maxWindow,
+                ct
+            );
+            var b = await LatestTsWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                mid,
+                winToUtc,
+                maxWindow,
+                ct
+            );
+            return new[] { a, b }.Max();
+        }
     }
 
     private static DateTime? MaxNullable(params DateTime?[] values) =>
@@ -563,36 +746,131 @@ public class InfluxMeasurementStore : IStoreMeasurement
         CancellationToken ct
     )
     {
-        var sql =
-            $@"
-            WITH ranked AS (
-                SELECT
-                    source_address,
-                    value,
-                    time,
-                    ROW_NUMBER() OVER (PARTITION BY source_address ORDER BY time DESC) AS rn
-                FROM ""{table}""
-                WHERE source_address IN ({addrParams})
+        var toUtc = DateTime.UtcNow;
+        var fromUtc = toUtc.AddYears(-2);
+
+        var acc = new Dictionary<string, LastRow>(StringComparer.OrdinalIgnoreCase);
+
+        await LatestPerSensorWindowOrSplitAsync(
+                table,
+                addrParams,
+                named,
+                fromUtc,
+                toUtc,
+                TimeSpan.FromHours(ChartMaxWindowHours),
+                acc,
+                ct
             )
-            SELECT source_address, value, time
-            FROM ranked
-            WHERE rn = 1";
+            .ConfigureAwait(false);
 
-        var dict = new Dictionary<string, LastRow>(StringComparer.OrdinalIgnoreCase);
+        return acc;
+    }
 
-        await foreach (
-            var row in _client
-                .Query(sql, database: _options.Bucket, namedParameters: named)
-                .WithCancellation(ct)
-        )
+    private async Task LatestPerSensorWindowOrSplitAsync(
+        string table,
+        string addrParams,
+        IReadOnlyDictionary<string, object> baseNamed,
+        DateTime winFromUtc,
+        DateTime winToUtc,
+        TimeSpan maxWindow,
+        Dictionary<string, LastRow> acc,
+        CancellationToken ct
+    )
+    {
+        if (winFromUtc >= winToUtc)
+            return;
+
+        var span = winToUtc - winFromUtc;
+        if (span > maxWindow)
         {
-            var addr = (string)row[0];
-            var val = ToDouble(row[1]);
-            var ts = ToUtcTime(row[2]);
-            dict[addr] = new LastRow { Time = ts, Value = val };
+            var mid = winFromUtc + TimeSpan.FromTicks(span.Ticks / 2);
+            await LatestPerSensorWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                winFromUtc,
+                mid,
+                maxWindow,
+                acc,
+                ct
+            );
+            await LatestPerSensorWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                mid,
+                winToUtc,
+                maxWindow,
+                acc,
+                ct
+            );
+            return;
         }
 
-        return dict;
+        var named = new Dictionary<string, object>(baseNamed)
+        {
+            ["from"] = winFromUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+            ["to"] = winToUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+        };
+
+        var sql =
+            $@"
+        WITH ranked AS (
+            SELECT
+                source_address,
+                value,
+                time,
+                ROW_NUMBER() OVER (PARTITION BY source_address ORDER BY time DESC) AS rn
+            FROM ""{table}""
+            WHERE time >= $from AND time < $to
+              AND source_address IN ({addrParams})
+        )
+        SELECT source_address, value, time
+        FROM ranked
+        WHERE rn = 1";
+
+        try
+        {
+            await foreach (
+                var row in _client
+                    .Query(sql, database: _options.Bucket, namedParameters: named)
+                    .WithCancellation(ct)
+            )
+            {
+                var addr = (string)row[0];
+                var val = ToDouble(row[1]);
+                var ts = ToUtcTime(row[2]);
+
+                if (!acc.TryGetValue(addr, out var current) || ts > current.Time)
+                    acc[addr] = new LastRow { Time = ts, Value = val };
+            }
+        }
+        catch (Exception ex) when (IsQueryFileLimit(ex))
+        {
+            if (span <= MinSplitWindow)
+                throw;
+            var mid = winFromUtc + TimeSpan.FromTicks(span.Ticks / 2);
+            await LatestPerSensorWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                winFromUtc,
+                mid,
+                maxWindow,
+                acc,
+                ct
+            );
+            await LatestPerSensorWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                mid,
+                winToUtc,
+                maxWindow,
+                acc,
+                ct
+            );
+        }
     }
 
     private static long ToInt64(object cell) =>
