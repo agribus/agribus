@@ -30,6 +30,8 @@ import { DashboardService } from "@services/dashboard/dashboard.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Sensor, SensorData, SummaryAggregates } from "@interfaces/dashboard.interface";
 import { ChartTimeseries, MetricPoint } from "@interfaces/chart.interface";
+import { ActivatedRoute } from "@angular/router";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 type AlertType = "success" | "warning" | "error" | "info";
 
@@ -127,6 +129,7 @@ export class DashboardComponent implements OnInit {
   private readonly greenhouseService = inject(GreenhouseService);
   private readonly injector = inject(INJECTOR);
   private readonly months$ = inject(TUI_MONTHS);
+  private readonly route = inject(ActivatedRoute);
 
   private readonly control = new FormControl<TuiDayRange | null>(null);
   get selectedRange(): TuiDayRange | null {
@@ -199,15 +202,24 @@ export class DashboardComponent implements OnInit {
     const greenhouseId = this.greenhouseService.selectedSerre()?.id;
     this.greenhouseId$.next(greenhouseId);
 
-    // Measurements (cards)
-    this.dashboardService.getGreenhouseMeasurementsById(greenhouseId).subscribe({
-      next: (data: SensorData) => {
-        this.sensors = data.sensors ?? [];
-        this.metrics =
-          data.summaryAggregates?.metrics ?? data.summaryAggregates?.metrics ?? undefined;
-      },
-      error: err => console.error("HTTP error:", err),
-    });
+    this.route.paramMap
+      .pipe(
+        map(params => params.get("id")),
+        filter(id => !!id),
+        switchMap(id => {
+          return this.dashboardService.getGreenhouseMeasurementsById(
+            id ? id : this.greenhouseService.selectedSerre()?.id
+          );
+        })
+      )
+      .subscribe({
+        next: (data: SensorData) => {
+          this.sensors = data.sensors ?? [];
+          this.metrics =
+            data.summaryAggregates?.metrics ?? data.summaryAggregates?.metrics ?? undefined;
+        },
+        error: err => console.error("HTTP error:", err),
+      });
   }
 
   protected onClick(): void {
