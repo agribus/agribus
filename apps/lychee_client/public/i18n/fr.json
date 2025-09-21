@@ -34,7 +34,25 @@
       "title": "Paramètres du compte"
     },
     "settings": {
-      "title": "Paramètres"
+      "title": "Paramètres",
+      "notification-section-title": "Notifications",
+      "notification-section-alerts-subtitle": "Alertes",
+      "notification-section-alerts-text": "Recevez des alertes quand les températures ou le taux d'humidité depassent les seuils définis.",
+      "notification-section-weekly-reports-subtitle": "Rapports Hebdomadaire",
+      "notification-section-weekly-reports-text": "Obtenez les rapports hebdomadaire des performances de vos serres.",
+      "notification-section-dark-mode-text": "Mode sombre",
+      "account-password-change": "Changez de mot de passe",
+      "account-logout": "Déconnexion",
+      "account-delete": "Supprimer le compte",
+      "account-delete-confirm": "Voulez vous vraiment supprimer votre compte ?",
+      "account-delete-label": "Etes vous sure ?"
+    },
+    "password-change": {
+      "title": "Changez le mot de passe",
+      "current-password": "Entrez votre mot de passe",
+      "new-password": "Entrez votre nouveau mot de passe",
+      "confirm-new-password": "Confirmez votre nouveau mot de passe",
+      "save": "Enregistrer"
     },
     "unsupported-platform": {
       "description": "Nous travaillons activement sur une version pour ordinateur. Pour l’instant, l’application est uniquement disponible sur les appareils mobiles.",
@@ -68,7 +86,9 @@
       "return": "Retour",
       "selectCrop": "Sélectionner une culture",
       "send": "Envoyer",
-      "submit": "Valider"
+      "submit": "Valider",
+      "cancel": "Annuler",
+      "confirm": "Confirmer"
     },
     "common": {
       "crops": "Cultures",

@@ -1,0 +1,15 @@
+<button
+  tuiCardLarge
+  tuiHeader
+  tuiSurface="outline"
+  type="button"
+  (click)="onClick()"
+  class="greenhouse-card">
+  <h1 tuiTitle>
+    {{ greenhouseTitle }}
+  </h1>
+
+  <aside tuiAccessories>
+    <tui-avatar appearance="primary-destructive" src="@tui.trash" />
+  </aside>
+</button>

@@ -1,0 +1,17 @@
+<div class="toggle-card-container">
+  <div class="toogle-card-content">
+    <h3 class="section-subtitle">
+      {{ subTitle }}
+    </h3>
+
+    <p>{{ text }}</p>
+  </div>
+
+  <p>
+    <input
+      tuiSwitch
+      type="checkbox"
+      [(ngModel)]="isActive"
+      (ngModelChange)="toggled.emit($event)" />
+  </p>
+</div>

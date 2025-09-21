@@ -41,7 +41,8 @@ public class PingTests
             new TestLogger<AuthService>(),
             new HttpContextAccessor(),
             new LoginRequestValidator(),
-            new SignupRequestValidator()
+            new SignupRequestValidator(),
+            new PasswordChangeRequestValidator()
         );
         _controller = new PingController(_logger, authService);
     }
