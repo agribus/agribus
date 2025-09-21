@@ -411,7 +411,14 @@ export class GreenhouseSceneService {
       return;
     }
 
-    const infoText = `${plantedCrop.crop.commonName}\n${plantedCrop.crop.cropGrowthConditions?.atmosphericHumidity} %RH\n${plantedCrop.crop.cropGrowthConditions?.miniumTemperature}° - ${plantedCrop.crop.cropGrowthConditions?.maximumTemperature}°C\n`;
+    let infoText = `${plantedCrop.crop.commonName}`;
+    if (plantedCrop.crop.idealConditions?.atmosphericHumidity)
+      infoText += `\n${plantedCrop.crop.idealConditions?.atmosphericHumidity} %RH`;
+    if (
+      plantedCrop.crop.idealConditions?.miniumTemperature &&
+      plantedCrop.crop.idealConditions?.maximumTemperature
+    )
+      infoText += `\n${plantedCrop.crop.idealConditions?.miniumTemperature}° - ${plantedCrop.crop.idealConditions?.maximumTemperature}°C`;
 
     const textPosition = new THREE.Vector3(
       plantedCrop.mesh.position.x,

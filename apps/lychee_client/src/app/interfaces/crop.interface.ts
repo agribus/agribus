@@ -8,5 +8,5 @@ export interface Crop {
   score: number;
   quantity?: number;
   imageUrl?: string;
-  cropGrowthConditions?: CropGrowthConditions;
+  idealConditions?: CropGrowthConditions;
 }

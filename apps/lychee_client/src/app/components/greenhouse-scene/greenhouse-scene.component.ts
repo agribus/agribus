@@ -31,29 +31,6 @@ export class GreenhouseSceneComponent implements OnInit {
   private readonly greenhouseService = inject(GreenhouseService);
   private readonly injector = inject(Injector);
 
-  private readonly carrotCrop: Crop = {
-    commonName: "Carotte",
-    commonNames: ["Carotte", "Carrot", "Zanahoria"],
-    scientificName: "Daucus carota subsp. sativus",
-    score: 85,
-    quantity: 7,
-    plantingDate: new Date("2025-03-01"),
-    cropGrowthConditions: {
-      atmosphericHumidity: 23.4,
-      miniumTemperature: 15.6,
-      maximumTemperature: 25.6,
-    },
-  };
-
-  private readonly greenhouse: Greenhouse = {
-    id: "guid-001",
-    name: "Serre expérimentale",
-    city: "Paris",
-    country: "France",
-    crops: [this.carrotCrop],
-    sensors: [],
-  };
-
   async ngOnInit(): Promise<void> {
     await this.threeSceneService.createScene(this.greenhouseCanva);
 
