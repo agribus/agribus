@@ -10,13 +10,13 @@ import { TuiSwitch } from "@taiga-ui/kit";
 })
 export class ToggleCardComponent {
   @Input()
-  public subTitle!: string;
+  public subTitle: string = "";
 
   @Input()
-  public text!: string;
+  public text: string = "";
 
   @Input()
-  public isActive!: boolean;
+  public isActive: boolean = false;
 
   @Output() public toggled = new EventEmitter<boolean>();
 }
