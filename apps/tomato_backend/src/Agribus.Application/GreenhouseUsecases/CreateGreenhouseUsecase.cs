@@ -24,7 +24,9 @@ public class CreateGreenhouseUsecase(
         entityToAdd.AddCoordinate(lat, lon);
         foreach (var crop in entityToAdd.Crops)
         {
-            var cropGrowthConditions = await trefleService.GetCropIdealConditions(crop.CommonName);
+            var cropGrowthConditions = await trefleService.GetCropIdealConditions(
+                crop.ScientificName
+            );
             crop.AddCropGrowthConditions(cropGrowthConditions);
         }
         var result = await greenhouseRepository.AddAsync(entityToAdd, cancellationToken);
