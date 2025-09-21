@@ -13,4 +13,8 @@ export class SettingsService {
     this.darkMode.set(!this.darkMode());
     localStorage.setItem("darkMode", this.darkMode().toString());
   }
+
+  public getIsDarkMode() {
+    return localStorage.getItem("darkMode") === "true";
+  }
 }
