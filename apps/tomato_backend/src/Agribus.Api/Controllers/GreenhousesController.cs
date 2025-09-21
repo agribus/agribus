@@ -148,4 +148,35 @@ public class GreenhousesController(
         var result = await getAlertsByGreenhouseUsecase.Handle(id, userId, cancellationToken);
         return Ok(result);
     }
+
+    [HttpGet(Endpoints.Greenhouses.GetGreenhouseChartTimeseriesById)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGreenhouseChartTimeseriesById(
+        [FromRoute] Guid id,
+        [FromQuery] DateOnly from,
+        [FromQuery] DateOnly to,
+        CancellationToken cancellationToken = default
+    )
+    {
+        if (from > to)
+            return BadRequest("'from' must be <= 'to' (format: yyyy-MM-dd).");
+
+        var userId = authService.GetCurrentUserId();
+        var greenhouse = await getGreenhouseByIdUsecase.Handle(id, userId, cancellationToken);
+        if (greenhouse is null)
+            return NotFound();
+
+        var sensors = greenhouse.Sensors.ToList();
+
+        var chart = await dataProcessor.GetChartTimeseriesAsync(
+            sensors,
+            from,
+            to,
+            cancellationToken
+        );
+
+        return Ok(new { chartTimeseries = chart });
+    }
 }
