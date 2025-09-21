@@ -48,30 +48,27 @@ public class InfluxMeasurementStore : IStoreMeasurement
         for (var i = 0; i < sensors.Count; i++)
             named[$"addr{i}"] = sensors[i].SourceAddress;
 
-        // ---- Aggregates (hourly mean over last hour) ----
-        resp.SummaryAggreglates.Metrics.Temperature = await QueryHourlyMeanAsync(
-            table: "Temperature",
-            unit: "°C",
+        var tTemp = QueryLatestHourMeanAsync(
+            "Temperature",
+            "°C",
+            addrParams,
+            named,
+            cancellationToken
+        );
+        var tHum = QueryLatestHourMeanAsync("Humidity", "%", addrParams, named, cancellationToken);
+        var tPress = QueryLatestHourMeanAsync(
+            "Pressure",
+            "hPa",
             addrParams,
             named,
             cancellationToken
         );
 
-        resp.SummaryAggreglates.Metrics.Humidity = await QueryHourlyMeanAsync(
-            table: "Humidity",
-            unit: "%",
-            addrParams,
-            named,
-            cancellationToken
-        );
+        await Task.WhenAll(tTemp, tHum, tPress);
 
-        resp.SummaryAggreglates.Metrics.AirPressure = await QueryHourlyMeanAsync(
-            table: "Pressure",
-            unit: "hPa",
-            addrParams,
-            named,
-            cancellationToken
-        );
+        resp.SummaryAggreglates.Metrics.Temperature = await tTemp;
+        resp.SummaryAggreglates.Metrics.Humidity = await tHum;
+        resp.SummaryAggreglates.Metrics.AirPressure = await tPress;
 
         // Latest per sensor by measurement type
         var latestTemp = await QueryLatestPerSensorAsync(
@@ -261,5 +258,65 @@ public class InfluxMeasurementStore : IStoreMeasurement
         }
 
         return dict;
+    }
+
+    private async Task<MeasureValueDto> QueryLatestHourMeanAsync(
+        string table,
+        string unit,
+        string addrParams,
+        Dictionary<string, object> named,
+        CancellationToken ct
+    )
+    {
+        // Choose the hour bucket that contains the most recent sample across the selected sensors.
+        // Then compute AVG(value) within that hour (half-open interval: [start, start+1h)).
+        var sql =
+            $@"
+        WITH last_ts AS (
+            SELECT MAX(time) AS t
+            FROM ""{table}""
+            WHERE source_address IN ({addrParams})
+        ),
+        bounds AS (
+            SELECT
+                DATE_TRUNC('hour', t)                         AS start_ts,
+                DATE_TRUNC('hour', t) + INTERVAL '1 hour'     AS end_ts
+            FROM last_ts
+        )
+        SELECT
+            AVG(m.value) AS value,
+            b.start_ts    AS ts
+        FROM ""{table}"" AS m
+        CROSS JOIN bounds AS b
+        WHERE m.source_address IN ({addrParams})
+          AND m.time >= b.start_ts
+          AND m.time <  b.end_ts
+        GROUP BY b.start_ts
+    ";
+
+        double? v = null;
+        DateTime? ts = null;
+
+        await foreach (
+            var row in _client
+                .Query(sql, database: _options.Bucket, namedParameters: named)
+                .WithCancellation(ct)
+        )
+        {
+            if (row is [not null, not null, ..])
+            {
+                v = ToDouble(row[0]);
+                ts = ToUtcTime(row[1]);
+            }
+
+            break;
+        }
+
+        return new MeasureValueDto
+        {
+            Value = v,
+            Unit = unit,
+            Timestamp = ts,
+        };
     }
 }
