@@ -22,7 +22,7 @@ export const MAIN_ROUTES = [
     component: MainLayoutComponent,
     children: [
       {
-        path: "dashboard",
+        path: "dashboard/:id",
         component: DashboardComponent,
         canActivate: [platformGuard, authGuard],
       },

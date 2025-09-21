@@ -1,5 +1,14 @@
 {
   "pages": {
+    "dashboard": {
+      "title": {
+        "measurements": {
+          "temperature": "Temperature",
+          "humidity": "Humidity",
+          "airPressure": "Air pressure"
+        }
+      }
+    },
     "forgot-password": {
       "connection-page": "Connection page",
       "subtitle": "Enter your email to reset your password",

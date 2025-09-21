@@ -118,6 +118,7 @@ export class HeaderComponent implements OnInit {
   }
 
   public onGreenhouseChange(greenhouse: Greenhouse) {
+    this.gotoPage("home");
     this.greenhouseService.selectedSerre.set(greenhouse);
   }
 }

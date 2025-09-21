@@ -60,6 +60,14 @@ export class NavbarComponent implements OnInit {
     this.router.navigate([`/${pageName}`]);
   }
 
+  goToDashboard() {
+    if (!this.greenhouseService.selectedSerre()) {
+      this.router.navigate(["/home"]);
+    } else {
+      this.router.navigate(["/dashboard", this.greenhouseService.selectedSerre()?.id]);
+    }
+  }
+
   goToGreenhouse() {
     if (!this.greenhouseService.selectedSerre()) {
       this.router.navigate(["/greenhouse/create"]);
