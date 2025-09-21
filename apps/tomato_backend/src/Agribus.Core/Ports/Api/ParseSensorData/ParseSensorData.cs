@@ -15,13 +15,15 @@ public class ParseSensorData(RawSensorPayloadValidator validator) : IParseSensor
     {
         await validator.ValidateAndThrowAsync(payload, cancellationToken);
         var sensorType = MapType(payload.Type);
-        var date = DateTimeOffset.FromUnixTimeMilliseconds(payload.Timestamp).UtcDateTime;
+        var date = payload.Timestamp;
+        var whenUtc = DateTimeOffset.FromUnixTimeMilliseconds(payload.Timestamp).UtcDateTime;
+
         var measurement = new SensorMeasurement
         {
             Date = date,
             Value = payload.Value,
             Type = sensorType,
-            SourceAdress = payload.SourceAddress,
+            SourceAddress = payload.SourceAddress,
         };
 
         return measurement;

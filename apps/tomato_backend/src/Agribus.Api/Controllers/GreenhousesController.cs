@@ -1,5 +1,7 @@
 using Agribus.Api.Extensions;
 using Agribus.Application.GreenhouseUsecases;
+using Agribus.Application.SensorUsecases;
+using Agribus.Core.Ports.Api.AlertUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases;
 using Agribus.Core.Ports.Api.GreenhouseUsecases.DTOs;
 using Agribus.Core.Ports.Spi.AuthContext;
@@ -15,8 +17,10 @@ public class GreenhousesController(
     IUpdateGreenhouseUsecase updateGreenhouseUsecase,
     IGetUserGreenhousesUsecase getUserGreenhousesUsecase,
     IGetGreenhouseByIdUsecase getGreenhouseByIdUsecase,
+    SensorDataProcessor dataProcessor,
     IForecastService forecastService,
-    IAuthService authService
+    IAuthService authService,
+    IGetAlertsByGreenhouseUsecase getAlertsByGreenhouseUsecase
 ) : ControllerBase
 {
     [HttpGet(Endpoints.Greenhouses.GetUserGreenhouseById)]
@@ -54,6 +58,27 @@ public class GreenhousesController(
         return Ok(forecast);
     }
 
+    [HttpGet(Endpoints.Greenhouses.GetGreenhouseMeasurementsById)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGreenhouseMeasurementsById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken
+    )
+    {
+        var userId = authService.GetCurrentUserId();
+        var greenhouse = await getGreenhouseByIdUsecase.Handle(id, userId, cancellationToken);
+        if (greenhouse is null)
+            return NotFound();
+
+        var sourceAdresses = greenhouse.Sensors.ToList();
+        var measurements = await dataProcessor.GetMeasurementsAsync(
+            sourceAdresses,
+            cancellationToken
+        );
+        return Ok(measurements);
+    }
+
     [HttpGet(Endpoints.Greenhouses.GetUserGreenhouses)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetUserGreenhouses(CancellationToken cancellationToken)
@@ -71,8 +96,9 @@ public class GreenhousesController(
         CancellationToken cancellationToken = default
     )
     {
-        if  (dto is null) return BadRequest();
-        
+        if (dto is null)
+            return BadRequest();
+
         var userId = authService.GetCurrentUserId();
         var created = await createGreenhouseUsecase.Handle(dto, userId, cancellationToken);
         return Created(Endpoints.Greenhouses.CreateGreenhouse, created);
@@ -101,11 +127,25 @@ public class GreenhousesController(
         CancellationToken cancellationToken = default
     )
     {
-        if (dto is null) return BadRequest();
-        
+        if (dto is null)
+            return BadRequest();
+
         var userId = authService.GetCurrentUserId();
         var updated = await updateGreenhouseUsecase.Handle(id, userId, dto, cancellationToken);
 
         return updated ? NoContent() : NotFound();
+    }
+
+    [HttpGet(Endpoints.Greenhouses.GetGreenhouseAlertsById)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetGreenhouseAlertsById(
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var userId = authService.GetCurrentUserId();
+        var result = await getAlertsByGreenhouseUsecase.Handle(id, userId, cancellationToken);
+        return Ok(result);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Agribus.Postgres.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Agribus.Postgres.Migrations
 {
     [DbContext(typeof(AgribusDbContext))]
-    partial class AgribusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250902164323_AddAlertValueRanges")]
+    partial class AddAlertValueRanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,9 +90,9 @@ namespace Agribus.Postgres.Migrations
 
                     b.ToTable("alert", null, t =>
                         {
-                            t.HasCheckConstraint("CK_MeasureType_IsValid", "LOWER(measure_type) IN ('temperature', 'humidity', 'pressure', 'motion', 'rssi', 'neighbors', 'unknown')");
+                            t.HasCheckConstraint("CK_MeasureType_IsValid", "measure_type IN ('temperature', 'humidity', 'pressure', 'motion', 'rssi', 'neighbors', 'unknown')");
 
-                            t.HasCheckConstraint("CK_RuleType_IsValid", "LOWER(rule_type) IN ('above', 'below', 'outside', 'inside')");
+                            t.HasCheckConstraint("CK_RuleType_IsValid", "rule_type IN ('above', 'below', 'outside', 'inside')");
                         });
                 });
 

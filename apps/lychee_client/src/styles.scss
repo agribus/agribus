@@ -41,3 +41,8 @@
     max-width: 960px;
   }
 }
+.app-immersive-layout {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+}

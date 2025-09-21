@@ -1,4 +1,5 @@
-﻿using Agribus.Core.Ports.Api.ParseSensorData;
+﻿using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
+using Agribus.Core.Ports.Api.ParseSensorData;
 using Agribus.Core.Ports.Api.ParseSensorData.DTOs;
 using Agribus.Core.Ports.Spi.Measurement;
 using Agribus.Core.Ports.Spi.SensorContext;
@@ -22,6 +23,14 @@ public class SensorDataProcessor(
             );
         var parsed = await parser.FromRawJson(raw, cancellationToken);
         await store.StoreAsync(parsed, cancellationToken);
+    }
+
+    public async Task<LatestMeasurementsResponseDto> GetMeasurementsAsync(
+        List<Sensor> sensors,
+        CancellationToken cancellationToken
+    )
+    {
+        return await store.GetMeasurementsAsync(sensors, cancellationToken);
     }
 }
 

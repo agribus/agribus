@@ -1,11 +1,4 @@
 {
-  "components": {
-    "ui": {
-      "header": {
-        "new-greenhouse": "➕ Add a greenhouse"
-      }
-    }
-  },
   "pages": {
     "forgot-password": {
       "connection-page": "Connection page",
@@ -17,6 +10,9 @@
     },
     "greenhouse-settings": {
       "title": "Greenhouse parameters"
+    },
+    "home": {
+      "create-first-greenhouse": "Add your first greenhouse"
     },
     "login": {
       "no-account": "No account?",

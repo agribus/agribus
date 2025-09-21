@@ -1,6 +1,6 @@
 using Agribus.Core.Ports.Spi.Measurement;
 using Agribus.InfluxDB.Repositories;
-using InfluxDB.Client;
+using InfluxDB3.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

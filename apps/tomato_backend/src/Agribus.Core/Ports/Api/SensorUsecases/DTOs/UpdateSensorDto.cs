@@ -1,4 +1,3 @@
-using Agribus.Core.Domain.AggregatesModels.SensorAggregates;
 using Agribus.Core.Domain.Enums;
 
 namespace Agribus.Core.Ports.Api.SensorUsecases.DTOs;
@@ -13,4 +12,5 @@ public class UpdateSensorDto
 public class UpdateSensorFromGreenhouseDto : UpdateSensorDto
 {
     public Guid Id { get; set; }
+    public required string SourceAddress { get; set; }
 }

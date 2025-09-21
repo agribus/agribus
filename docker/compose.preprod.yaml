@@ -76,6 +76,7 @@ services:
       - INFLUXDB__URL=http://hot-potato-preprod:8181
       - ConnectionStrings__Postgres=Host=${POSTGRES_HOST};Port=${POSTGRES_PORT};Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
       - Clerk__SecretKey=${Clerk__SecretKey}
+      - Trefle__Token=${Trefle__Token}
     restart: unless-stopped
     depends_on:
       cold-potato-preprod:

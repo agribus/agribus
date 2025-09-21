@@ -68,9 +68,10 @@ namespace Agribus.Clerk.Services
 
                 var session = await _clerkClient.Sessions.CreateAsync(new() { UserId = user.Id });
 
-                SetAuthCookie(session.Session!.Id);
-
-                return AuthResponse.CreateSuccess(message: "Successfully logged in");
+                return AuthResponse.CreateSuccess(
+                    token: session.Session!.Id,
+                    message: "Successfully logged in"
+                );
             }
             catch (Exception ex)
             {
@@ -168,11 +169,6 @@ namespace Agribus.Clerk.Services
             return _httpContextAccessor.HttpContext.Items["UserId"]!.ToString()!;
         }
 
-        public void LogoutAsync()
-        {
-            _httpContextAccessor.HttpContext?.Response.Cookies.Delete("auth_token");
-        }
-
         public string? GetToken()
         {
             return _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(
@@ -181,24 +177,6 @@ namespace Agribus.Clerk.Services
             )
                 ? token
                 : null;
-        }
-
-        private void SetAuthCookie(string token)
-        {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddDays(7),
-                Path = "/",
-            };
-
-            _httpContextAccessor.HttpContext?.Response.Cookies.Append(
-                "auth_token",
-                token,
-                cookieOptions
-            );
         }
     }
 }

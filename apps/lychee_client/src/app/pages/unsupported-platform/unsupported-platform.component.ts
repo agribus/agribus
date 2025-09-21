@@ -26,7 +26,6 @@ export class UnsupportedPlatformComponent {
       });
   }
 
-  /** Extract the primary language code (e.g. 'fr-FR' => 'FR') */
   private formatLang(lang: string): string {
     return lang.split("-")[0].toUpperCase();
   }
