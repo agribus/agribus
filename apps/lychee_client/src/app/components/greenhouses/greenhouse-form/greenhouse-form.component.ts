@@ -107,8 +107,8 @@ export class GreenhouseFormComponent implements OnChanges {
     this.greenhouseForm = this.fb.group({
       step0: this.fb.group({
         name: [this.greenhouse?.name, Validators.required],
-        city: ["Paris", Validators.required],
-        country: ["France", Validators.required],
+        city: [this.greenhouse?.city, Validators.required],
+        country: [this.greenhouse?.country, Validators.required],
       }),
       step1: this.fb.group({
         crops: [[]],

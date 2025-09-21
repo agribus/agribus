@@ -21,7 +21,24 @@
           <label tuiLabel for="name">
             {{ "shared.common.name" | translate }}
           </label>
-          <input formControlName="name" tuiTextfield placeholder="Serre 1" />
+          <input
+            formControlName="name"
+            tuiTextfield
+            [placeholder]="'shared.common.greenhouse' | translate" />
+        </tui-textfield>
+
+        <tui-textfield>
+          <label tuiLabel for="city">
+            {{ "shared.common.city" | translate }}
+          </label>
+          <input formControlName="city" tuiTextfield placeholder="Paris" />
+        </tui-textfield>
+
+        <tui-textfield>
+          <label tuiLabel for="country">
+            {{ "shared.common.country" | translate }}
+          </label>
+          <input formControlName="country" tuiTextfield placeholder="France" />
         </tui-textfield>
 
         <footer class="form-footer">
