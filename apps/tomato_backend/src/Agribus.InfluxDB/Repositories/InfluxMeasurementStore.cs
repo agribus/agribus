@@ -21,6 +21,15 @@ public class InfluxMeasurementStore : IStoreMeasurement
         _client = client;
     }
 
+    private const int ChartMaxWindowHours = 48;
+
+    private static bool IsQueryFileLimit(Exception ex)
+    {
+        var s = ex.ToString();
+        return s.IndexOf("file limit", StringComparison.OrdinalIgnoreCase) >= 0
+            || s.IndexOf("parquet files", StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
     public async Task StoreAsync(
         SensorMeasurement measurement,
         CancellationToken cancellationToken = default
@@ -51,9 +60,21 @@ public class InfluxMeasurementStore : IStoreMeasurement
             named[$"addr{i}"] = sensors[i].SourceAddress;
 
         // ---- Aggregates (hourly mean anchored at the hour that contains the latest sample) ----
-        var tTemp = QueryLatestHourMeanAsync("Temperature", "°C", addrParams, named, cancellationToken);
+        var tTemp = QueryLatestHourMeanAsync(
+            "Temperature",
+            "°C",
+            addrParams,
+            named,
+            cancellationToken
+        );
         var tHum = QueryLatestHourMeanAsync("Humidity", "%", addrParams, named, cancellationToken);
-        var tPres = QueryLatestHourMeanAsync("Pressure", "hPa", addrParams, named, cancellationToken);
+        var tPres = QueryLatestHourMeanAsync(
+            "Pressure",
+            "hPa",
+            addrParams,
+            named,
+            cancellationToken
+        );
 
         await Task.WhenAll(tTemp, tHum, tPres);
 
@@ -62,9 +83,24 @@ public class InfluxMeasurementStore : IStoreMeasurement
         resp.SummaryAggreglates.Metrics.AirPressure = await tPres;
 
         // Latest per sensor by measurement type
-        var latestTemp = await QueryLatestPerSensorAsync("Temperature", addrParams, named, cancellationToken);
-        var latestHum = await QueryLatestPerSensorAsync("Humidity", addrParams, named, cancellationToken);
-        var latestPress = await QueryLatestPerSensorAsync("Pressure", addrParams, named, cancellationToken);
+        var latestTemp = await QueryLatestPerSensorAsync(
+            "Temperature",
+            addrParams,
+            named,
+            cancellationToken
+        );
+        var latestHum = await QueryLatestPerSensorAsync(
+            "Humidity",
+            addrParams,
+            named,
+            cancellationToken
+        );
+        var latestPress = await QueryLatestPerSensorAsync(
+            "Pressure",
+            addrParams,
+            named,
+            cancellationToken
+        );
 
         foreach (var sensor in sensors)
         {
@@ -82,13 +118,28 @@ public class InfluxMeasurementStore : IStoreMeasurement
                 {
                     Timestamp = ts,
                     Temperature = t?.Value is { } tv
-                        ? new MeasureValueDto { Value = tv, Unit = "°C", Timestamp = t!.Time }
+                        ? new MeasureValueDto
+                        {
+                            Value = tv,
+                            Unit = "°C",
+                            Timestamp = t!.Time,
+                        }
                         : null,
                     Humidity = h?.Value is { } hv
-                        ? new MeasureValueDto { Value = hv, Unit = "%", Timestamp = h!.Time }
+                        ? new MeasureValueDto
+                        {
+                            Value = hv,
+                            Unit = "%",
+                            Timestamp = h!.Time,
+                        }
                         : null,
                     Pressure = p?.Value is { } pv
-                        ? new MeasureValueDto { Value = pv, Unit = "hPa", Timestamp = p!.Time }
+                        ? new MeasureValueDto
+                        {
+                            Value = pv,
+                            Unit = "hPa",
+                            Timestamp = p!.Time,
+                        }
                         : null,
                 },
             };
@@ -133,17 +184,42 @@ public class InfluxMeasurementStore : IStoreMeasurement
         for (var i = 0; i < sensors.Count; i++)
             baseNamed[$"addr{i}"] = sensors[i].SourceAddress;
 
-        // Inclusive [from, to] UTC -> [from 00:00Z, to+1d 00:00Z)
         var fromUtc = DateTime.SpecifyKind(from.ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
-        var toExclusiveUtc = DateTime.SpecifyKind(to.AddDays(1).ToDateTime(TimeOnly.MinValue), DateTimeKind.Utc);
+        var toExclusiveUtc = DateTime.SpecifyKind(
+            to.AddDays(1).ToDateTime(TimeOnly.MinValue),
+            DateTimeKind.Utc
+        );
 
-        // Influx SQL named parameters must be simple types; use RFC3339 strings
-        baseNamed["from"] = fromUtc.ToString("yyyy-MM-ddTHH:mm:ssZ");
-        baseNamed["to"] = toExclusiveUtc.ToString("yyyy-MM-ddTHH:mm:ssZ");
-
-        var tempTask = QueryDailySeriesAsync("Temperature", addrParams, baseNamed, from, to, ct);
-        var humTask = QueryDailySeriesAsync("Humidity", addrParams, baseNamed, from, to, ct);
-        var pressTask = QueryDailySeriesAsync("Pressure", addrParams, baseNamed, from, to, ct);
+        var tempTask = QueryDailySeriesAdaptiveAsync(
+            "Temperature",
+            addrParams,
+            baseNamed,
+            from,
+            to,
+            fromUtc,
+            toExclusiveUtc,
+            ct
+        );
+        var humTask = QueryDailySeriesAdaptiveAsync(
+            "Humidity",
+            addrParams,
+            baseNamed,
+            from,
+            to,
+            fromUtc,
+            toExclusiveUtc,
+            ct
+        );
+        var pressTask = QueryDailySeriesAdaptiveAsync(
+            "Pressure",
+            addrParams,
+            baseNamed,
+            from,
+            to,
+            fromUtc,
+            toExclusiveUtc,
+            ct
+        );
 
         await Task.WhenAll(tempTask, humTask, pressTask).ConfigureAwait(false);
 
@@ -152,6 +228,161 @@ public class InfluxMeasurementStore : IStoreMeasurement
         resp.Metrics.AirPressure.Points = pressTask.Result;
 
         return resp;
+    }
+
+    private async Task<List<MetricPointDto>> QueryDailySeriesAdaptiveAsync(
+        string table,
+        string addrParams,
+        IReadOnlyDictionary<string, object> baseNamed,
+        DateOnly reqFrom,
+        DateOnly reqTo,
+        DateTime fromUtc,
+        DateTime toExclusiveUtc,
+        CancellationToken ct
+    )
+    {
+        // Accumulate per-day SUM and COUNT across windows, then compute final AVG
+        var sums = new Dictionary<DateOnly, (double sum, long cnt)>();
+
+        await QueryDailyWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                fromUtc,
+                toExclusiveUtc,
+                TimeSpan.FromHours(ChartMaxWindowHours),
+                sums,
+                ct
+            )
+            .ConfigureAwait(false);
+
+        var points = new List<MetricPointDto>();
+        for (var d = reqFrom; d <= reqTo; d = d.AddDays(1))
+        {
+            if (sums.TryGetValue(d, out var sc) && sc.cnt > 0)
+                points.Add(
+                    new MetricPointDto
+                    {
+                        Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                        Value = sc.sum / sc.cnt,
+                    }
+                );
+            else
+                points.Add(
+                    new MetricPointDto
+                    {
+                        Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                        Value = null,
+                    }
+                );
+        }
+        return points;
+    }
+
+    private async Task QueryDailyWindowOrSplitAsync(
+        string table,
+        string addrParams,
+        IReadOnlyDictionary<string, object> baseNamed,
+        DateTime winFromUtc,
+        DateTime winToUtc,
+        TimeSpan maxWindow,
+        Dictionary<DateOnly, (double sum, long cnt)> acc,
+        CancellationToken ct
+    )
+    {
+        if (winFromUtc >= winToUtc)
+            return;
+
+        if ((winToUtc - winFromUtc) > maxWindow)
+        {
+            var mid = winFromUtc + TimeSpan.FromTicks((winToUtc - winFromUtc).Ticks / 2);
+            await QueryDailyWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                winFromUtc,
+                mid,
+                maxWindow,
+                acc,
+                ct
+            );
+            await QueryDailyWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                mid,
+                winToUtc,
+                maxWindow,
+                acc,
+                ct
+            );
+            return;
+        }
+
+        var named = new Dictionary<string, object>(baseNamed)
+        {
+            ["from"] = winFromUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+            ["to"] = winToUtc.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+        };
+
+        var sql =
+            $@"
+        SELECT DATE_TRUNC('day', time) AS d, SUM(value) AS s, COUNT(value) AS n
+        FROM ""{table}""
+        WHERE time >= $from AND time < $to
+          AND source_address IN ({addrParams})
+        GROUP BY 1
+        ORDER BY 1";
+
+        try
+        {
+            await foreach (
+                var row in _client
+                    .Query(sql, database: _options.Bucket, namedParameters: named)
+                    .WithCancellation(ct)
+            )
+            {
+                if (row is [not null, not null, not null, ..])
+                {
+                    var day = DateOnly.FromDateTime(ToUtcTime(row[0]));
+                    var sum = ToDouble(row[1]);
+                    var cnt = ToInt64(row[2]);
+
+                    if (acc.TryGetValue(day, out var sc))
+                        acc[day] = (sc.sum + sum, sc.cnt + cnt);
+                    else
+                        acc[day] = (sum, cnt);
+                }
+            }
+        }
+        catch (Exception ex) when (IsQueryFileLimit(ex))
+        {
+            var span = winToUtc - winFromUtc;
+            if (span <= TimeSpan.FromHours(1))
+                throw; // pathological; let it surface
+
+            var mid = winFromUtc + TimeSpan.FromTicks(span.Ticks / 2);
+            await QueryDailyWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                winFromUtc,
+                mid,
+                maxWindow,
+                acc,
+                ct
+            );
+            await QueryDailyWindowOrSplitAsync(
+                table,
+                addrParams,
+                baseNamed,
+                mid,
+                winToUtc,
+                maxWindow,
+                acc,
+                ct
+            );
+        }
     }
 
     private async Task<List<MetricPointDto>> QueryDailySeriesAsync(
@@ -163,10 +394,10 @@ public class InfluxMeasurementStore : IStoreMeasurement
         CancellationToken ct
     )
     {
-        // Clone to be safe if the caller reuses baseNamed concurrently
         var named = new Dictionary<string, object>(baseNamed);
 
-        var sql = $@"
+        var sql =
+            $@"
             SELECT DATE_TRUNC('day', time) AS d, AVG(value) AS v
             FROM ""{table}""
             WHERE time >= $from AND time < $to
@@ -176,7 +407,11 @@ public class InfluxMeasurementStore : IStoreMeasurement
 
         var byDay = new Dictionary<DateOnly, double>();
 
-        await foreach (var row in _client.Query(sql, database: _options.Bucket, namedParameters: named).WithCancellation(ct))
+        await foreach (
+            var row in _client
+                .Query(sql, database: _options.Bucket, namedParameters: named)
+                .WithCancellation(ct)
+        )
         {
             if (row is [not null, not null, ..])
             {
@@ -191,11 +426,13 @@ public class InfluxMeasurementStore : IStoreMeasurement
         for (var d = from; d <= to; d = d.AddDays(1))
         {
             var has = byDay.TryGetValue(d, out var v);
-            points.Add(new MetricPointDto
-            {
-                Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                Value = has ? v : (double?)null
-            });
+            points.Add(
+                new MetricPointDto
+                {
+                    Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Value = has ? v : (double?)null,
+                }
+            );
         }
 
         return points;
@@ -206,11 +443,13 @@ public class InfluxMeasurementStore : IStoreMeasurement
         var list = new List<MetricPointDto>();
         for (var d = from; d <= to; d = d.AddDays(1))
         {
-            list.Add(new MetricPointDto
-            {
-                Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
-                Value = null
-            });
+            list.Add(
+                new MetricPointDto
+                {
+                    Date = d.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    Value = null,
+                }
+            );
         }
         return list;
     }
@@ -226,7 +465,8 @@ public class InfluxMeasurementStore : IStoreMeasurement
     )
     {
         // Hour bucket containing the most recent sample across selected sensors
-        var sql = $@"
+        var sql =
+            $@"
             WITH last_ts AS (
                 SELECT MAX(time) AS t
                 FROM ""{table}""
@@ -251,20 +491,27 @@ public class InfluxMeasurementStore : IStoreMeasurement
         double? v = null;
         DateTime? ts = null;
 
-        await foreach (var row in _client.Query(sql, database: _options.Bucket, namedParameters: named).WithCancellation(ct))
+        await foreach (
+            var row in _client
+                .Query(sql, database: _options.Bucket, namedParameters: named)
+                .WithCancellation(ct)
+        )
         {
             if (row is [not null, not null, ..])
             {
                 v = ToDouble(row[0]);
                 ts = ToUtcTime(row[1]); // hour start (UTC) of the chosen bucket
             }
-            break; // single row expected
+            break;
         }
 
-        return new MeasureValueDto { Value = v, Unit = unit, Timestamp = ts };
+        return new MeasureValueDto
+        {
+            Value = v,
+            Unit = unit,
+            Timestamp = ts,
+        };
     }
-
-    // ---------------- Common helpers ----------------
 
     private static DateTime? MaxNullable(params DateTime?[] values) =>
         values.Where(v => v.HasValue).Select(v => v!.Value).DefaultIfEmpty().Max();
@@ -274,15 +521,21 @@ public class InfluxMeasurementStore : IStoreMeasurement
         {
             DateTime dt => DateTime.SpecifyKind(dt, DateTimeKind.Utc),
             DateTimeOffset dto => dto.UtcDateTime,
-            string s => DateTimeOffset.Parse(
-                                    s,
-                                    CultureInfo.InvariantCulture,
-                                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
-                                  ).UtcDateTime,
-            BigInteger bi => DateTimeOffset.FromUnixTimeMilliseconds((long)(bi / 1_000_000)).UtcDateTime, // ns -> ms
+            string s => DateTimeOffset
+                .Parse(
+                    s,
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.AdjustToUniversal | DateTimeStyles.AssumeUniversal
+                )
+                .UtcDateTime,
+            BigInteger bi => DateTimeOffset
+                .FromUnixTimeMilliseconds((long)(bi / 1_000_000))
+                .UtcDateTime, // ns -> ms
             long ms => DateTimeOffset.FromUnixTimeMilliseconds(ms).UtcDateTime,
             double dms => DateTimeOffset.FromUnixTimeMilliseconds((long)dms).UtcDateTime,
-            _ => throw new InvalidCastException($"Unsupported time type: {cell.GetType().FullName}")
+            _ => throw new InvalidCastException(
+                $"Unsupported time type: {cell.GetType().FullName}"
+            ),
         };
 
     private static double ToDouble(object cell) =>
@@ -294,41 +547,8 @@ public class InfluxMeasurementStore : IStoreMeasurement
             int i => i,
             decimal m => (double)m,
             BigInteger b => (double)b,
-            _ => Convert.ToDouble(cell)
+            _ => Convert.ToDouble(cell),
         };
-
-    // (Optional) Kept for reference; not used by current flow
-    private async Task<MeasureValueDto> QueryHourlyMeanAsync(
-        string table,
-        string unit,
-        string addrParams,
-        Dictionary<string, object> named,
-        CancellationToken ct
-    )
-    {
-        var sql = $@"
-            SELECT
-              AVG(value)                         AS value,
-              DATE_TRUNC('hour', MAX(time))      AS ts
-            FROM ""{table}""
-            WHERE time >= now() - INTERVAL '1 hour'
-              AND source_address IN ({addrParams})";
-
-        double? v = null;
-        DateTime? ts = null;
-
-        await foreach (var row in _client.Query(sql, database: _options.Bucket, namedParameters: named).WithCancellation(ct))
-        {
-            if (row is [not null, not null, ..])
-            {
-                v = ToDouble(row[0]);
-                ts = ToUtcTime(row[1]);
-            }
-            break; // single row
-        }
-
-        return new MeasureValueDto { Value = v, Unit = unit, Timestamp = ts };
-    }
 
     private sealed class LastRow
     {
@@ -343,7 +563,8 @@ public class InfluxMeasurementStore : IStoreMeasurement
         CancellationToken ct
     )
     {
-        var sql = $@"
+        var sql =
+            $@"
             WITH ranked AS (
                 SELECT
                     source_address,
@@ -359,7 +580,11 @@ public class InfluxMeasurementStore : IStoreMeasurement
 
         var dict = new Dictionary<string, LastRow>(StringComparer.OrdinalIgnoreCase);
 
-        await foreach (var row in _client.Query(sql, database: _options.Bucket, namedParameters: named).WithCancellation(ct))
+        await foreach (
+            var row in _client
+                .Query(sql, database: _options.Bucket, namedParameters: named)
+                .WithCancellation(ct)
+        )
         {
             var addr = (string)row[0];
             var val = ToDouble(row[1]);
@@ -369,4 +594,15 @@ public class InfluxMeasurementStore : IStoreMeasurement
 
         return dict;
     }
+
+    private static long ToInt64(object cell) =>
+        cell switch
+        {
+            long l => l,
+            int i => i,
+            BigInteger bi => (long)bi,
+            double d => (long)d,
+            decimal m => (long)m,
+            _ => Convert.ToInt64(cell, CultureInfo.InvariantCulture),
+        };
 }
