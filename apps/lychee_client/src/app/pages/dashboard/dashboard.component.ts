@@ -1,7 +1,15 @@
 import { Component, inject, Injector, INJECTOR, OnInit } from "@angular/core";
-import { AsyncPipe, DatePipe, KeyValuePipe, TitleCasePipe, UpperCasePipe } from "@angular/common";
+import { AsyncPipe, DatePipe, KeyValuePipe } from "@angular/common";
 import { FormsModule, FormControl } from "@angular/forms";
-import { combineLatest, map, Observable } from "rxjs";
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  shareReplay,
+  switchMap,
+} from "rxjs";
 
 import { TuiCard } from "@taiga-ui/layout";
 import {
@@ -21,6 +29,7 @@ import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import { DashboardService } from "@services/dashboard/dashboard.service";
 import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
 import { Sensor, SensorData, SummaryAggregates } from "@interfaces/dashboard.interface";
+import { ChartTimeseries, MetricPoint } from "@interfaces/chart.interface";
 
 type AlertType = "success" | "warning" | "error" | "info";
 
@@ -45,7 +54,6 @@ interface Alert {
     FormsModule,
     AsyncPipe,
     ChartDashboard,
-    ChartDashboard,
     TuiIcon,
     TranslatePipe,
     DatePipe,
@@ -55,16 +63,6 @@ interface Alert {
   styleUrls: ["./dashboard.component.scss"],
 })
 export class DashboardComponent implements OnInit {
-  ngOnInit(): void {
-    const greenhouseId = this.greenhouseService.selectedSerre()?.id;
-    this.dashboardService.getGreenhouseMeasurementsById(greenhouseId).subscribe({
-      next: (data: SensorData) => {
-        this.sensors = data.sensors;
-        this.metrics = data.summaryAggregates.metrics;
-      },
-      error: err => console.error("HTTP error:", err),
-    });
-  }
   protected readonly temperatureIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
     `<svg width="18" height="24" viewBox="0 0 18 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M14.875 5.25C13.4253 5.25 12.25 6.42525 12.25 7.875C12.25 9.32475 13.4253 10.5 14.875 10.5C16.3247 10.5 17.5 9.32475 17.5 7.875C17.5 6.42525 16.3247 5.25 14.875 5.25ZM14.875 9C14.2537 9 13.75 8.49632 13.75 7.875C13.75 7.25368 14.2537 6.75 14.875 6.75C15.4963 6.75 16 7.25368 16 7.875C16 8.49632 15.4963 9 14.875 9ZM7 14.3438V8.25C7 7.83579 6.66421 7.5 6.25 7.5C5.83579 7.5 5.5 7.83579 5.5 8.25V14.3438C4.03727 14.7214 3.08356 16.1278 3.27391 17.6265C3.46427 19.1252 4.7393 20.2485 6.25 20.2485C7.7607 20.2485 9.03573 19.1252 9.22609 17.6265C9.41644 16.1278 8.46273 14.7214 7 14.3438ZM6.25 18.75C5.42157 18.75 4.75 18.0784 4.75 17.25C4.75 16.4216 5.42157 15.75 6.25 15.75C7.07843 15.75 7.75 16.4216 7.75 17.25C7.75 18.0784 7.07843 18.75 6.25 18.75ZM10 12.5625V4.5C10 2.42893 8.32107 0.75 6.25 0.75C4.17893 0.75 2.5 2.42893 2.5 4.5V12.5625C0.511202 14.1548 -0.255157 16.8295 0.588618 19.2334C1.43239 21.6373 3.7023 23.2462 6.25 23.2462C8.7977 23.2462 11.0676 21.6373 11.9114 19.2334C12.7552 16.8295 11.9888 14.1548 10 12.5625ZM6.25 21.75C4.28349 21.7502 2.54464 20.4734 1.95598 18.597C1.36731 16.7207 2.0652 14.6795 3.67937 13.5562C3.8814 13.4152 4.00125 13.1839 4 12.9375V4.5C4 3.25736 5.00736 2.25 6.25 2.25C7.49264 2.25 8.5 3.25736 8.5 4.5V12.9375C8.49998 13.1826 8.61969 13.4122 8.82063 13.5525C10.4383 14.6746 11.1387 16.718 10.5496 18.5965C9.96052 20.475 8.21872 21.7525 6.25 21.75Z" fill="#374141"/>
@@ -99,7 +97,7 @@ export class DashboardComponent implements OnInit {
   // Sensor section
   sensors: Sensor[] = [];
 
-  // Alerts section
+  // Alerts section (demo alerts kept)
   alerts: Alert[] = [
     { id: 1, type: "success", title: "Your carrots have been planted", last_update: "08/07/2025" },
     {
@@ -123,78 +121,19 @@ export class DashboardComponent implements OnInit {
     info: "Info",
   };
 
-  // Calendar
   private readonly dialogs = inject(TuiDialogService);
-  private translateService = inject(TranslateService);
-  private dashboardService = inject(DashboardService);
-  private greenhouseService = inject(GreenhouseService);
+  private readonly translateService = inject(TranslateService);
+  private readonly dashboardService = inject(DashboardService);
+  private readonly greenhouseService = inject(GreenhouseService);
   private readonly injector = inject(INJECTOR);
   private readonly months$ = inject(TUI_MONTHS);
 
   private readonly control = new FormControl<TuiDayRange | null>(null);
-
   get selectedRange(): TuiDayRange | null {
     return this.control.value;
   }
 
-  // Demo data chart
-  private readonly start = new TuiDay(2025, 0, 1);
-  private readonly DAYS = 365;
-
-  protected readonly tempData: ReadonlyArray<[TuiDay, number]> = (() => {
-    const arr: Array<[TuiDay, number]> = [];
-    for (let i = 0; i < this.DAYS; i++) {
-      const d = this.start.append({ day: i });
-      let v = 22 + 10 * Math.sin(i / 7) + (Math.random() * 2 - 1);
-      if (i >= 20 && i <= 26) v += 15;
-      if (i >= 70 && i <= 73) v -= 8;
-      v = this.clamp(v, 0, 45);
-      arr.push([d, Math.round(v * 10) / 10]);
-    }
-    return arr;
-  })();
-
-  protected readonly humidityData: ReadonlyArray<[TuiDay, number]> = (() => {
-    const arr: Array<[TuiDay, number]> = [];
-    let v = 55;
-    for (let i = 0; i < this.DAYS; i++) {
-      const d = this.start.append({ day: i });
-      v += this.random(-20, 20);
-      if (i >= 35 && i <= 38) v -= 25;
-      if (i >= 90 && i <= 95) v += 30;
-      v = this.clamp(v, 0, 100);
-      arr.push([d, Math.round(v)]);
-    }
-    return arr;
-  })();
-
-  protected readonly pressureData: ReadonlyArray<[TuiDay, number]> = (() => {
-    const arr: Array<[TuiDay, number]> = [];
-    for (let i = 0; i < this.DAYS; i++) {
-      const d = this.start.append({ day: i });
-      let v = 1015 + 8 * Math.sin(i / 12) + this.random(-3, 3);
-      if (i >= 40 && i <= 45) v -= 35;
-      if (i >= 100 && i <= 104) v += 18;
-      v = this.clamp(v, 950, 1050);
-      arr.push([d, Math.round(v)]);
-    }
-    return arr;
-  })();
-
-  private readonly minDay = this.start;
-  private readonly maxDay = this.start.append({ day: this.DAYS - 1 });
-
-  // Dialog
-  private readonly dialog$: Observable<TuiDayRange> = this.dialogs.open(
-    new PolymorpheusComponent(
-      TuiMobileCalendarDropdown,
-      Injector.create({
-        providers: [{ provide: TUI_CALENDAR_DATE_STREAM, useValue: tuiControlValue(this.control) }],
-        parent: this.injector,
-      })
-    ),
-    { size: "fullscreen", closeable: false, data: { min: this.minDay, max: this.maxDay } }
-  );
+  private readonly greenhouseId$ = new BehaviorSubject<string | undefined>(undefined);
 
   protected readonly date$ = combineLatest([
     tuiControlValue<TuiDayRange>(this.control),
@@ -209,16 +148,114 @@ export class DashboardComponent implements OnInit {
     })
   );
 
+  // ---- Charts: live data from API ----
+
+  private readonly range$ = tuiControlValue<TuiDayRange>(this.control);
+
+  private readonly chartTimeseries$: Observable<ChartTimeseries> = combineLatest([
+    this.greenhouseId$,
+    this.range$,
+  ]).pipe(
+    filter(([id, range]) => !!id && !!range),
+    switchMap(([id, range]) =>
+      this.dashboardService.getChartsTimeseriesById(
+        id as string,
+        this.toDateOnly(range!.from),
+        this.toDateOnly(range!.to)
+      )
+    ),
+    map(res => res.chartTimeseries),
+    shareReplay(1)
+  );
+
+  // Per-metric series and meta
+  readonly temperatureData$ = this.chartTimeseries$.pipe(
+    map(ct => this.toSeries(ct.metrics.temperature.points))
+  );
+  readonly humidityData$ = this.chartTimeseries$.pipe(
+    map(ct => this.toSeries(ct.metrics.humidity.points))
+  );
+  readonly pressureData$ = this.chartTimeseries$.pipe(
+    map(ct => this.toSeries(ct.metrics.airPressure.points))
+  );
+
+  readonly tempMeta$ = this.chartTimeseries$.pipe(map(ct => ct.metrics.temperature));
+  readonly humMeta$ = this.chartTimeseries$.pipe(map(ct => ct.metrics.humidity));
+  readonly presMeta$ = this.chartTimeseries$.pipe(map(ct => ct.metrics.airPressure));
+
+  // Dialog (you can adjust min/max if you want to constrain selection)
+  private readonly dialog$: Observable<TuiDayRange> = this.dialogs.open(
+    new PolymorpheusComponent(
+      TuiMobileCalendarDropdown,
+      Injector.create({
+        providers: [{ provide: TUI_CALENDAR_DATE_STREAM, useValue: tuiControlValue(this.control) }],
+        parent: this.injector,
+      })
+    ),
+    { size: "fullscreen", closeable: false }
+  );
+
+  ngOnInit(): void {
+    const greenhouseId = this.greenhouseService.selectedSerre()?.id;
+    this.greenhouseId$.next(greenhouseId);
+
+    // Measurements (cards)
+    this.dashboardService.getGreenhouseMeasurementsById(greenhouseId).subscribe({
+      next: (data: SensorData) => {
+        this.sensors = data.sensors ?? [];
+        this.metrics =
+          data.summaryAggregates?.metrics ?? data.summaryAggregates?.metrics ?? undefined;
+      },
+      error: err => console.error("HTTP error:", err),
+    });
+  }
+
   protected onClick(): void {
-    this.dialog$.subscribe(v => this.control.setValue(v));
+    this.dialogs
+      .open<TuiDayRange>(
+        new PolymorpheusComponent(
+          TuiMobileCalendarDropdown,
+          Injector.create({
+            // Provide the current FormControl value/stream to the calendar
+            providers: [
+              { provide: TUI_CALENDAR_DATE_STREAM, useValue: tuiControlValue(this.control) },
+            ],
+            parent: this.injector,
+          })
+        ),
+        {
+          size: "fullscreen",
+          closeable: false,
+        }
+      )
+      .subscribe({
+        next: range => {
+          if (range) this.control.setValue(range); // <-- APPLY selection
+        },
+        error: err => console.error("Calendar dialog error", err),
+      });
   }
 
-  // Utils
-  private clamp(n: number, min: number, max: number): number {
-    return Math.min(max, Math.max(min, n));
+  // ---- Helpers ----
+
+  /** Convert API points into [TuiDay, number] tuples (skips null values) */
+  private toSeries(points: MetricPoint[]): ReadonlyArray<[TuiDay, number]> {
+    return points
+      .filter(p => p.value !== null)
+      .map(p => [this.fromDateOnly(p.date), p.value as number] as [TuiDay, number]);
   }
 
-  private random(min: number, max: number): number {
-    return min + Math.random() * (max - min);
+  /** "yyyy-MM-dd" -> TuiDay (UTC-safe) */
+  private fromDateOnly(d: string): TuiDay {
+    const [y, m, dd] = d.split("-").map(Number);
+    return new TuiDay(y, m - 1, dd);
+  }
+
+  /** TuiDay -> "yyyy-MM-dd" (UTC-safe) */
+  private toDateOnly(day: TuiDay): string {
+    const y = day.year;
+    const m = String(day.month + 1).padStart(2, "0");
+    const d = String(day.day).padStart(2, "0");
+    return `${y}-${m}-${d}`;
   }
 }
