@@ -17,7 +17,7 @@
     <h2 tuiTitle>Affichage</h2>
 
     <app-toggle-card
-      [isActive]="settingsService.isDarkModeToggled()"
+      [isActive]="settingsService.getIsDarkMode()"
       [text]="'pages.settings.notification-section-dark-mode-text' | translate"
       (toggled)="handleDarkModeToggle()"></app-toggle-card>
   </div>
