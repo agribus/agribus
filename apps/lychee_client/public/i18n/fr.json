@@ -84,7 +84,10 @@
       "location": "Localisation",
       "name": "Nom",
       "sensor": "Capteur",
-      "sensors": "Capteurs"
+      "sensors": "Capteurs",
+      "city": "Ville",
+      "country": "Pays",
+      "greenhouse": "Serre"
     },
     "crops": {
       "commonName": "Nom commun",
