@@ -8,6 +8,7 @@ public interface IAuthService
     Task<AuthResponse> SignupAsync(SignupRequest request);
     Task<bool> ValidateTokenAsync(string token);
     Task<string?> GetUserIdFromTokenAsync(string token);
+    Task<AuthResponse> PasswordChangeAsync(PasswordChangeRequest request);
+    Task<AuthResponse> DeleteUserAsync(string userId);
     string GetCurrentUserId();
-    string GetToken();
 }

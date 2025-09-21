@@ -5,6 +5,8 @@ import { authGuard } from "@guards/auth.guard";
 import { GreenhouseSettingsComponent } from "@pages/greenhouses/greenhouse-settings/greenhouse-settings.component";
 import { SettingsComponent } from "@pages/settings/settings.component";
 import { SettingsAccountComponent } from "@pages/settings-account/settings-account.component";
+import { PasswordChangeComponent } from "@pages/password-change/password-change.component";
+import { GreenhouseListComponent } from "@pages/greenhouses/greenhouse-list/greenhouse-list.component";
 
 export const SETTINGS_ROUTES = [
   {
@@ -29,6 +31,16 @@ export const SETTINGS_ROUTES = [
       {
         path: "settings-account",
         component: SettingsAccountComponent,
+        canActivate: [platformGuard, authGuard],
+      },
+      {
+        path: "password-change",
+        component: PasswordChangeComponent,
+        canActivate: [platformGuard, authGuard],
+      },
+      {
+        path: "settings/greenhouses",
+        component: GreenhouseListComponent,
         canActivate: [platformGuard, authGuard],
       },
     ],

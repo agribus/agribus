@@ -1,0 +1,9 @@
+@import "@taiga-ui/core/styles/taiga-ui-local.scss";
+
+.greenhouse-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  gap: 1rem;
+}

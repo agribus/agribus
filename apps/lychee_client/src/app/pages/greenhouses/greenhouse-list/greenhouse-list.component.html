@@ -1,0 +1,11 @@
+<div class="greenhouse-list-container">
+  @for (greenhouse of greenhouses; track greenhouse.id) {
+    <app-greenhouse-card
+      [greenhouseTitle]="greenhouse.name"
+      [no]="'shared.buttons.cancel' | translate"
+      [yes]="'shared.buttons.confirm' | translate"
+      [content]="'Voulez vous vraiment supprimer cette serre.'"
+      [label]="greenhouse.name"
+      (confirmed)="handleDeleteGreenhouse(greenhouse.id)"></app-greenhouse-card>
+  }
+</div>

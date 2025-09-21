@@ -5,8 +5,9 @@
         [ngSrc]="darkMode() ? '/assets/logo/logo-dark.svg' : '/assets/logo/logo-light.png'"
         tuiSlot="left"
         alt="Agribus"
-        height="56"
-        width="56"
+        height="38"
+        width="38"
+        class="logo"
         priority />
 
       @if (userHaveGreenhouse) {
@@ -60,6 +61,10 @@
           {{ "pages.greenhouse-settings.title" | translate }}
         } @else if (url === "/greenhouse/create") {
           {{ "pages.greenhouse-create.title" | translate }}
+        } @else if (url === "/password-change") {
+          {{ "pages.password-change.title" | translate }}
+        } @else if (url === "/settings/greenhouses") {
+          {{ "Vos serres " }}
         } @else {
           {{ "pages.settings.title" | translate }}
         }

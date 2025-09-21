@@ -18,13 +18,15 @@ namespace Agribus.Clerk.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly LoginRequestValidator _loginValidator;
         private readonly SignupRequestValidator _signupValidator;
+        private readonly PasswordChangeRequestValidator _passwordChangeValidator;
 
         public AuthService(
             ClerkBackendApi clerkClient,
             ILogger<AuthService> logger,
             IHttpContextAccessor httpContextAccessor,
             LoginRequestValidator loginValidator,
-            SignupRequestValidator signupValidator
+            SignupRequestValidator signupValidator,
+            PasswordChangeRequestValidator passwordChangeValidator
         )
         {
             _clerkClient = clerkClient;
@@ -32,6 +34,7 @@ namespace Agribus.Clerk.Services
             _httpContextAccessor = httpContextAccessor;
             _loginValidator = loginValidator;
             _signupValidator = signupValidator;
+            _passwordChangeValidator = passwordChangeValidator;
         }
 
         public async Task<AuthResponse> LoginAsync(LoginRequest request)
@@ -164,19 +167,96 @@ namespace Agribus.Clerk.Services
             }
         }
 
-        public string GetCurrentUserId()
+        public async Task<AuthResponse> PasswordChangeAsync(PasswordChangeRequest request)
         {
-            return _httpContextAccessor.HttpContext.Items["UserId"]!.ToString()!;
+            var userId = GetCurrentUserId();
+            if (string.IsNullOrEmpty(userId))
+            {
+                return AuthResponse.CreateError(
+                    "Unauthorized",
+                    new Dictionary<string, string[]> { ["auth"] = ["User not authenticated"] }
+                );
+            }
+            try
+            {
+                await _passwordChangeValidator.ValidateAndThrowAsync(request);
+
+                var goodPassword = await _clerkClient.Users.VerifyPasswordAsync(
+                    userId: userId,
+                    requestBody: new VerifyPasswordRequestBody
+                    {
+                        Password = request.CurrentPassword,
+                    }
+                );
+            }
+            catch
+            {
+                return AuthResponse.CreateError(
+                    "Incorrect credentials.",
+                    new Dictionary<string, string[]>
+                    {
+                        ["auth"] = ["Current password is incorrect"],
+                    }
+                );
+            }
+
+            if (request.NewPassword == request.ConfirmNewPassword)
+            {
+                try
+                {
+                    var passwordChange = await _clerkClient.Users.UpdateAsync(
+                        userId: userId,
+                        requestBody: new UpdateUserRequestBody() { Password = request.NewPassword }
+                    );
+
+                    return AuthResponse.CreateSuccess(message: "Password successfully changed.");
+                }
+                catch (ClerkErrors ex)
+                {
+                    _logger.LogError(
+                        ex,
+                        "Erreur lors de la tentative de changement de mot de passe pour l'utilisateur: {userId}",
+                        userId
+                    );
+
+                    return AuthResponse.CreateError(
+                        "Password change error. Please try again later.",
+                        new Dictionary<string, string[]> { ["server"] = ["An error has occured"] }
+                    );
+                }
+            }
+            else
+            {
+                return AuthResponse.CreateError(
+                    "newPassword and confirmNewPassword do not match.",
+                    new Dictionary<string, string[]>
+                    {
+                        ["auth"] = ["newPassword and confirmNewPassword do not match."],
+                    }
+                );
+            }
         }
 
-        public string? GetToken()
+        public async Task<AuthResponse> DeleteUserAsync(string userId)
         {
-            return _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(
-                "auth_token",
-                out var token
-            )
-                ? token
-                : null;
+            try
+            {
+                await _clerkClient.Users.DeleteAsync(userId);
+                return AuthResponse.CreateSuccess(message: "Account successfully deleted.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erreur lors de la suppression du compte {UserId}", userId);
+                return AuthResponse.CreateError(
+                    "Account deletion error.",
+                    new Dictionary<string, string[]> { ["server"] = ["An error has occured"] }
+                );
+            }
+        }
+
+        public string? GetCurrentUserId()
+        {
+            return _httpContextAccessor.HttpContext.Items["UserId"]!.ToString()!;
         }
     }
 }

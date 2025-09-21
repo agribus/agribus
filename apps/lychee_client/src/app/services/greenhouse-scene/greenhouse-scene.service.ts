@@ -4,7 +4,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { Font, FontLoader } from "three/addons/loaders/FontLoader.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
-import { CROPS } from "@utils/vegetables-config/vegetables.config";
+import { CROPS } from "@utils/crops-config/crops.config";
 import { Greenhouse } from "@interfaces/greenhouse.interface";
 import { Crop } from "@interfaces/crop.interface";
 
@@ -79,10 +79,10 @@ export class GreenhouseSceneService {
   }
 
   plantCrop(crop: Crop, quantity: number): void {
-    const config = CROPS[crop.commonName.toLowerCase()];
+    let config = CROPS[crop.scientificName.toLowerCase()];
     if (!config) {
       console.error(`Crop "${crop.commonName}" not found in CROPS.`);
-      return;
+      config = CROPS["leaf"];
     }
 
     this.gltfLoader.load(config.modelPath, gltf => {
@@ -91,6 +91,24 @@ export class GreenhouseSceneService {
         this.processPlantPlacement(crop, baseModel);
       }
     });
+  }
+
+  clearCrops(): void {
+    this.plantedCrops.forEach(plant => {
+      this.scene.remove(plant.mesh);
+
+      plant.mesh.traverse(obj => {
+        if (obj instanceof THREE.Mesh) {
+          obj.geometry?.dispose();
+          if (Array.isArray(obj.material)) {
+            obj.material.forEach(m => m.dispose());
+          } else {
+            obj.material?.dispose();
+          }
+        }
+      });
+    });
+    this.plantedCrops = [];
   }
 
   returnToDefaultCamera(): void {
@@ -250,12 +268,9 @@ export class GreenhouseSceneService {
   }
 
   private findAvailableSpawnPoint(): number {
-    const usedSpawnPoints = this.plantedCrops.map(v => v.spawnPointIndex);
-    for (let i = 0; i < this.spawnPoints.length; i++) {
-      if (!usedSpawnPoints.includes(i)) {
-        return i;
-      }
-    }
+    if (this.spawnPoints.length === 0) throw new Error("No spawn points available.");
+    const used = this.plantedCrops.map(v => v.spawnPointIndex);
+    for (let i = 0; i < this.spawnPoints.length; i++) if (!used.includes(i)) return i;
     return this.spawnPoints.length - 1;
   }
 
@@ -396,7 +411,14 @@ export class GreenhouseSceneService {
       return;
     }
 
-    const infoText = `${plantedCrop.crop.commonName}\n${plantedCrop.crop.cropGrowthConditions?.atmosphericHumidity} %RH\n${plantedCrop.crop.cropGrowthConditions?.miniumTemperature}° - ${plantedCrop.crop.cropGrowthConditions?.maximumTemperature}°C\n`;
+    let infoText = `${plantedCrop.crop.commonName}`;
+    if (plantedCrop.crop.idealConditions?.atmosphericHumidity)
+      infoText += `\n${plantedCrop.crop.idealConditions?.atmosphericHumidity} %RH`;
+    if (
+      plantedCrop.crop.idealConditions?.miniumTemperature &&
+      plantedCrop.crop.idealConditions?.maximumTemperature
+    )
+      infoText += `\n${plantedCrop.crop.idealConditions?.miniumTemperature}° - ${plantedCrop.crop.idealConditions?.maximumTemperature}°C`;
 
     const textPosition = new THREE.Vector3(
       plantedCrop.mesh.position.x,

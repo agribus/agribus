@@ -4,6 +4,7 @@ import { Camera, CameraResultType } from "@capacitor/camera";
 import { environment } from "@environment/environment";
 import { from, map, Observable, switchMap } from "rxjs";
 import { Crop } from "@interfaces/crop.interface";
+import { TranslateService } from "@ngx-translate/core";
 
 interface PlantNetIdentifyResponse {
   results?: PlantNetResult[];
@@ -24,6 +25,7 @@ interface PlantNetSpecies {
 })
 export class CropsService {
   private readonly http = inject(HttpClient);
+  private readonly translateService = inject(TranslateService);
 
   public identifyPlantFromCamera(): Observable<Crop[]> {
     return from(this.takePicture()).pipe(
@@ -57,7 +59,9 @@ export class CropsService {
     formData.append("images", this.base64ToBlob(base64Image));
     formData.append("organs", "leaf");
 
-    const params = new HttpParams().set("api-key", apiKey).set("lang", "fr");
+    const params = new HttpParams()
+      .set("api-key", apiKey)
+      .set("lang", this.translateService.currentLang);
 
     return this.http
       .post<PlantNetIdentifyResponse>(environment.planetApiUrl + "/v2/identify/all", formData, {

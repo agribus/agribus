@@ -1,0 +1,15 @@
+@import "@taiga-ui/core/styles/taiga-ui-local.scss";
+
+.settings-section-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.account-section-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 0.5rem;
+}

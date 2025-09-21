@@ -1,1 +1,45 @@
-<p>settings works!</p>
+<div class="settings">
+  <div class="settings-section-container">
+    <h2 tuiTitle>Notifications</h2>
+
+    <app-toggle-card
+      [subTitle]="'pages.settings.notification-section-alerts-subtitle' | translate"
+      [text]="'pages.settings.notification-section-alerts-text' | translate"
+      (toggled)="handleAlertToggle($event)"></app-toggle-card>
+
+    <app-toggle-card
+      [subTitle]="'pages.settings.notification-section-weekly-reports-subtitle' | translate"
+      [text]="'pages.settings.notification-section-weekly-reports-text' | translate"
+      (toggled)="handleReportToggle($event)"></app-toggle-card>
+  </div>
+
+  <div class="settings-section-container">
+    <h2 tuiTitle>Affichage</h2>
+
+    <app-toggle-card
+      [isActive]="settingsService.getIsDarkMode()"
+      [text]="'pages.settings.notification-section-dark-mode-text' | translate"
+      (toggled)="handleDarkModeToggle()"></app-toggle-card>
+  </div>
+
+  <div class="settings-section-container">
+    <h2 tuiTitle>Compte</h2>
+
+    <div class="account-section-container">
+      <app-go-to-card [text]="'Gerez mes serres'" (click)="handleGreenhouses()"></app-go-to-card>
+      <app-go-to-card
+        [text]="'pages.settings.account-password-change' | translate"
+        (click)="handlePasswordChange()"></app-go-to-card>
+      <app-go-to-card
+        [text]="'pages.settings.account-logout' | translate"
+        (click)="handleLogout()"></app-go-to-card>
+      <app-confirm
+        [buttonText]="'pages.settings.account-delete' | translate"
+        [no]="'shared.buttons.cancel' | translate"
+        [yes]="'shared.buttons.confirm' | translate"
+        [content]="'pages.settings.account-delete-confirm' | translate"
+        [label]="'pages.settings.account-delete-label' | translate"
+        (confirmed)="handleDeleteAccount()"></app-confirm>
+    </div>
+  </div>
+</div>

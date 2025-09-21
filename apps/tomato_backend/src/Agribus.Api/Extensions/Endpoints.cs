@@ -29,6 +29,8 @@ public static class Endpoints
         public const string DeleteGreenhouse = $"{BasePath}/{{id:guid}}";
         public const string EditGreenhouse = $"{BasePath}/{{id:guid}}";
         public const string GetGreenhouseAlertsById = $"{BasePath}/{{id:guid}}/alerts";
+        public const string GetGreenhouseChartTimeseriesById =
+            $"{BasePath}/{{id:guid}}/charts/timeseries";
     }
 
     public static class User
@@ -37,6 +39,8 @@ public static class Endpoints
         public const string Login = $"{BasePath}/login";
         public const string Signup = $"{BasePath}/signup";
         public const string Me = $"{BasePath}/me";
+        public const string PasswordChange = $"{BasePath}/password-change";
+        public const string Delete = $"{BasePath}/delete";
     }
 
     public static class Alerts

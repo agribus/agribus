@@ -14,7 +14,7 @@ import { BehaviorSubject, combineLatest, map } from "rxjs";
 export class ChartDashboard implements OnChanges {
   @Input() title = "";
   @Input() unit = "";
-  @Input() data: ReadonlyArray<[TuiDay, number]> = [];
+  @Input() data: ReadonlyArray<[TuiDay, number]> | null = [];
   @Input() range: TuiDayRange | null = null;
   @Input() yMin = 0;
   @Input() yMax = 100;
@@ -26,7 +26,7 @@ export class ChartDashboard implements OnChanges {
     data: ReadonlyArray<[TuiDay, number]>;
     range: TuiDayRange | null;
   }>({
-    data: this.data,
+    data: this.data ?? [],
     range: this.range,
   });
 

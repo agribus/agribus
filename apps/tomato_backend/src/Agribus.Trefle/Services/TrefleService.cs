@@ -21,11 +21,11 @@ public class TrefleService : ITrefleService
         _parameters.Add("token", _configuration["Trefle:Token"]);
     }
 
-    public async Task<CropGrowthConditions> GetCropIdealConditions(string commonName)
+    public async Task<CropGrowthConditions> GetCropIdealConditions(string scientificName)
     {
         try
         {
-            var cropId = await GetCropSpeciesId(commonName);
+            var cropId = await GetCropSpeciesId(scientificName);
             return await GetSpeciesGrowthConditions(cropId);
         }
         catch (NotFoundEntityException)
@@ -39,21 +39,25 @@ public class TrefleService : ITrefleService
         }
     }
 
-    private async Task<int> GetCropSpeciesId(string commonName)
+    private async Task<int> GetCropSpeciesId(string scientificName)
     {
         var searchParameters = new Dictionary<string, string>(_parameters)
         {
-            ["filter[common_name]"] = commonName,
+            ["filter[scientific_name]"] = scientificName,
         };
 
         var jsonResponse = await _getHttpUsecase.GetAsync($"{_baseUrl}/species", searchParameters);
         var jsonElement = JsonDocument.Parse(jsonResponse).RootElement;
         jsonElement.TryGetProperty("data", out var dataElement);
         if (dataElement.GetArrayLength() == 0)
-            throw new NotFoundEntityException($"No species found for common name: {commonName}");
-        dataElement[0].TryGetProperty("common_name", out var responseCommonName);
-        return responseCommonName.GetString() != commonName
-            ? throw new NotFoundEntityException($"No species found for common name: {commonName}")
+            throw new NotFoundEntityException(
+                $"No species found for scientific name: {scientificName}"
+            );
+        dataElement[0].TryGetProperty("scientific_name", out var responseScientificName);
+        return responseScientificName.GetString().ToLower() != scientificName
+            ? throw new NotFoundEntityException(
+                $"No species found for scientific name: {scientificName}"
+            )
             : dataElement[0].GetProperty("id").GetInt32();
     }
 

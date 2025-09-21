@@ -10,6 +10,12 @@ export interface AuthRegister {
   readonly confirmPassword: string;
 }
 
+export interface AuthPasswordChange {
+  readonly currentPassword: string;
+  readonly newPassword: string;
+  readonly confirmNewPassword: string;
+}
+
 export interface ForgotPassword {
   readonly email: string;
 }

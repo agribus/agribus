@@ -9,6 +9,6 @@ public class UpdateGreenhouseDto
     public string? Country { get; set; }
 
     public string? City { get; set; }
-    public List<UpdateCropDto>? Crops { get; set; }
+    public List<Crop>? Crops { get; set; }
     public List<UpdateSensorFromGreenhouseDto>? Sensors { get; set; }
 }

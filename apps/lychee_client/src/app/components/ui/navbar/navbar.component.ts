@@ -46,7 +46,7 @@ export class NavbarComponent implements OnInit {
           case url.includes("greenhouse"):
             this.activeIndex = 2;
             break;
-          case url.includes("settings-account"):
+          case url.includes("settings"):
             this.activeIndex = 3;
             break;
           default:
@@ -58,6 +58,14 @@ export class NavbarComponent implements OnInit {
 
   gotoPage(pageName: string) {
     this.router.navigate([`/${pageName}`]);
+  }
+
+  goToDashboard() {
+    if (!this.greenhouseService.selectedSerre()) {
+      this.router.navigate(["/home"]);
+    } else {
+      this.router.navigate(["/dashboard", this.greenhouseService.selectedSerre()?.id]);
+    }
   }
 
   goToGreenhouse() {

@@ -6,7 +6,7 @@
   <button
     title="Dashboard"
     type="button"
-    (click)="gotoPage('dashboard')"
+    (click)="goToDashboard()"
     [class.active]="activeIndex === 1">
     <tui-icon icon="@tui.layout-panel-left" />
   </button>
@@ -22,7 +22,7 @@
   <button
     title="Settings"
     type="button"
-    (click)="gotoPage('settings-account')"
+    (click)="gotoPage('settings')"
     [class.active]="activeIndex === 3">
     <tui-icon icon="@tui.settings" />
   </button>
