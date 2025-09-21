@@ -5,8 +5,6 @@
 [tuiSlot="left"] {
   display: flex;
   align-items: center;
-  height: 38px;
-  width: 38px;
 }
 
 tui-textfield {
@@ -24,4 +22,8 @@ input:focus {
 
 .header {
   height: 56px;
+}
+
+.logo {
+  padding: 12px;
 }
