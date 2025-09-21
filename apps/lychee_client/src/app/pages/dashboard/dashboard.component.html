@@ -68,27 +68,27 @@
 
       <app-chart-dashboard
         title="{{ 'shared.dashboard.calendar.title.temperature' | translate }}"
-        [data]="tempData"
+        [data]="temperatureData$ | async"
         [range]="selectedRange"
-        unit="°C"
-        [yMin]="0"
-        [yMax]="50"></app-chart-dashboard>
+        [unit]="(tempMeta$ | async)?.unit || '°C'"
+        [yMin]="(tempMeta$ | async)?.yMin ?? 0"
+        [yMax]="(tempMeta$ | async)?.yMax ?? 50"></app-chart-dashboard>
 
       <app-chart-dashboard
         title="{{ 'shared.dashboard.calendar.title.humidity' | translate }}"
-        [data]="humidityData"
+        [data]="humidityData$ | async"
         [range]="selectedRange"
-        unit="%"
-        [yMin]="0"
-        [yMax]="100"></app-chart-dashboard>
+        [unit]="(humMeta$ | async)?.unit || '%'"
+        [yMin]="(humMeta$ | async)?.yMin ?? 0"
+        [yMax]="(humMeta$ | async)?.yMax ?? 100"></app-chart-dashboard>
 
       <app-chart-dashboard
         title="{{ 'shared.dashboard.calendar.title.air-pressure' | translate }}"
-        [data]="pressureData"
+        [data]="pressureData$ | async"
         [range]="selectedRange"
-        unit="hPa"
-        [yMin]="950"
-        [yMax]="1050"></app-chart-dashboard>
+        [unit]="(presMeta$ | async)?.unit || 'hPa'"
+        [yMin]="(presMeta$ | async)?.yMin ?? 950"
+        [yMax]="(presMeta$ | async)?.yMax ?? 1050"></app-chart-dashboard>
     </div>
   </div>
 </div>
