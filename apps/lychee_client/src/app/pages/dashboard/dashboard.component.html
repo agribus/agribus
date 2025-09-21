@@ -3,24 +3,34 @@
 
   <div class="latest-measures-container">
     <div class="data-container">
-      @for (metric of metrics; track metric.id) {
+      @for (metric of metrics | keyvalue; track metric.key) {
         <div class="card" tuiAppearance="neutral" tuiCardMedium>
-          <tui-icon [icon]="getIcon(metric.type)" />
-          <h2 tuiTitle>{{ metric.label }}</h2>
-          <span class="data-text">{{ metric.value }} {{ getUnit(metric.type) }}</span>
-          <span tuiSubtitle class="latest-update">{{ metric.last_update }}</span>
+          <tui-icon [icon]="getIcon(metric.key)" />
+          <h2 tuiTitle>{{ "pages.dashboard.title.measurements." + metric.key | translate }}</h2>
+          <span class="data-text">{{ metric.value.value }} {{ metric.value.unit }}</span>
+          <span tuiSubtitle class="latest-update">
+            {{ metric.value.timestamp | date: "dd/MM/yyyy HH:mm" }}
+          </span>
         </div>
       }
 
-      @for (sensor of sensors; track sensor.id) {
+      @for (sensor of sensors; track sensor.sourceAddress) {
         <div class="card" tuiAppearance="neutral" tuiCardMedium>
           <h2 tuiTitle>{{ sensor.name }}</h2>
           <div class="sensor-metrics">
-            <span class="data-text">{{ sensor.temperature }} {{ getUnit("temperature") }}</span>
-            <span class="data-text">{{ sensor.humidity }} {{ getUnit("humidity") }}</span>
-            <span class="data-text">{{ sensor.air_pressure }} {{ getUnit("air_pressure") }}</span>
+            <span class="data-text">
+              {{ Math.round(sensor.last.temperature.value) }} {{ sensor.last.temperature.unit }}
+            </span>
+            <span class="data-text">
+              {{ Math.round(sensor.last.humidity.value) }} {{ sensor.last.humidity.unit }}
+            </span>
+            <span class="data-text">
+              {{ Math.round(sensor.last.pressure.value) }} {{ sensor.last.pressure.unit }}
+            </span>
           </div>
-          <span tuiSubtitle class="latest-update">{{ sensor.last_update }}</span>
+          <span tuiSubtitle class="latest-update">
+            {{ sensor.last.timestamp | date: "dd/MM/yyyy HH:mm" }}
+          </span>
         </div>
       }
     </div>

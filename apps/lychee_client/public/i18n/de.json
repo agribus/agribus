@@ -1,5 +1,14 @@
 {
   "pages": {
+    "dashboard": {
+      "title": {
+        "measurements": {
+          "temperature": "Temperatur",
+          "humidity": "Luftfeuchtigkeit",
+          "airPressure": "Luftdruck"
+        }
+      }
+    },
     "forgot-password": {
       "connection-page": "Anmeldeseite",
       "subtitle": "Geben Sie Ihre E-Mail ein, um das Passwort zurückzusetzen",

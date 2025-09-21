@@ -1,5 +1,5 @@
-import { Component, inject, Injector, INJECTOR } from "@angular/core";
-import { AsyncPipe } from "@angular/common";
+import { Component, inject, Injector, INJECTOR, OnInit } from "@angular/core";
+import { AsyncPipe, DatePipe, KeyValuePipe, TitleCasePipe, UpperCasePipe } from "@angular/common";
 import { FormsModule, FormControl } from "@angular/forms";
 import { combineLatest, map, Observable } from "rxjs";
 
@@ -18,17 +18,9 @@ import { tuiControlValue, TuiDay, TuiDayRange } from "@taiga-ui/cdk";
 import { PolymorpheusComponent } from "@taiga-ui/polymorpheus";
 import { ChartDashboard } from "@components/chart-dashboard/chart-dashboard";
 import { TranslatePipe, TranslateService } from "@ngx-translate/core";
-import { Sensor } from "@interfaces/sensor.interface";
-
-type MetricType = "temperature" | "humidity" | "air_pressure";
-
-interface Metric {
-  id: number;
-  type: MetricType;
-  label: string;
-  value: number;
-  last_update: string;
-}
+import { DashboardService } from "@services/dashboard/dashboard.service";
+import { GreenhouseService } from "@services/greenhouse/greenhouse.service";
+import { Sensor, SensorData, SummaryAggregates } from "@interfaces/dashboard.interface";
 
 type AlertType = "success" | "warning" | "error" | "info";
 
@@ -56,11 +48,23 @@ interface Alert {
     ChartDashboard,
     TuiIcon,
     TranslatePipe,
+    DatePipe,
+    KeyValuePipe,
   ],
   templateUrl: "./dashboard.component.html",
   styleUrls: ["./dashboard.component.scss"],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  ngOnInit(): void {
+    const greenhouseId = this.greenhouseService.selectedSerre()?.id;
+    this.dashboardService.getGreenhouseMeasurementsById(greenhouseId).subscribe({
+      next: (data: SensorData) => {
+        this.sensors = data.sensors;
+        this.metrics = data.summaryAggregates.metrics;
+      },
+      error: err => console.error("HTTP error:", err),
+    });
+  }
   protected readonly temperatureIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
     `<svg width="18" height="24" viewBox="0 0 18 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M14.875 5.25C13.4253 5.25 12.25 6.42525 12.25 7.875C12.25 9.32475 13.4253 10.5 14.875 10.5C16.3247 10.5 17.5 9.32475 17.5 7.875C17.5 6.42525 16.3247 5.25 14.875 5.25ZM14.875 9C14.2537 9 13.75 8.49632 13.75 7.875C13.75 7.25368 14.2537 6.75 14.875 6.75C15.4963 6.75 16 7.25368 16 7.875C16 8.49632 15.4963 9 14.875 9ZM7 14.3438V8.25C7 7.83579 6.66421 7.5 6.25 7.5C5.83579 7.5 5.5 7.83579 5.5 8.25V14.3438C4.03727 14.7214 3.08356 16.1278 3.27391 17.6265C3.46427 19.1252 4.7393 20.2485 6.25 20.2485C7.7607 20.2485 9.03573 19.1252 9.22609 17.6265C9.41644 16.1278 8.46273 14.7214 7 14.3438ZM6.25 18.75C5.42157 18.75 4.75 18.0784 4.75 17.25C4.75 16.4216 5.42157 15.75 6.25 15.75C7.07843 15.75 7.75 16.4216 7.75 17.25C7.75 18.0784 7.07843 18.75 6.25 18.75ZM10 12.5625V4.5C10 2.42893 8.32107 0.75 6.25 0.75C4.17893 0.75 2.5 2.42893 2.5 4.5V12.5625C0.511202 14.1548 -0.255157 16.8295 0.588618 19.2334C1.43239 21.6373 3.7023 23.2462 6.25 23.2462C8.7977 23.2462 11.0676 21.6373 11.9114 19.2334C12.7552 16.8295 11.9888 14.1548 10 12.5625ZM6.25 21.75C4.28349 21.7502 2.54464 20.4734 1.95598 18.597C1.36731 16.7207 2.0652 14.6795 3.67937 13.5562C3.8814 13.4152 4.00125 13.1839 4 12.9375V4.5C4 3.25736 5.00736 2.25 6.25 2.25C7.49264 2.25 8.5 3.25736 8.5 4.5V12.9375C8.49998 13.1826 8.61969 13.4122 8.82063 13.5525C10.4383 14.6746 11.1387 16.718 10.5496 18.5965C9.96052 20.475 8.21872 21.7525 6.25 21.75Z" fill="#374141"/>
@@ -73,83 +77,27 @@ export class DashboardComponent {
 </svg>`
   )}`;
 
-  protected readonly airPressureIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
+  protected readonly pressureIcon = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(
     `<svg width="22" height="15" viewBox="0 0 22 15" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M18.4119 3.56281C16.4483 1.59475 13.7801 0.492189 11 0.5H10.9625C5.19406 0.519688 0.5 5.28125 0.5 11.1059V13.25C0.5 14.0784 1.17157 14.75 2 14.75H20C20.8284 14.75 21.5 14.0784 21.5 13.25V11C21.5078 8.20749 20.3954 5.52849 18.4119 3.56281ZM20 13.25H10.2228L15.3566 6.19063C15.6004 5.85563 15.5266 5.38637 15.1916 5.1425C14.8566 4.89863 14.3873 4.9725 14.1434 5.3075L8.3675 13.25H2V11.1059C2 10.8172 2.01406 10.5322 2.04031 10.25H4.25C4.66421 10.25 5 9.91421 5 9.5C5 9.08579 4.66421 8.75 4.25 8.75H2.30656C3.27406 5.10687 6.43156 2.3525 10.25 2.03188V4.25C10.25 4.66421 10.5858 5 11 5C11.4142 5 11.75 4.66421 11.75 4.25V2.03094C15.5633 2.35185 18.7582 5.04574 19.7188 8.75H17.75C17.3358 8.75 17 9.08579 17 9.5C17 9.91421 17.3358 10.25 17.75 10.25H19.9691C19.9888 10.4984 20 10.7478 20 11V13.25Z" fill="#374141"/>
 </svg>`
   )}`;
 
   // Metrics section
-  metrics: Metric[] = [
-    {
-      id: 1,
-      type: "temperature",
-      label: "Temperature",
-      value: 18,
-      last_update: "08/07/2025 12:00",
-    },
-    {
-      id: 2,
-      type: "humidity",
-      label: "Humidity",
-      value: 54,
-      last_update: "08/07/2025 08:45",
-    },
-    {
-      id: 3,
-      type: "air_pressure",
-      label: "Air Pressure",
-      value: 1013,
-      last_update: "08/07/2025 11:26",
-    },
-  ];
+  metrics: SummaryAggregates["metrics"] | undefined;
+  protected readonly Math = Math;
 
-  private readonly icons: Record<MetricType, string> = {
+  private readonly icons: Record<string, string> = {
     temperature: this.temperatureIcon,
     humidity: this.humidityIcon,
-    air_pressure: this.airPressureIcon,
+    airPressure: this.pressureIcon,
   };
-  getIcon(type: MetricType): string {
+  getIcon(type: string): string {
     return this.icons[type];
   }
 
-  private readonly units: Record<MetricType, string> = {
-    temperature: "°C",
-    humidity: "%",
-    air_pressure: "hPa",
-  };
-
-  getUnit(type: MetricType): string {
-    return this.units[type];
-  }
-
   // Sensor section
-  sensors: Sensor[] = [
-    {
-      id: 1,
-      name: "Sensor 1",
-      last_update: "08/07/2025 12:10",
-      temperature: 26.4,
-      humidity: 41,
-      air_pressure: 1016,
-    },
-    {
-      id: 2,
-      name: "Sensor 2",
-      last_update: "08/07/2025 12:07",
-      temperature: 18.9,
-      humidity: 67,
-      air_pressure: 1003,
-    },
-    {
-      id: 3,
-      name: "Sensor 3",
-      last_update: "08/07/2025 11:59",
-      temperature: 30.1,
-      humidity: 52,
-      air_pressure: 1022,
-    },
-  ];
+  sensors: Sensor[] = [];
 
   // Alerts section
   alerts: Alert[] = [
@@ -178,6 +126,8 @@ export class DashboardComponent {
   // Calendar
   private readonly dialogs = inject(TuiDialogService);
   private translateService = inject(TranslateService);
+  private dashboardService = inject(DashboardService);
+  private greenhouseService = inject(GreenhouseService);
   private readonly injector = inject(INJECTOR);
   private readonly months$ = inject(TUI_MONTHS);
 
